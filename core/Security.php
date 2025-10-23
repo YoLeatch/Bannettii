@@ -71,7 +71,7 @@ class Security {
     }
 
     public static function rateLimit($key, $limit = 60, $period = 60) {
-        $redis = new Redis();
+        $redis = new \Redis();
         $redis->connect('127.0.0.1', 6379);
         
         $current = $redis->get($key);

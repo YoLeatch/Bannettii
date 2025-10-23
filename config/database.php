@@ -2,14 +2,14 @@
 return [
     'db' => [
         'host' => 'localhost',
-        'name' => 'nome_do_seu_banco',
+        'name' => 'bennettii',
         'write' => [
             'user' => 'web_escrita',
-            'pass' => 'senha_forte_para_escrita'
+            'pass' => 'senha'
         ],
         'read' => [
             'user' => 'web_leitura',
-            'pass' => 'senha_forte_para_leitura'
+            'pass' => 'senha'
         ]
     ]
 ];

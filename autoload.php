@@ -2,8 +2,8 @@
 
 function autoload($className) {
     $namespaceMap = [
-        'App\\' => __DIR__ . '/app/',
-        'Core\\' => __DIR__ . '/core/'
+        'App\\' => __DIR__ . '/App/',
+        'Core\\' => __DIR__ . '/Core/'
     ];
 
     foreach ($namespaceMap as $prefix => $baseDir) {

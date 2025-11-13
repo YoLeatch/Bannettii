@@ -1,6 +1,8 @@
 <?php
 namespace Core;
 
+use App\Helpers\CacheHelper;
+
 class Router {
     private static array $prefixStack = [];
     private static array $routes = [];
@@ -8,13 +10,13 @@ class Router {
     public function __construct(){
         $cacheFile = __DIR__ . '/cache/routes.php';
 
-        if (!file_exists($cacheFile)) {
+        if (!CacheHelper::isCached($cacheFile)) {
             $rotasCompiladas = self::compileRoutes();
-            $conteudoDoCache = '<?php return ' . var_export($rotasCompiladas, true) . ';';
-            file_put_contents($cacheFile, $conteudoDoCache);
+            CacheHelper::setCache($cacheFile, $rotasCompiladas);
             self::$routes = $rotasCompiladas;
         } else {
-            self::$routes = require $cacheFile;
+            $cached = CacheHelper::getCache($cacheFile);
+            self::$routes = is_array($cached) ? $cached : [];
         }
     }
 
@@ -23,8 +25,7 @@ class Router {
 
         foreach (self::$routes as $route) {
             $pattern = preg_replace('#\{([a-zA-Z_][a-zA-Z0-9_]*)\}#', '(?P<$1>[^/]+)', $route['path']);
-            $regex = '#^' . $pattern . '$#';
-
+            $regex = '#^' . rtrim($pattern, '/') . '/?$#';
             $compiledRoutes[] = [
                 'method'  => $route['method'],
                 'handler' => $route['handler'],

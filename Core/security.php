@@ -10,11 +10,11 @@ class Security {
         return $_SESSION['csrf_token'];
     }
 
-    public static function validateCSRFToken($token) {
+    public static function validateCSRFToken($token):bool {
         if (!isset($_SESSION['csrf_token']) || $token !== $_SESSION['csrf_token']) {
-            throw new \Exception('CSRF token validation failed');
+            return false;
         }
-        return true;
+        return hash_equals($_SESSION['csrf_token'], $token);
     }
 
     public static function sanitizeInput($data) {
@@ -70,21 +70,34 @@ class Security {
         return hash_equals($signature, $expectedSignature);
     }
 
-    public static function rateLimit($key, $limit = 60, $period = 60) {
-        $redis = new Redis();
-        $redis->connect('127.0.0.1', 6379);
-        
-        $current = $redis->get($key);
-        if (!$current) {
-            $redis->setex($key, $period, 1);
-            return true;
+    public static function getJWTPayload($token){
+        $parts = explode('.', $token);
+        if (count($parts) !== 3) {
+            return null;
         }
-        
-        if ($current >= $limit) {
-            return false;
+
+        list($headerB64, $payloadB64, $signatureB64) = $parts;
+        $signature = base64_decode(str_replace(['-', '_'], ['+', '/'], $signatureB64));
+        $expectedSignature = hash_hmac('sha256', 
+            $headerB64 . "." . $payloadB64, 
+            getenv('JWT_SECRET'), 
+            true
+        );
+
+        if (!hash_equals($signature, $expectedSignature)) {
+            return null;
         }
-        
-        $redis->incr($key);
-        return true;
-    }
+
+        $payload = json_decode(
+            base64_decode(str_replace(['-', '_'], ['+', '/'], $payloadB64)),
+            true
+        );
+
+        if (isset($payload['exp']) && $payload['exp'] < time()) {
+             return null;
+        }
+
+        return $payload;
+
+}
 } 

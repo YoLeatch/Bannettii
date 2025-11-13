@@ -1,7 +1,5 @@
 <?php
-namespace Core\ViwerPlace;
-
-require_once("../autoload.php");
+namespace Core;
 
 class ViewerPlace {
     public static function render($view, $data = []) {

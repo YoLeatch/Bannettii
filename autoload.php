@@ -3,7 +3,8 @@
 function autoload($className) {
     $namespaceMap = [
         'App\\' => __DIR__ . '/App/',
-        'Core\\' => __DIR__ . '/Core/'
+        'Core\\' => __DIR__ . '/Core/',
+        'Helpers\\' => __DIR__ . '/App/Helpers/'
     ];
 
     foreach ($namespaceMap as $prefix => $baseDir) {
@@ -24,3 +25,6 @@ function autoload($className) {
 }
 
 spl_autoload_register('autoload');
+
+
+

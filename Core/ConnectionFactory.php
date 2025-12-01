@@ -8,7 +8,7 @@ class ConnectionFactory {
      * Armazena as configurações carregadas do arquivo.
      * @var array|null
      */
-    private static array $config;
+    private static ?array $config = null;
     /**
      * Armazena as conexões ativas (padrão Singleton)
      * @var array
@@ -54,7 +54,8 @@ class ConnectionFactory {
 
         } catch (\PDOException $e) {
             //deve "logar" esse erro, não "ecoar".
-            throw new \Exception("Falha na conexão com o banco de dados: " . $e->getMessage());
+            echo ViewerPlace::render('error' , ['error_code' => '500', 'error_msg' => 'Erro de conexão com o banco de dados', 'error_mensage' => $e->getMessage()]);
+            throw  new \Exception("Falha na conexão com o banco de dados: " . $e->getMessage());
         }
     }
 

@@ -1,0 +1,28 @@
+@use '../base/variables' as *;
+
+.breadcrumb__item {
+    display: inline-block;
+
+    &:not(:last-of-type)::after {
+        content: '/';
+        margin: 0 5px;
+        color: #cccccc;
+    }
+}
+
+.breadcrumb__link {
+    text-decoration: none;
+    color: #999999;
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    &--active {
+        color: $nav-bg-color;
+
+        &:hover {
+            color: $link-hover-color;
+        }
+    }
+}

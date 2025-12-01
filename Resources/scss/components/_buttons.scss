@@ -1,0 +1,49 @@
+@use '../base/variables' as *;
+
+.button {
+    margin: auto;
+    text-align: center;
+    width: 32vh;
+    height: 52.12px;
+    border: none;
+    border-radius: 61.5px;
+    background: $btn-bg-color;
+    color: $btn-text-color;
+    font-family: $font-primary;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 30px;
+
+    &:hover {
+        background-color: $nav-text-color;
+        cursor: pointer;
+        transition: 50ms;
+    }
+}
+
+.buttonRed:hover {
+    background-color: $nav-text-color;
+    cursor: pointer;
+    transition: 50ms;
+}
+
+.smallbutton {
+    margin: auto;
+    text-align: center;
+    width: 150px;
+    border: none;
+    border-radius: 10px;
+    background: $btn-bg-color;
+    color: $btn-text-color;
+    font-family: $font-primary;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 30px;
+
+    &:hover {
+        background-color: $nav-text-color;
+        cursor: pointer;
+        transition: 50ms;
+    }
+}

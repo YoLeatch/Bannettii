@@ -1,0 +1,9 @@
+@use 'variables' as *;
+@import url('https://fonts.googleapis.com/css?family=Inter');
+@import url('https://fonts.googleapis.com/css?family=Belleza');
+
+body {
+    min-height: 100vh;
+    background-color: $bg-color;
+    font-family: $font-primary;
+}

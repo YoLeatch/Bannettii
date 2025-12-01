@@ -6,7 +6,9 @@ use App\User\PessoaModel;
 
 class GuestMiddleware {
     public static function handle(): bool {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         
         $isAuthenticated = (isset($_SESSION['user_id']) && !empty($_SESSION['user_id']) && (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true));
 
@@ -40,5 +42,5 @@ class GuestMiddleware {
         // 3. Sucesso! O usuário não está logado (é um convidado).
         // Permite que ele veja a página /login ou /register.
         return true;
-        }
+    }
 }

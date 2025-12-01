@@ -1,22 +1,25 @@
 <?php
 namespace Core;
 
-use App\Helpers\CacheHelper;
+use Core\ViewerPlace;
 
 class Router {
     private static array $prefixStack = [];
     private static array $routes = [];
 
     public function __construct(){
-        $cacheFile = __DIR__ . '/cache/routes.php';
+        $cacheDir = __DIR__ . '/cache';
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir, 0777, true);
+        }
+        $cacheFile = $cacheDir . '/routes.php';
 
-        if (!CacheHelper::isCached($cacheFile)) {
+        if (!file_exists($cacheFile)) {
             $rotasCompiladas = self::compileRoutes();
-            CacheHelper::setCache($cacheFile, $rotasCompiladas);
+            file_put_contents($cacheFile, '<?php return ' . var_export($rotasCompiladas, true) . ';');
             self::$routes = $rotasCompiladas;
         } else {
-            $cached = CacheHelper::getCache($cacheFile);
-            self::$routes = is_array($cached) ? $cached : [];
+            self::$routes = require $cacheFile;
         }
     }
 
@@ -29,7 +32,8 @@ class Router {
             $compiledRoutes[] = [
                 'method'  => $route['method'],
                 'handler' => $route['handler'],
-                'regex'   => $regex
+                'regex'   => $regex,
+                'middleware' => $route['middleware'] ?? []
             ];
         }
 
@@ -42,20 +46,35 @@ class Router {
         array_pop(self::$prefixStack);
     }
 
-    public static function addRoute(string $method, string $path, string $handler): void {
+    public static function addRoute(string $method, string $path, string $handler, array $middleware = []): void {
         $fullPrefix = implode('', self::$prefixStack);
         $fullPath = $fullPrefix . $path;
 
         self::$routes[] = [
             'method' => strtoupper($method),
             'path' => $fullPath,
-            'handler' => $handler
+            'handler' => $handler,
+            'middleware' => $middleware
         ];
     }
 
     public function dispatch(string $method, string $uri): mixed {
         foreach (self::$routes as $route) {
             if ($route['method'] === strtoupper($method) && preg_match($route['regex'], $uri, $matches)) {
+                
+                if (!empty($route['middleware'])) {
+                    $middlewares = $route['middleware'];
+                    if (is_callable($middlewares)) {
+                        $middlewares = [$middlewares];
+                    }
+                    
+                    foreach ($middlewares as $mw) {
+                        if (is_callable($mw)) {
+                            call_user_func($mw);
+                        }
+                    }
+                }
+
                 $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
                 list($controller, $action) = explode('@', $route['handler']);
                 $controllerInstance = new $controller();
@@ -63,7 +82,11 @@ class Router {
             }
         }
         header("HTTP/1.0 404 Not Found");
-        echo "404 Not Found";
+        echo ViewerPlace::render('error', [
+            'error_code' => '404',
+            'error_msg' => 'Página não encontrada',
+            'error_mensage' => 'Página não encontrada. Por favor, <a href="/">clique aqui</a> para retornar à página inicial.'
+        ]);
         exit;
     }
 }

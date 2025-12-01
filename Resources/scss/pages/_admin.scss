@@ -1,0 +1,19 @@
+@use '../base/variables' as *;
+
+.page-content {
+    margin-left: 275px;
+    padding: 10px;
+}
+
+.navbuttons a {
+    color: $btn-bg-color;
+
+    &:visited {
+        color: $btn-bg-color;
+    }
+
+    &:hover {
+        cursor: pointer;
+        color: $link-hover-color;
+    }
+}

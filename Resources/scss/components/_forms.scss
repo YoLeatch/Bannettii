@@ -1,0 +1,45 @@
+.login-modal {
+
+    input[type=text],
+    input[type=email],
+    input[type=password] {
+        height: 35px;
+        width: 30vh;
+        padding-left: 10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border: 0px;
+        border-bottom: 2px solid black;
+        background-color: unset;
+    }
+
+    label {
+        border-left: 2px solid black;
+        padding-left: 10px;
+    }
+}
+
+.barraPesquisa {
+    height: 20px;
+    width: 500px;
+    padding: 5px 10px 5px 40px;
+    border: none;
+    background-color: #ffffff7c;
+    border-bottom: 2px solid black;
+    margin-bottom: 5px;
+
+    &:focus,
+    &:hover {
+        background-color: white;
+        width: 500px;
+    }
+}
+
+select,
+input[type="date"] {
+    border-radius: 5px;
+    height: 20px;
+    width: 150px;
+    border: 1px solid #343d28;
+    margin-right: 10px;
+}

@@ -4,16 +4,16 @@ return [
         'driver'   => 'mysql',
         'host'     => 'localhost',
         'port'     => 3306,
-        'dbname'   => 'seu_banco_ecommerce',
-        'user'     => 'seu_usuario_app',
-        'password' => 'sua_senha_app'
+        'dbname'   => 'bennettii',
+        'user'     => 'default',
+        'password' => 'u*!v2aSN#0^9sNR_'
     ],
     'read_only' => [
         'driver'   => 'mysql',
         'host'     => 'localhost',
         'port'     => 3306,
-        'dbname'   => 'seu_banco_ecommerce',
-        'user'     => 'usuario_relatorios',
-        'password' => 'senha_segura_read_only'
+        'dbname'   => 'bennettii',
+        'user'     => 'read_only',
+        'password' => '95kw2hT{UiJ[+d[9'
     ],
 ];

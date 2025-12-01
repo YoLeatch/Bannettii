@@ -7,7 +7,9 @@ use Core\Security;
 
 class AuthMiddleware {
     public static function handle(): bool {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         $isAuthenticated = (isset($_SESSION['user_id']) && !empty($_SESSION['user_id']) && ((isset($_SESSION['logged_in']) && !empty($_SESSION['logged_in']))));
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
@@ -33,17 +35,10 @@ class AuthMiddleware {
             $_SESSION['user_id'] = $user->getId();
             $_SESSION['logged_in'] = true;
             
-            return true;
+            header("Location: /home");
+            exit;
         }
-            return true;
-        }
-
-    public static function logout(): void {
-        session_start();
-        session_unset();
-        session_destroy();
-        if (isset($_COOKIE['remember_token']) && !empty($_COOKIE['remember_token'])) {
-            setcookie('remember_token', '', time() - 3600, "/");
-        }
+        header("Location: /home");
+        exit;
     }
 }

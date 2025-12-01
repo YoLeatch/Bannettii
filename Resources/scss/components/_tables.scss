@@ -1,0 +1,100 @@
+@use '../base/variables' as *;
+
+.tabela-box {
+    width: min-content;
+    height: min-content;
+    padding: 5px;
+    border-radius: 10px;
+    margin: auto;
+    box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.233);
+}
+
+table,
+caption,
+tr,
+th,
+td {
+    font-family: $font-primary;
+    border-collapse: collapse;
+}
+
+.tabela {
+    th {
+        background-color: $table-header-bg;
+        padding: 20px;
+        color: white;
+
+        &:first-child {
+            border-radius: 10px 0px 0px 0px;
+        }
+
+        &:last-child {
+            border-radius: 0px 10px 0px 0px;
+        }
+    }
+
+    tr:last-child {
+        td:first-child {
+            border-radius: 0px 0px 0px 10px;
+        }
+
+        td:last-child {
+            border-radius: 0px 0px 10px 0px;
+        }
+    }
+
+    tr,
+    td {
+        padding: 20px;
+        background-color: $table-row-bg;
+    }
+
+    button {
+        margin: auto;
+        text-align: center;
+        width: 150px;
+        border: none;
+        border-radius: 10px;
+        background: $btn-bg-color;
+        color: $btn-text-color;
+        font-family: $font-primary;
+        font-style: normal;
+        font-weight: 800;
+        line-height: 30px;
+
+        &:hover {
+            background-color: $nav-text-color;
+            cursor: pointer;
+            transition: 50ms;
+        }
+    }
+}
+
+tr[data-href] {
+    cursor: pointer;
+}
+
+.tabelausuario img {
+    border-radius: 50px;
+}
+
+.status-pedido {
+    padding: 10px 10px 10px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: white;
+}
+
+.aprovado,
+.ativo {
+    background-color: $status-approved;
+}
+
+.processando {
+    background-color: $status-processing;
+}
+
+.cancelado,
+.inativo {
+    background-color: $status-cancelled;
+}

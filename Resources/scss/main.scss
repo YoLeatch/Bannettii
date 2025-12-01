@@ -1,7 +1,25 @@
-// resources/scss/style.scss
+// resources/scss/main.scss
 
-// 1. Importa as variáveis primeiro
-@use 'base/variables';
+// 1. Base
+@use 'base/variables' as *;
+@use 'base/reset';
+@use 'base/typography';
+@use 'base/animations';
+@use 'base/utils';
 
-// 2. Importa os componentes
-@use 'components/button-login';
+// 2. Layout
+@use 'layout/navbar';
+@use 'layout/sidebar';
+@use 'layout/breadcrumb';
+
+// 3. Components
+@use 'components/buttons';
+@use 'components/forms';
+@use 'components/tables';
+@use 'components/icons';
+
+// 4. Pages
+@use 'pages/auth';
+@use 'pages/terms';
+@use 'pages/admin';
+@use 'pages/team-management';

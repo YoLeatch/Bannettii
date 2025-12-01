@@ -1,5 +1,5 @@
 <?php
-namespace User\Controllers;
+namespace App\User\Controllers;
 
 use Core\Security;
 use App\User\PessoaModel;
@@ -9,34 +9,36 @@ class AuthController {
 
     public function showLoginForm() {
         $token = Security::generateCSRFToken();
-
-        return ViewerPlace::render('login.html', ['csrf_token' => $token]);
-    }
-
-    public function showRegisterForm() {
-        $token = Security::generateCSRFToken();
-
-        return ViewerPlace::render('register.html', ['csrf_token' => $token]);
+        $error = $_SESSION['ERROR'] ?? '';
+        unset($_SESSION['ERROR']);
+        echo ViewerPlace::render('login', ['csrf_token' => $token, 'error' => $error]);
     }
 
     public function login() {
+        $token = $_POST['csrf_token'] ?? '';
+        if (!Security::validateCSRFToken($token)) {
+            $_SESSION['ERROR'] = 'Não foi possível processar o login.';
+            $this->showLoginForm();     
+            exit;
+        }
         $email = Security::sanitizeInput($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
 
         try {
             if (!isset($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                header("Location: /login");
+                $_SESSION['ERROR'] = 'E-mail inválido.';
+                $this->showLoginForm();
                 exit;
             }
 
             if (!isset($password)) {
-                header("Location: /login");
+                $_SESSION['ERROR'] = 'Senha inválida.';
+                $this->showLoginForm();
                 exit;
             }
-
-            $Pessoa = PessoaModel::findByData('email', $email);
-
-            if ($Pessoa && Security::verifyPassword($password, $Pessoa->getPasswordHash())) {
+            
+            if ($Pessoa = PessoaModel::findByData('email', $email)){
+                if (Security::verifyPassword($password, $Pessoa->getPasswordHash())) {
                 $_SESSION['user_id'] = $Pessoa->getId();
                 $_SESSION['logged_in'] = true;
 
@@ -56,16 +58,33 @@ class AuthController {
                 header("Location: /home");
                 exit;
             }else {
-                $_SESSION['LOGIN_ERROR'] = 'Credenciais inválidas.';
-
-                header("Location: /login");
+                $_SESSION['ERROR'] = 'Credenciais inválidas.';
+                $this->showLoginForm();
                 exit;
             }
-
-        } catch (\Exception $e) {
-            $_SESSION['LOGIN_ERROR'] = 'Não foi possível processar o login.';
-            header("Location: /login");
+        }else {
+            $_SESSION['ERROR'] = 'Email não registrado';
+            $this->showLoginForm();
             exit;
         }
+
+        } catch (\Exception $e) {
+            $_SESSION['ERROR'] = 'Não foi possível processar o login.';
+            $this->showLoginForm();
+            exit;
+        }
+    }
+
+    public function logout(): void {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        session_unset();
+        session_destroy();
+        if (isset($_COOKIE['remember_token']) && !empty($_COOKIE['remember_token'])) {
+            setcookie('remember_token', '', time() - 3600, "/");
+        }
+        $this->showLoginForm();
+        exit;
     }
 }

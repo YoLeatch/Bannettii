@@ -1,0 +1,70 @@
+@use '../base/variables' as *;
+
+.sidebar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 275px;
+    z-index: 0;
+    background-color: $nav-bg-color;
+    box-shadow: -10px 0 10px rgba(0, 0, 0, 0.233);
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    animation: appear 0.2s;
+
+    li {
+        width: 100%;
+    }
+
+    a {
+        width: 100%;
+    }
+}
+
+.left-sidebar {
+    padding-top: 10px;
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    width: 275px;
+    z-index: 0;
+    background-color: $nav-bg-color;
+    box-shadow: -10px 0 10px rgba(0, 0, 0, 0.233);
+    display: block;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    animation: appear 0.2s;
+
+    ul {
+        margin-top: 50%;
+    }
+
+    li {
+        height: 50px;
+
+        &:last-child {
+            position: absolute;
+            bottom: 0px;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+    }
+
+    a {
+        height: 100%;
+        padding: 0 30px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        color: $nav-text-color;
+
+        &:hover {
+            background-color: $nav-hover-bg;
+            cursor: pointer;
+        }
+    }
+}

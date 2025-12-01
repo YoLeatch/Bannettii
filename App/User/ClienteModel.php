@@ -16,13 +16,15 @@ class ClienteModel extends PessoaModel
         string $nome,
         string $usuario,
         string $senha,
+        string $email,
         string $dt_criacao,
+        string $CPF,
         string $status,
         string $Uid,
         ?int $idade = null,
         ?string $statusCliente = null
     ) {
-        parent::__construct($id, $nome, $usuario, $senha, $dt_criacao, $status, $Uid);
+        parent::__construct($id, $nome, $usuario, $senha, $email, $dt_criacao, $CPF, $status, $Uid);
         $this->idade = $idade;
         $this->statusCliente = $statusCliente;
         
@@ -44,7 +46,7 @@ class ClienteModel extends PessoaModel
     private function fetchCards(): void
     {
         $pdo = ConnectionFactory::getConnection('read_only');
-        $stmt = $pdo->prepare("SELECT id, nome, numero, validade FROM Cartao_Credito WHERE Usuario = ? AND status = '1'");
+        $stmt = $pdo->prepare("SELECT id, nome, numero, validade FROM cartao_credito WHERE usuario = ? AND status = '1'");
         $stmt->execute([$this->id]);
         $this->cards = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -57,7 +59,7 @@ class ClienteModel extends PessoaModel
     public function addCard(string $nome, string $numero, string $validade): bool
     {
         $pdo = ConnectionFactory::getConnection('default');
-        $stmt = $pdo->prepare("INSERT INTO Cartao_Credito (nome, numero, validade, Usuario, status) VALUES (?, ?, ?, ?, '1')");
+        $stmt = $pdo->prepare("INSERT INTO cartao_credito (nome, numero, validade, usuario, status) VALUES (?, ?, ?, ?, '1')");
         
         if ($stmt->execute([$nome, $numero, $validade, $this->id])) {
             $this->fetchCards(); // Refresh cards
@@ -69,7 +71,7 @@ class ClienteModel extends PessoaModel
     public function deactivateCard(int $cardId): bool
     {
         $pdo = ConnectionFactory::getConnection('default');
-        $stmt = $pdo->prepare("UPDATE Cartao_Credito SET status = '0' WHERE id = ? AND Usuario = ?");
+        $stmt = $pdo->prepare("UPDATE cartao_credito SET status = '0' WHERE id = ? AND usuario = ?");
         
         if ($stmt->execute([$cardId, $this->id])) {
             $this->fetchCards(); // Refresh cards
@@ -83,8 +85,8 @@ class ClienteModel extends PessoaModel
         $pdo = ConnectionFactory::getConnection('read_only');
         $stmt = $pdo->prepare("
             SELECT p.*, c.idade, c.status as status_cliente
-            FROM Pessoa p
-            JOIN Cliente c ON c.id = p.id
+            FROM pessoa p
+            JOIN cliente c ON c.id = p.id
             WHERE p.id = ? AND p.status = '1'
         ");
         $stmt->execute([$id]);
@@ -99,7 +101,9 @@ class ClienteModel extends PessoaModel
             $row['nome'],
             $row['login'], // DB column
             $row['senha'],
+            $row['email'],
             $row['dt_criacao'],
+            $row['CPF'],
             $row['status'],
             $row['Uid'],
             $row['idade'],
@@ -107,10 +111,10 @@ class ClienteModel extends PessoaModel
         );
     }
 
-    public static function createCliente(string $nome, string $usuario, string $email, string $senha, int $idade): ?ClienteModel
+    public static function createCliente(string $nome, string $usuario, string $email, string $senha, string $cpf, int $idade): ?ClienteModel
     {
         // 1. Create Pessoa
-        $pessoa = parent::registerPessoa($nome, $usuario, $email, $senha);
+        $pessoa = parent::registerPessoa($nome, $usuario, $email, $senha, $cpf);
         
         if (!$pessoa) {
             return null;
@@ -118,7 +122,7 @@ class ClienteModel extends PessoaModel
 
         // 2. Insert into Cliente
         $pdo = ConnectionFactory::getConnection('default');
-        $stmt = $pdo->prepare("INSERT INTO Cliente (id, idade, status) VALUES (?, ?, '1')");
+        $stmt = $pdo->prepare("INSERT INTO cliente (id, idade, status) VALUES (?, ?, '1')");
         
         if ($stmt->execute([$pessoa->getId(), $idade])) {
             return self::findByClienteId($pessoa->getId());

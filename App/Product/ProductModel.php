@@ -55,73 +55,90 @@ class ProductModel {
         }
     }
 
-    public function getId(): ?int {
+    public function getId(): ?int 
+    {
         return $this->id;
     }
 
-    public function getNome(): ?string {
+    public function getNome(): ?string 
+    {
         return $this->nome;
     }
 
-    public function getPreco(): ?float {
+    public function getPreco(): ?float 
+    {
         return $this->preco;
     }
 
-    public function getCodigo(): ?string {
+    public function getCodigo(): ?string 
+    {
         return $this->codigo;
     }
 
-    public function getSubCategoriaId(): ?int {
+    public function getSubCategoriaId(): ?int 
+    {
         return $this->subCategoriaId;
     }
 
-    public function getPesoLiq(): ?string {
+    public function getPesoLiq(): ?string 
+    {
         return $this->pesoliq;
     }
 
-    public function getPesoTotal(): ?string {
+    public function getPesoTotal(): ?string 
+    {
         return $this->pesototal;
     }
 
-    public function getDimensoes(): ?string {
+    public function getDimensoes(): ?string 
+    {
         return $this->dimensoes;
     }
 
-    public function getDescricao(): ?string {
+    public function getDescricao(): ?string 
+    {
         return $this->descricao;
     }
 
-    public function getData(): ?string {
+    public function getData(): ?string 
+    {
         return $this->data;
     }
 
-    public function getStatus(): ?string {
+    public function getStatus(): ?string 
+    {
         return $this->status;
     }
 
-    public function getDesconto(): ?int {
+    public function getDesconto(): ?int 
+    {
         return $this->desconto;
     }
 
-    public function getEstoque(): ?int {
+    public function getEstoque(): ?int 
+    
+    {
         return $this->estoque;
     }
 
-    public function getImages(): array {
+    public function getImages(): array 
+    {
         return $this->images;
     }
 
-    private function fetchImages(): array {
+    private function fetchImages(): array 
+    {
         $pdo = ConnectionFactory::getConnection('read_only');
-        $stmt = $pdo->prepare("SELECT * FROM Imagem WHERE Produto = ?");
+        $stmt = $pdo->prepare("SELECT * FROM imagem WHERE produto = ?");
         $stmt->execute([$this->id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function findById(int $id): ?ProductModel {
+    public static function findById(int $id, int $status = 1): ?ProductModel 
+    {
         $pdo = ConnectionFactory::getConnection('read_only');
-        $stmt = $pdo->prepare("SELECT * FROM Produto WHERE id = :id AND status = '1'");
-        $stmt->execute(['id' => $id]);
+        $stmt = $pdo->prepare("SELECT * FROM produto WHERE id = :id AND status = :status");
+        $stmt->execute(['id' => $id, 'status' => $status]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($row) {
@@ -129,8 +146,8 @@ class ProductModel {
                 $row['id'],
                 $row['nome'],
                 (float)$row['preco'],
-                $row['cod'], // Database column is 'cod'
-                $row['Sub_categoria'],
+                $row['cod'],
+                $row['sub_categoria'],
                 $row['pesoliq'],
                 $row['pesototal'],
                 $row['dimensoes'],
@@ -144,9 +161,11 @@ class ProductModel {
         return null;
     }
 
-    public static function findAll(): array {
+    public static function fetchAll(int $status = 1): array 
+    {
         $pdo = ConnectionFactory::getConnection('read_only');
-        $stmt = $pdo->query("SELECT * FROM Produto WHERE status = '1'");
+        $stmt = $pdo->prepare("SELECT * FROM produto WHERE status = ?");
+        $stmt->execute([$status]);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         $products = [];
@@ -156,7 +175,7 @@ class ProductModel {
                 $row['nome'],
                 (float)$row['preco'],
                 $row['cod'],
-                $row['Sub_categoria'],
+                $row['sub_categoria'],
                 $row['pesoliq'],
                 $row['pesototal'],
                 $row['dimensoes'],

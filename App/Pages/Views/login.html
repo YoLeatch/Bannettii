@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Favicon -->
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/image/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/image/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/image/favicon-16x16.png">
+
+
+    <!-- Custom CSS -->
+
+
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/assets/js/script.js"></script>
+
+
+    <title>Login - Bennettii</title>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <ul class="sidebar">
+            <li onclick="esconderBarraLateral()"><a><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                        viewBox="0 -960 960 960" width="24px" fill="#D0D558">
+                        <path
+                            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                    </svg></a></li>
+            <li href="#"><a>Categorias</a></li>
+            <li href="#"><a>Sobre nós</a></li>
+            <li href="#"><a>SAC</a></li>
+            <li href="#"><a><img src="/assets/image/cart.png" alt="Sacola">&nbsp;&nbsp;&nbsp; Carrinho</a></li>
+            <li href="#"><a href="/register"><img src="/assets/image/user.png" alt="Usuário">&nbsp;&nbsp;&nbsp;
+                    Usuário</a></li>
+        </ul>
+        <ul>
+            <li><a href="/home"><img src="/assets/image/bennettii_nobackground_horizontal.png" height="35px"></a>
+            </li>
+            <li href="#" class="esconderMobile" onclick="mostrarProdutos()"><a>Categorias</a></li>
+            <li href="#" class="esconderMobile"><a>Sobre nós</a></li>
+            <li href="#" class="esconderMobile"><a>SAC</a></li>
+            <li href="#" class="esconderMobile"><a><img src="/assets/image/cart.png" alt="Sacola"></a></li>
+            <li href="#" class="esconderMobile"><a href="/register"><img src="/assets/image/user.png" alt="Usuário"></a>
+            </li>
+            <li onclick="mostrarBarraLateral()" class="menu-btn"><a><svg xmlns="http://www.w3.org/2000/svg"
+                        height="50px" viewBox="0 -960 960 960" fill="#D0D558">
+                        <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+                    </svg></a></li>
+        </ul>
+    </nav>
+
+    <main class="special-margin">
+        <div id="login-container">
+
+            <div class="login-modal">
+
+                <form method="POST" action="/login">
+                    <center><img src="/assets/image/bennettii_nobackground.png" height="120px"><br></center>
+                    <br>
+                    <h3>Entre em sua conta Bennettii</h3><br>
+                    <h3 style="color: red;" id="login-error">{error}</h3><br>
+
+                    <label>Email</label><br>
+                    <input type="email" required name="email" maxlength="255"
+                        placeholder="(Ex.: seuemail@email.com)"><br>
+
+                    <label>Senha</label><br>
+                    <input type="password" required name="password" maxlength="255" placeholder="Insira sua senha"><br>
+                    <br>
+                    <input type="checkbox" name="remember_me" id="remember_me">
+                    <label for="remember_me">Lembrar-me</label><br><br>
+                    <input type="submit" class="button" value="Entrar">
+                    <br><br>
+                    <span class="possuiConta"><a href="recuperacao.html">Esqueceu sua senha?</a></span><br><br>
+                    <span class="possuiConta"><a href="/register">Ainda não possui uma conta?</a></span>
+
+                    <input type="hidden" name="csrf_token" value="{csrf_token}">
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+
+
+</html>

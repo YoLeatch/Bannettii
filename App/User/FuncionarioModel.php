@@ -119,4 +119,32 @@ class FuncionarioModel extends PessoaModel
 
         return $funcionarios;
     }
+    public function assignCargo(int $cargoId): bool
+    {
+        $pdo = ConnectionFactory::getConnection('default');
+        $stmt = $pdo->prepare("INSERT INTO funcionario_cargo (funcionario_id, cargo_id, status) VALUES (?, ?, '1')");
+        return $stmt->execute([$this->id, $cargoId]);
+    }
+
+    public static function promote(int $pessoaId, string $carteirinha): bool
+    {
+        $pdo = ConnectionFactory::getConnection('default');
+        $stmt = $pdo->prepare("INSERT INTO funcionario (id, carteirinha, status) VALUES (?, ?, '1')");
+        return $stmt->execute([$pessoaId, $carteirinha]);
+    }
+
+    public function hasPower(int $requiredPower): bool
+    {
+        $pdo = ConnectionFactory::getConnection('read_only');
+        $stmt = $pdo->prepare("
+            SELECT c.poder 
+            FROM cargo c
+            JOIN funcionario_cargo fc ON fc.cargo_id = c.id
+            WHERE fc.funcionario_id = ? AND fc.status = '1'
+        ");
+        $stmt->execute([$this->id]);
+        $power = $stmt->fetchColumn();
+        
+        return $power !== false && (int)$power >= $requiredPower;
+    }
 }

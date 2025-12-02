@@ -59,7 +59,7 @@
                             d="m40.5,5.5H7.5c-1.1046,0-2,.8954-2,2v33c0,1.1046.8954,2,2,2h33c1.1046,0,2-.8954,2-2V7.5c0-1.1046-.8954-2-2-2Zm-11.5,30H11m26,6.9544v-4.7409h-2.2342c-1.1168,0-2.0158-.8991-2.0158-2.0158v-.5376c0-1.1168.8991-2.0158,2.0158-2.0158h2.2342v-6.6807h-2.4842c-1.1168,0-2.0158-.8991-2.0158-2.0158v-.5376c0-1.1168.8991-2.0158,2.0158-2.0158h2.4842v-6.9307h-2.4842c-1.1168,0-2.0158-.8991-2.0158-2.0158v-.5376c0-1.1168.8991-2.0158,2.0158-2.0158h2.4842v-4.8532m-8,18.9586H11m13-11h-13" />
                     </svg>
                     Registro de Logs</a></li>
-            <li><a href=""><svg fill="#000000" class="amarelo-bennettii" height="40px" viewBox="0 0 16 16"
+            <li><a href="/admin/logout"><svg fill="#000000" class="amarelo-bennettii" height="40px" viewBox="0 0 16 16"
                         xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M12.207 9H5V7h7.136L11.05 5.914 12.464 4.5 16 8.036l-3.536 3.535-1.414-1.414L12.207 9zM10 4H8V2H2v12h6v-2h2v4H0V0h10v4z"
@@ -75,8 +75,8 @@
                     <div class="admin-profile-card">
                         <img src="./assets/image/placeholder_pfp.png" class="admin-pfp">
                         <div class="admin-profile-info">
-                            <h2 id="admin-profile-name">NOME DO ADMINISTRADOR</h2>
-                            <h4 id="admin-profile-role">FUNÇÃO</h4>
+                            <h2 id="admin-profile-name">{admin_name}</h2>
+                            <h4 id="admin-profile-role">{admin_role}</h4>
                         </div>
                     </div>
                 </div>
@@ -96,157 +96,154 @@
                     </ul>
                 </div><br>
 
-                <div class="page-header">
-                    <div class="title-area">
-                        <a href="./tabela-produtos" class="btn-back">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M19 12H5M12 19l-7-7 7-7" />
-                            </svg>
-                        </a>
-                        <h1>Add New Product</h1>
+                <form action="/admin/products/store" method="POST" enctype="multipart/form-data">
+                    <div class="page-header">
+                        <div class="title-area">
+                            <a href="./tabela-produtos" class="btn-back">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                                </svg>
+                            </a>
+                            <h1>Adicionar Novo Produto</h1>
+                        </div>
+                        <div class="actions-area">
+                            <button type="submit" class="btn-add">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                Salvar Produto
+                            </button>
+                        </div>
                     </div>
-                    <div class="actions-area">
-                        <button class="btn-draft">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                                <line x1="16" y1="13" x2="8" y2="13"></line>
-                                <line x1="16" y1="17" x2="8" y2="17"></line>
-                                <polyline points="10 9 9 9 8 9"></polyline>
-                            </svg>
-                            Save Draft
-                        </button>
-                        <button class="btn-add">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            Add Product
-                        </button>
-                    </div>
-                </div>
 
-                <div class="product-form-grid">
-                    <!-- Left Column -->
-                    <div class="left-column">
-                        <!-- General Information -->
-                        <div class="card">
-                            <h2>General Information</h2>
+                    <div class="product-form-grid">
+                        <!-- Left Column -->
+                        <div class="left-column">
+                            <!-- General Information -->
+                            <div class="card">
+                                <h2>Informações Gerais</h2>
 
-                            <div class="form-group">
-                                <label>Name Product</label>
-                                <input type="text" value="Puffer Jacket With Pocket Detail">
-                            </div>
+                                <div class="form-group">
+                                    <label>Nome do Produto</label>
+                                    <input type="text" name="nome" required placeholder="Ex: Jaqueta Puffer">
+                                </div>
 
-                            <div class="form-group">
-                                <label>Description Product</label>
-                                <textarea
-                                    rows="5">Cropped puffer jacket made of technical fabric. High neck and long sleeves. Flap pocket at the chest and in-seam side pockets at the hip. Inside pocket detail. Hem with elastic interior. Zip-up front.</textarea>
-                            </div>
+                                <div class="form-group">
+                                    <label>Descrição</label>
+                                    <textarea name="descricao" rows="5"
+                                        placeholder="Descrição detalhada do produto..."></textarea>
+                                </div>
 
-                            <div class="row">
-                                <div class="col">
-                                    <label>Size</label>
-                                    <span class="sub-label">Pick Available Size</span>
-                                    <div class="size-selector">
-                                        <button type="button" class="size-btn">XS</button>
-                                        <button type="button" class="size-btn active">S</button>
-                                        <button type="button" class="size-btn">M</button>
-                                        <button type="button" class="size-btn">XL</button>
-                                        <button type="button" class="size-btn">XXL</button>
+                                <div class="row">
+                                    <div class="col">
+                                        <label>Tamanho</label>
+                                        <span class="sub-label">Selecione o tamanho</span>
+                                        <div class="size-selector">
+                                            <input type="hidden" name="tamanho" id="selected-size">
+                                            <button type="button" class="size-btn"
+                                                onclick="selectSize('XS')">XS</button>
+                                            <button type="button" class="size-btn" onclick="selectSize('S')">S</button>
+                                            <button type="button" class="size-btn" onclick="selectSize('M')">M</button>
+                                            <button type="button" class="size-btn" onclick="selectSize('L')">L</button>
+                                            <button type="button" class="size-btn"
+                                                onclick="selectSize('XL')">XL</button>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <label>Material</label>
+                                        <input type="text" name="material" placeholder="Ex: Algodão, Poliéster">
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <label>Gender</label>
-                                    <span class="sub-label">Pick Available Gender</span>
-                                    <div class="gender-selector">
-                                        <label class="radio-container">
-                                            <input type="radio" name="gender" checked>
-                                            <span class="checkmark"></span>
-                                            Men
-                                        </label>
-                                        <label class="radio-container">
-                                            <input type="radio" name="gender">
-                                            <span class="checkmark"></span>
-                                            Woman
-                                        </label>
-                                        <label class="radio-container">
-                                            <input type="radio" name="gender">
-                                            <span class="checkmark"></span>
-                                            Unisex
-                                        </label>
+                                <div class="row">
+                                    <div class="col">
+                                        <label>Cor</label>
+                                        <input type="text" name="cor" placeholder="Ex: Azul, Preto">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pricing and Stock -->
+                            <div class="card">
+                                <h2>Preço e Estoque</h2>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <label>Preço Base (R$)</label>
+                                        <input type="number" step="0.01" name="preco" required placeholder="0.00">
+                                    </div>
+                                    <div class="col">
+                                        <label>Estoque</label>
+                                        <input type="number" name="estoque" required placeholder="0">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <label>Desconto (%)</label>
+                                        <input type="number" name="desconto" placeholder="0">
+                                    </div>
+                                    <div class="col">
+                                        <label>Peso Líquido</label>
+                                        <input type="text" name="pesoliq" placeholder="Ex: 0.5kg">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label>Peso Total</label>
+                                        <input type="text" name="pesototal" placeholder="Ex: 0.6kg">
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Pricing and Stock -->
-                        <div class="card">
-                            <h2>Pricing And Stock</h2>
-
-                            <div class="row">
-                                <div class="col">
-                                    <label>Base Pricing</label>
-                                    <input type="text" value="$47.55">
+                        <!-- Right Column -->
+                        <div class="right-column">
+                            <!-- Upload Img -->
+                            <div class="card">
+                                <h2>Imagens do Produto</h2>
+                                <div class="image-preview-area">
+                                    <img src="./assets/image/placeholder_product.jpg" alt="Preview" id="main-preview">
                                 </div>
-                                <div class="col">
-                                    <label>Stock</label>
-                                    <input type="text" value="77">
-                                </div>
+                                <input type="file" name="images[]" multiple accept="image/*" style="margin-top: 10px;">
                             </div>
 
-                            <div class="row">
-                                <div class="col">
-                                    <label>Discount</label>
-                                    <input type="text" value="10%">
+                            <!-- Category -->
+                            <div class="card">
+                                <h2>Categoria</h2>
+                                <div class="form-group">
+                                    <label>Categoria Principal</label>
+                                    <select name="categoria" required>
+                                        <option value="">Selecione...</option>
+                                        {category_options}
+                                    </select>
                                 </div>
-                                <div class="col">
-                                    <label>Discount Type</label>
-                                    <select>
-                                        <option>Chinese New Year Discount</option>
+                                <div class="form-group">
+                                    <label>Sub Categoria</label>
+                                    <select name="sub_categoria">
+                                        <option value="">Selecione...</option>
+                                        {subcategory_options}
                                     </select>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Right Column -->
-                    <div class="right-column">
-                        <!-- Upload Img -->
-                        <div class="card">
-                            <h2>Upload Img</h2>
-                            <div class="image-preview-area">
-                                <img src="./assets/image/placeholder_product.jpg" alt="Preview">
-                            </div>
-                            <div class="thumbnails-grid">
-                                <div class="thumb"><img src="./assets/image/placeholder_product.jpg"></div>
-                                <div class="thumb"><img src="./assets/image/placeholder_product.jpg"></div>
-                                <div class="thumb"><img src="./assets/image/placeholder_product.jpg"></div>
-                                <div class="thumb add-btn">+</div>
-                            </div>
-                        </div>
-
-                        <!-- Category -->
-                        <div class="card">
-                            <h2>Category</h2>
-                            <div class="form-group">
-                                <label>Product Category</label>
-                                <select>
-                                    <option>Jacket</option>
-                                </select>
-                            </div>
-                            <button class="btn-add-category">Add Category</button>
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </main>
+
+    <script>
+        function selectSize(size) {
+            document.getElementById('selected-size').value = size;
+            // Visual feedback
+            document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
 
 </body>
 

@@ -46,7 +46,7 @@ class ClienteModel extends PessoaModel
     private function fetchCards(): void
     {
         $pdo = ConnectionFactory::getConnection('read_only');
-        $stmt = $pdo->prepare("SELECT id, nome, numero, validade FROM cartao_credito WHERE usuario = ? AND status = '1'");
+        $stmt = $pdo->prepare("SELECT id, nome, validade FROM cartao_credito WHERE usuario = ? AND status = '1'");
         $stmt->execute([$this->id]);
         $this->cards = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -56,12 +56,12 @@ class ClienteModel extends PessoaModel
         return $this->cards;
     }
 
-    public function addCard(string $nome, string $numero, string $validade): bool
+    public function addCard(string $nome, string $validade): bool
     {
         $pdo = ConnectionFactory::getConnection('default');
-        $stmt = $pdo->prepare("INSERT INTO cartao_credito (nome, numero, validade, usuario, status) VALUES (?, ?, ?, ?, '1')");
+        $stmt = $pdo->prepare("INSERT INTO cartao_credito (nome, validade, usuario, status) VALUES (?, ?, ?, '1')");
         
-        if ($stmt->execute([$nome, $numero, $validade, $this->id])) {
+        if ($stmt->execute([$nome, $validade, $this->id])) {
             $this->fetchCards(); // Refresh cards
             return true;
         }
@@ -129,5 +129,58 @@ class ClienteModel extends PessoaModel
         }
 
         return null;
+    }
+    public static function fetchAllWithStats(int $limit, int $offset, string $search = ''): array
+    {
+        $pdo = ConnectionFactory::getConnection('read_only');
+        
+        $sql = "
+            SELECT p.*, c.idade, c.status as status_cliente,
+                   (SELECT COUNT(*) FROM venda v WHERE v.cliente = c.id) as total_compras,
+                   (SELECT COALESCE(SUM(valor_total), 0) FROM venda v WHERE v.cliente = c.id) as valor_total_compras
+            FROM pessoa p
+            JOIN cliente c ON c.id = p.id
+            WHERE p.status = '1'
+        ";
+
+        $params = [];
+        if (!empty($search)) {
+            $sql .= " AND (p.nome LIKE ? OR p.email LIKE ? OR p.CPF LIKE ?)";
+            $searchTerm = "%$search%";
+            $params = [$searchTerm, $searchTerm, $searchTerm];
+        }
+
+        $sql .= " LIMIT $limit OFFSET $offset";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Return raw rows or objects? 
+        // For the table, raw rows with extra stats are easier to handle in the controller loop.
+        return $rows;
+    }
+
+    public static function countAll(string $search = ''): int
+    {
+        $pdo = ConnectionFactory::getConnection('read_only');
+        
+        $sql = "
+            SELECT COUNT(*)
+            FROM pessoa p
+            JOIN cliente c ON c.id = p.id
+            WHERE p.status = '1'
+        ";
+
+        $params = [];
+        if (!empty($search)) {
+            $sql .= " AND (p.nome LIKE ? OR p.email LIKE ? OR p.CPF LIKE ?)";
+            $searchTerm = "%$search%";
+            $params = [$searchTerm, $searchTerm, $searchTerm];
+        }
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        return (int)$stmt->fetchColumn();
     }
 }

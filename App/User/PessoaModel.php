@@ -202,17 +202,27 @@ class PessoaModel {
         ]);
     }
 
-    public function deactivatePessoa(): bool 
+    public static function updateUser(int $id, string $nome, string $email, string $cpf, string $status, string $password = ''): bool
     {
         $pdo = ConnectionFactory::getConnection('default');
-        $stmt = $pdo->prepare("UPDATE pessoa SET status = '0' WHERE id = :id");
         
-        return $stmt->execute([
-            'id' => $this->id
-        ]);
-    }
-    
-    public function getPasswordHash(): string {
-        return $this->senha;
+        $sql = "UPDATE pessoa SET nome = :nome, email = :email, CPF = :cpf, status = :status";
+        $params = [
+            'id' => $id,
+            'nome' => $nome,
+            'email' => $email,
+            'cpf' => $cpf,
+            'status' => $status
+        ];
+
+        if (!empty($password)) {
+            $sql .= ", senha = :senha";
+            $params['senha'] = password_hash($password, PASSWORD_DEFAULT);
+        }
+
+        $sql .= " WHERE id = :id";
+        
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute($params);
     }
 }

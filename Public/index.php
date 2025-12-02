@@ -52,6 +52,27 @@ Router::addRoute("POST", "/cart/clear", "App\Cart\CartController@clear", [AuthMi
 
 Router::addRoute("GET", "/gerenciarfuncionarios", "App\Pages\Controllers\TeamController@index", [AuthMiddleware::class, 'handle']);
 
+// Admin Auth Routes
+// Router::addRoute("GET", "/admin/login", "App\Pages\Controllers\AdminAuthController@login", []); // Removed
+// Router::addRoute("POST", "/admin/login", "App\Pages\Controllers\AdminAuthController@login", []); // Removed
+Router::addRoute("GET", "/admin/register", "App\Pages\Controllers\AdminAuthController@register", []);
+Router::addRoute("POST", "/admin/register", "App\Pages\Controllers\AdminAuthController@register", []);
+Router::addRoute("GET", "/admin/logout", "App\Pages\Controllers\AdminAuthController@logout", []);
+
+// Admin System Routes
+Router::addRoute("GET", "/admin/products", "App\Pages\Controllers\AdminProductController@index", []); // List or Dashboard
+Router::addRoute("GET", "/tabela-produtos", "App\Pages\Controllers\AdminProductController@index", []); // Alias as per view link
+Router::addRoute("GET", "/registrar-produto", "App\Pages\Controllers\AdminProductController@index", []); // Alias
+Router::addRoute("POST", "/admin/products/store", "App\Pages\Controllers\AdminProductController@store", []);
+
+Router::addRoute("GET", "/admin/users", "App\Pages\Controllers\AdminUserController@index", []);
+Router::addRoute("GET", "/tabela-usuarios", "App\Pages\Controllers\AdminUserController@index", []); // Alias
+Router::addRoute("GET", "/admin/users/edit", "App\Pages\Controllers\AdminUserController@edit", []);
+Router::addRoute("POST", "/admin/users/update", "App\Pages\Controllers\AdminUserController@update", []);
+
+Router::addRoute("GET", "/admin/reports", "App\Pages\Controllers\AdminReportController@index", []);
+Router::addRoute("GET", "/orders-preview", "App\Pages\Controllers\AdminReportController@index", []); // Alias
+
 
 $router = new Router();
 $method = $_SERVER['REQUEST_METHOD'];

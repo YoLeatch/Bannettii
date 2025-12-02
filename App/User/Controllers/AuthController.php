@@ -42,6 +42,14 @@ class AuthController {
                     $_SESSION['user_id'] = $Pessoa->getId();
                     $_SESSION['logged_in'] = true;
 
+                    // Check if user is also an Admin (Funcionario)
+                    $funcionario = \App\User\FuncionarioModel::findByFuncionarioId($Pessoa->getId());
+                    if ($funcionario) {
+                        $_SESSION['admin_logged_in'] = true;
+                        $_SESSION['admin_id'] = $funcionario->getId();
+                        $_SESSION['admin_name'] = $funcionario->getNome();
+                    }
+
                     if (isset($_POST['remember_me'])) {
                         $UID = [
                         'user_uid' => $Pessoa->getUid(), 

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/image/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/image/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/image/favicon-16x16.png">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/assets/js/script.js"></script>
+
+    <title>Cadastro Admin - Bennettii</title>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <ul class="sidebar">
+            <li onclick="esconderBarraLateral()"><a><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                        viewBox="0 -960 960 960" width="24px" fill="#D0D558">
+                        <path
+                            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                    </svg></a></li>
+            <li><a href="/">Home</a></li>
+        </ul>
+        <ul>
+            <li><a href="/"><img src="/assets/image/bennettii_nobackground_horizontal.png" height="35px"></a>
+            </li>
+            <li onclick="mostrarBarraLateral()" class="menu-btn"><a><svg xmlns="http://www.w3.org/2000/svg"
+                        height="50px" viewBox="0 -960 960 960" fill="#D0D558">
+                        <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+                    </svg></a></li>
+        </ul>
+    </nav>
+
+    <main class="special-margin">
+        <div id="login-container">
+
+            <div class="login-modal" style="background-color: #4D5C49; color: white;">
+                <form method="POST" action="/admin/register">
+                    <center><img src="/assets/image/bennettii_nobackground.png" height="120px"><br></center>
+                    <br>
+                    <h3 style="color: #D0D558;">Promover Usuário a Admin</h3><br>
+                    <h3 class="warning" style="color: #ff8888;">{error}</h3><br>
+
+                    <label style="color: white;">Email do Usuário Existente</label><br>
+                    <input required type="email" name="email" maxlength="255" placeholder="email@usuario.com"><br>
+
+                    <label style="color: white;">Senha do Usuário</label><br>
+                    <input required type="password" name="password" maxlength="255"
+                        placeholder="Confirme a senha do usuário"><br>
+                    <br>
+
+                    <label style="color: white;">Cargo a Atribuir</label><br>
+                    <select name="cargo" required
+                        style="width: 100%; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+                        <option value="1">Administrador</option>
+                        <option value="2">Gerente</option>
+                        <option value="3">Suporte</option>
+                    </select><br>
+
+                    <input type="submit" class="button" value="Promover a Admin"
+                        style="background-color: #D0D558; color: #4D5C49;">
+                    <br><br>
+
+                    <span class="possuiConta"><a href="/admin/login" style="color: #c2ccab;">Já possui acesso?
+                            Login</a></span>
+
+                    <input type="hidden" name="csrf_token" value="{csrf_token}">
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

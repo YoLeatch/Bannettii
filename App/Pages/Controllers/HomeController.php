@@ -12,6 +12,6 @@ class HomeController
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-        echo ViewerPlace::render('orders-preview'); 
+        echo ViewerPlace::render('index'); 
     }
 }

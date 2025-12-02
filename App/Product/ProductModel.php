@@ -9,7 +9,8 @@ class ProductModel {
     private ?int $id;
     private ?string $nome;
     private ?float $preco;
-    private ?string $codigo; // User requested 'codigo'
+    private ?string $codigo;
+    private ?int $categoriaId; // Added
     private ?int $subCategoriaId;
     private ?string $pesoliq;
     private ?string $pesototal;
@@ -26,6 +27,7 @@ class ProductModel {
         ?string $nome = null,
         ?float $preco = null,
         ?string $codigo = null,
+        ?int $categoriaId = null, // Added
         ?int $subCategoriaId = null,
         ?string $pesoliq = null,
         ?string $pesototal = null,
@@ -40,6 +42,7 @@ class ProductModel {
         $this->nome = $nome;
         $this->preco = $preco;
         $this->codigo = $codigo;
+        $this->categoriaId = $categoriaId; // Added
         $this->subCategoriaId = $subCategoriaId;
         $this->pesoliq = $pesoliq;
         $this->pesototal = $pesototal;
@@ -73,6 +76,11 @@ class ProductModel {
     public function getCodigo(): ?string 
     {
         return $this->codigo;
+    }
+
+    public function getCategoriaId(): ?int 
+    {
+        return $this->categoriaId;
     }
 
     public function getSubCategoriaId(): ?int 
@@ -116,7 +124,6 @@ class ProductModel {
     }
 
     public function getEstoque(): ?int 
-    
     {
         return $this->estoque;
     }
@@ -147,6 +154,7 @@ class ProductModel {
                 $row['nome'],
                 (float)$row['preco'],
                 $row['cod'],
+                $row['categoria'], // Added
                 $row['sub_categoria'],
                 $row['pesoliq'],
                 $row['pesototal'],
@@ -175,6 +183,7 @@ class ProductModel {
                 $row['nome'],
                 (float)$row['preco'],
                 $row['cod'],
+                $row['categoria'], // Added
                 $row['sub_categoria'],
                 $row['pesoliq'],
                 $row['pesototal'],
@@ -187,5 +196,72 @@ class ProductModel {
             );
         }
         return $products;
+    }
+    public static function create(
+        string $nome,
+        float $preco,
+        string $codigo,
+        int $categoriaId,
+        int $subCategoriaId,
+        string $pesoliq,
+        string $pesototal,
+        string $dimensoes,
+        string $descricao,
+        string $status,
+        int $desconto,
+        int $estoque
+    ): ?ProductModel {
+        $pdo = ConnectionFactory::getConnection('default');
+        $stmt = $pdo->prepare("
+            INSERT INTO produto (
+                nome, preco, cod, categoria, sub_categoria, pesoliq, pesototal, dimensoes, descricao, data, status, desconto, estoque
+            ) VALUES (
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?
+            )
+        ");
+
+        if ($stmt->execute([
+            $nome, $preco, $codigo, $categoriaId, $subCategoriaId, $pesoliq, $pesototal, $dimensoes, $descricao, $status, $desconto, $estoque
+        ])) {
+            $id = $pdo->lastInsertId();
+            return self::findById($id, $status); // Assuming status matches
+        }
+        return null;
+    }
+
+    public function update(
+        string $nome,
+        float $preco,
+        string $codigo,
+        int $categoriaId,
+        int $subCategoriaId,
+        string $pesoliq,
+        string $pesototal,
+        string $dimensoes,
+        string $descricao,
+        string $status,
+        int $desconto,
+        int $estoque
+    ): bool {
+        $pdo = ConnectionFactory::getConnection('default');
+        $stmt = $pdo->prepare("
+            UPDATE produto SET
+                nome = ?, preco = ?, cod = ?, categoria = ?, sub_categoria = ?, pesoliq = ?, pesototal = ?, dimensoes = ?, descricao = ?, status = ?, desconto = ?, estoque = ?
+            WHERE id = ?
+        ");
+
+        return $stmt->execute([
+            $nome, $preco, $codigo, $categoriaId, $subCategoriaId, $pesoliq, $pesototal, $dimensoes, $descricao, $status, $desconto, $estoque, $this->id
+        ]);
+    }
+
+    public function saveImages(array $imagePaths): void
+    {
+        $pdo = ConnectionFactory::getConnection('default');
+        $stmt = $pdo->prepare("INSERT INTO imagem (imagem, produto) VALUES (?, ?)");
+
+        foreach ($imagePaths as $path) {
+            $stmt->execute([$path, $this->id]);
+        }
     }
 }

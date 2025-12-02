@@ -7,6 +7,7 @@ nav {
     font-family: $font-primary;
     position: fixed;
     width: 100%;
+    z-index: 100; // Garantir que fique acima do conteúdo
 
     ul {
         width: 100%;
@@ -37,6 +38,28 @@ nav {
             cursor: pointer;
         }
     }
+
+    // Estilo específico da barra de pesquisa dentro da navbar
+    .barraPesquisa {
+        margin: 0 20px;
+        width: 400px;
+
+        &:focus {
+            width: 420px;
+        }
+
+        @media (max-width: 1000px) {
+            width: 200px;
+
+            &:focus {
+                width: 220px;
+            }
+        }
+
+        @media (max-width: 800px) {
+            display: none;
+        }
+    }
 }
 
 .menu-btn {
@@ -48,18 +71,89 @@ nav {
 }
 
 .admin-profile {
-    right: 0;
     margin-left: 275px;
-    background-color: red; // From style.css
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    justify-content: flex-end;
+    background-color: transparent;
 }
 
 .admin-profile-card {
-    background-color: yellow; // From style.css
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: $nav-bg-color;
+    border: 1px dashed black;
+    border-radius: 10px;
     width: fit-content;
-    padding: 10px;
+    padding: 15px;
 }
 
 .admin-pfp {
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     border: 1px solid black;
+    flex-shrink: 0;
+}
+
+.admin-profile-info {
+    text-align: left;
+
+    h2,
+    h4 {
+        margin: 0;
+        color: #000;
+    }
+
+    h2 {
+        font-size: 16px;
+    }
+
+    h4 {
+        font-size: 12px;
+        color: #fff;
+        font-weight: normal;
+    }
+}
+
+// Mobile Sidebar Menu
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 250px;
+    z-index: 999;
+    background-color: $nav-bg-color;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    display: none; // Hidden by default
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-top: 20px;
+
+    li {
+        width: 100%;
+        height: auto; // Override fixed height
+        margin-bottom: 10px;
+    }
+
+    a {
+        width: 100%;
+        padding: 15px 30px;
+        justify-content: flex-start;
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    }
+}
+
+// Responsive Utilities
+@media (max-width: 800px) {
+    .esconderMobile {
+        display: none !important;
+    }
 }

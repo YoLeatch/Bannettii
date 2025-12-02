@@ -1,0 +1,41 @@
+@use '../base/variables' as *;
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+    list-style: none;
+    padding: 0;
+
+    li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.2s;
+
+            &:hover {
+                color: #2d4a3e; // Verde da marca
+                text-decoration: underline;
+            }
+        }
+
+        &.active {
+            color: #1a1a1a;
+            font-weight: 500;
+            pointer-events: none;
+        }
+
+        &:not(:last-child)::after {
+            content: '/';
+            color: #ccc;
+            font-size: 12px;
+        }
+    }
+}

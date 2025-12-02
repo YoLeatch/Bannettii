@@ -1,33 +1,12 @@
 @use '../base/variables' as *;
 
-.sidebar {
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 100vh;
-    width: 275px;
-    z-index: 0;
-    background-color: $nav-bg-color;
-    box-shadow: -10px 0 10px rgba(0, 0, 0, 0.233);
-    display: none;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    animation: appear 0.2s;
-
-    li {
-        width: 100%;
-    }
-
-    a {
-        width: 100%;
-    }
-}
+// .sidebar removed as it was causing layout issues and is not used in the new design
 
 .left-sidebar {
     padding-top: 10px;
     position: fixed;
     top: 0;
+    left: 0;
     height: 100vh;
     width: 275px;
     z-index: 0;

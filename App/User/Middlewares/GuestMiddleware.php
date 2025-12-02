@@ -39,8 +39,6 @@ class GuestMiddleware {
                 exit;
         }
         
-        // 3. Sucesso! O usuário não está logado (é um convidado).
-        // Permite que ele veja a página /login ou /register.
         return true;
     }
 }

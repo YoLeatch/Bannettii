@@ -1,12 +1,33 @@
 <?php
 require_once __DIR__ . '/../autoload.php';
 if (session_status() === PHP_SESSION_NONE) {
+    session_set_cookie_params(0);
     session_start();
 }
 
 use Core\Router;
 use App\User\Middlewares\GuestMiddleware;
 use App\User\Middlewares\AuthMiddleware;
+use Core\Security;
+use App\User\PessoaModel;
+
+if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+    if (isset($_COOKIE['remember_token']) && !empty($_COOKIE['remember_token'])) {
+        $token = Security::getJWTPayload($_COOKIE['remember_token']);
+        
+        if ($token && isset($token['user_uid'])) {
+            $user = PessoaModel::findByData('uid', $token['user_uid']);
+            if ($user) {
+                $_SESSION['user_id'] = $user->getId();
+                $_SESSION['logged_in'] = true;
+            } else {
+                setcookie('remember_token', '', time() - 3600, "/");
+            }
+        } else {
+            setcookie('remember_token', '', time() - 3600, "/");
+        }
+    }
+}
 
 header("X-XSS-Protection: 1; mode=block");
 header("X-Frame-Options: DENY");

@@ -1,7 +1,6 @@
 @use '../base/variables' as *;
 
 .page-header {
-    margin-left: 275px;
     padding: 20px;
 
     h2 {
@@ -12,7 +11,6 @@
 }
 
 .filters-container {
-    margin-left: 275px;
     padding: 0 20px 20px 20px;
     display: flex;
     align-items: center;
@@ -70,7 +68,6 @@
 }
 
 .team-grid {
-    margin-left: 275px;
     padding: 20px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -90,7 +87,9 @@
         display: flex;
         align-items: center;
         gap: 15px;
-        color: white; // Assuming dark background colors for header
+        background-color: $nav-bg-color; // Verde escuro como na imagem de referência
+        border-radius: 20px 20px 0 0;
+        color: white;
 
         .card-pfp {
             width: 80px;
@@ -112,12 +111,14 @@
                 font-size: 18px;
                 margin-bottom: 5px;
                 font-weight: 700;
+                color: white;
             }
 
             p {
                 font-size: 14px;
                 margin-bottom: 2px;
                 opacity: 0.9;
+                color: white;
             }
 
             .department {
@@ -131,11 +132,11 @@
                 font-weight: 600;
 
                 &.ativo {
-                    color: #4cd137; // Bright green
+                    color: #4cd137; // Verde brilhante
                 }
 
                 &.inativo {
-                    color: #e84118; // Red
+                    color: #e84118; // Vermelho
                 }
             }
         }
@@ -164,12 +165,21 @@
         }
 
         .btn-edit {
-            background-color: #95a5a6; // Greyish
+            background-color: #95a5a6; // Cinza
             color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+
+            svg {
+                width: 16px;
+                height: 16px;
+            }
         }
 
         .btn-profile {
-            background-color: $btn-bg-color;
+            background-color: $btn-bg-color; // Verde escuro
             color: white;
         }
     }

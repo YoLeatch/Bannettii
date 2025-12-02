@@ -10,16 +10,25 @@
 // 2. Layout
 @use 'layout/navbar';
 @use 'layout/sidebar';
-@use 'layout/breadcrumb';
+
 
 // 3. Components
 @use 'components/buttons';
 @use 'components/forms';
 @use 'components/tables';
 @use 'components/icons';
+@use 'components/breadcrumb';
 
 // 4. Pages
 @use 'pages/auth';
 @use 'pages/terms';
 @use 'pages/admin';
 @use 'pages/team-management';
+@use 'pages/cart';
+@use 'pages/product-preview';
+@use 'pages/product-list';
+@use 'pages/add-product';
+@use 'pages/order-history';
+@use 'pages/client-order-preview';
+@use 'pages/client-orders-history';
+@use 'pages/order-preview';

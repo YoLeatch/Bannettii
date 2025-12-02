@@ -19,7 +19,7 @@ class RegisterController {
         $email = Security::sanitizeInput($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
         $confirmPassword = $_POST['confirm_password'] ?? '';
-        $cpf = Security::sanitizeInput($_POST['cpf'] ?? '');
+        $cpf = Security::sanitizeInput($_POST['CPF'] ?? '');
 
         try {
             Security::validateCSRFToken($_POST['csrf_token'] ?? '');

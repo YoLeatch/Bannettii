@@ -7,29 +7,29 @@
 
   <!-- Favicon -->
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/image/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/image/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/image/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/image/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/image/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/image/favicon-16x16.png">
 
 
   <!-- Custom CSS -->
 
 
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="./css/style.css">
   <script type="text/javascript"
-    src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=vvhV3x1l0mFqx2qhLTsETg12Ylf-VCBZFPltVTovGctSQLS0o1Sm4bCl-UOocXEFB7VBirfqxr8E6nARomL4mOo2NSrdhoh4A2RcvOVNDfGkd4V-wbu8hdIbfhhrIua8cnaamWj3-lMHKQL4U10We0QMyjPaaae2ImE-zvqA5DtDyR6XIlNpTTEP6suYuxsuGwz0xuAs3Ljj09cZR0v-HbsSfI_DXqTBzKntGtaFPnjFcC4A2YNUZkGL5F-9bxWJXGnjMH3x9Mctvh2aAeeJ4EIcjFq55xm2NU3LjNHpYoY"
+    src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=GrJsPutp4SJzKYFw9zdKJXtBumodrOIEK7GCf2b4qKswNvYFo2koS2MVAEz3UA2_pfR2uhiQbvjXo5De3gShvl2Qfe9AHhoekcn-H30QMi3wLfcunz2eatbIDeRkIarm4rtH8_03jbN2RhiPn6OtNLmY4ecTOIJ92bYMnDa_a5AMrLWcGgZPuVrsSaMukAmRnOVmELM_2dg6H3diav-hEhZfVdpPqHyqcTM0dXYSoR9pXwrAXC8z77lcQDfoZ2qtzZX6w1kSqEuO8JsrvxmrYg"
     charset="UTF-8"></script>
-  <script src="/assets/js/script.js"></script>
+  <script src="./assets/js/script.js"></script>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 
-  <title>Histórico de Pedidos - Bennettii</title>
+  <title>Tabela de Usuários - Bennettii</title>
 </head>
 
 <body>
 
   <div class="left-sidebar">
-    <center><img src="/assets/image/bennettii_nobackground.png" height="130px"></center>
+    <center><img src="./assets/image/bennettii_nobackground.png" height="130px"></center>
     <ul>
       <li><a><svg class="amarelo-bennettii" height="40px" viewBox="0 0 24 24" fill="none"
             xmlns="http://www.w3.org/2000/svg">
@@ -76,18 +76,20 @@
     </ul>
   </div>
 
-  <!--<div class="admin-profile">
-      <div class="admin-profile-card">
-        <h2 id="admin-profile-name">NOME DO ADMINISTRADOR</h2><br>
-        <h4 id="admin-profile-role">FUNÇÃO</h4>
-      </div>
-      <img src="./assets/image/placeholder_pfp.png" class="admin-pfp">
-    </div>-->
-
   <main>
 
     <div class="page-content">
 
+
+      <div class="admin-profile">
+        <div class="admin-profile-card">
+          <img src="./assets/image/placeholder_pfp.png" class="admin-pfp">
+          <div class="admin-profile-info">
+            <h2 id="admin-profile-name">NOME DO ADMINISTRADOR</h2>
+            <h4 id="admin-profile-role">FUNÇÃO</h4>
+          </div>
+        </div>
+      </div>
 
       <div class="breadcrumb">
         <ul>
@@ -95,86 +97,18 @@
             <a class="breadcrumb__link" href="#">Dashboard</a>
           </li>
           <li class="breadcrumb__item">
-            <a class="breadcrumb__link" href="#">Registro de Dados</a>
+            <a class="breadcrumb__link">Registro de Dados</a>
           </li>
           <li class="breadcrumb__item">
-            <a class="breadcrumb__link breadcrumb__link--active" href="/index">Histórico de Pedidos</a>
+            <a class="breadcrumb__link breadcrumb__link--active" href="./index.html">Tabela de Usuários</a>
           </li>
         </ul>
       </div><br>
-
-
-
-      <div class="tabela-box">
-        <form>
-          <label>Filtrar por data:&nbsp;</label><input type="date" placeholder="Filtrar por data">
-          <label>Status do Pedido:&nbsp;</label>
-          <select>
-            <option value="Todos">Todos</option>
-            <option value="Processando">Processando</option>
-            <option value="Concluido">Concluído</option>
-            <option value="Cancelado">Cancelado</option>
-          </select>
-        </form><br>
-        <table class="tabela">
-          <tr id="usuario">
-            <th>Data</th>
-            <th>Pedido</th>
-            <th>Usuário</th>
-            <th>Valor total</th>
-            <th>Status</th>
-            <th>Ações</th>
-          </tr>
-          <!--Repetir a partir daqui-->
-          <tr>
-            <td>30/11/2025</td>
-            <td>#19230</td>
-            <td>Jair</td>
-            <td>R$500,00</td>
-            <td><span class="status-pedido aprovado">Aprovado</span></td>
-            <td><button class=".button" data-href="https://twitch.tv/">Ver detalhes</button></td>
-          </tr>
-          <!--Parar aqui-->
-          <tr>
-            <td>{data}</td>
-            <td>{id_pedido}</td>
-            <td>{nome}</td>
-            <td>{valor}</td>
-            <td><span class="status-pedido cancelado">Cancelado</span></td>
-            <td><button class=".button" data-href="https://twitch.tv/">Ver detalhes</button></td>
-          </tr>
-          <tr>
-            <td>{data}</td>
-            <td>{id_pedido}</td>
-            <td>{nome}</td>
-            <td>{valor}</td>
-            <td><span class="status-pedido processando">Processando</span></td>
-            <td><button class=".button" data-href="https://twitch.tv/">Ver detalhes</button></td>
-          </tr>
-          <tr>
-            <td>{data}</td>
-            <td>{id_pedido}</td>
-            <td>{nome}</td>
-            <td>{valor}</td>
-            <td><span class="status-pedido processando">Processando</span></td>
-            <td><button class=".button" data-href="https://twitch.tv/">Ver detalhes</button></td>
-          </tr>
-        </table>
-        <div class="navbuttons texto-centro">
-          <button>&lt;&lt;</button>
-          <span><a href="#">1</a></span>
-          <span><a href="#">2</a></span>
-          <span><a href="#">3</a></span>
-          <span><a href="#">4</a></span>
-          <span><a href="#">5</a></span>
-          <button>&gt;&gt;</button>
-        </div>
-      </div>
-
+      <input type="file">
     </div>
-  </main>
 
-  <script src="./assets/js/script.js"></script>
+
+  </main>
 </body>
 
 </html>

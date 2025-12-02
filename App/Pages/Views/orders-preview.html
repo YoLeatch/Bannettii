@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/image/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/image/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/image/favicon-16x16.png">
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./assets/js/script.js"></script>
+    <title>Meus Pedidos - Bennettii</title>
+</head>
+
+<body>
+    <nav class="navbar">
+        <ul class="sidebar">
+            <li onclick="esconderBarraLateral()"><a><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                        viewBox="0 -960 960 960" width="24px" fill="#D0D558">
+                        <path
+                            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                    </svg></a></li>
+            <li><a>Categorias</a></li>
+            <li><a>Sobre nós</a></li>
+            <li><a>SAC</a></li>
+            <li><a><img src="./assets/image/cart.png" alt="Sacola">&nbsp;&nbsp;&nbsp; Carrinho</a></li>
+            <li><a href="./"><img src="./assets/image/user.png" alt="Usuário">&nbsp;&nbsp;&nbsp; Usuário</a></li>
+        </ul>
+        <ul>
+            <li><a href="#"><img src="./assets/image/bennettii_nobackground_horizontal.png" height="35px"></a></li>
+            <input type="text" class="barraPesquisa" placeholder="Buscar...">
+            <li class="esconderMobile"><a>Categorias</a></li>
+            <li class="esconderMobile"><a>Sobre nós</a></li>
+            <li class="esconderMobile"><a>SAC</a></li>
+            <li class="esconderMobile"><a><img src="./assets/image/cart.png" alt="Sacola"></a></li>
+            <li class="esconderMobile"><a href="./criarconta.html"><img src="./assets/image/user.png" alt="Usuário"></a>
+            </li>
+            <li onclick="mostrarBarraLateral()" class="menu-btn"><a><svg xmlns="http://www.w3.org/2000/svg"
+                        height="50px" viewBox="0 -960 960 960" fill="#D0D558">
+                        <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+                    </svg></a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="client-orders-history-container">
+            <ul class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li><a href="/perfil">Minha Conta</a></li>
+                <li class="active">Meus Pedidos</li>
+            </ul>
+
+            <div class="page-header">
+                <h1>Meus Pedidos</h1>
+                <p>Acompanhe e gerencie suas compras recentes.</p>
+            </div>
+
+            <div class="orders-list">
+                <!-- Pedido 1 -->
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-id">
+                            <h3>Pedido #334902445</h3>
+                            <span class="date">08 Jan, 2024</span>
+                        </div>
+                        <span class="status-badge pending">Pagamento Pendente</span>
+                    </div>
+                    <div class="order-body">
+                        <div class="order-items-preview">
+                            <div class="item-thumb">
+                                <img src="./assets/image/T-shirt.png" alt="Produto">
+                            </div>
+                            <div class="item-thumb">
+                                <img src="./assets/image/moletom-verde-costas.jpg" alt="Produto">
+                            </div>
+                            <span class="more-items">+1</span>
+                        </div>
+                        <div class="order-info">
+                            <div class="info-group">
+                                <span class="label">Total</span>
+                                <span class="value">R$ 1.199,00</span>
+                            </div>
+                            <div class="info-group">
+                                <span class="label">Itens</span>
+                                <span class="value">3 produtos</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-footer">
+                        <a href="/order-preview" class="btn-details">Ver Detalhes</a>
+                        <button class="btn-help">Ajuda</button>
+                    </div>
+                </div>
+
+                <!-- Pedido 2 -->
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-id">
+                            <h3>Pedido #334902440</h3>
+                            <span class="date">15 Dez, 2023</span>
+                        </div>
+                        <span class="status-badge completed">Entregue</span>
+                    </div>
+                    <div class="order-body">
+                        <div class="order-items-preview">
+                            <div class="item-thumb">
+                                <img src="./assets/image/placeholder_pfp.png" alt="Produto">
+                            </div>
+                        </div>
+                        <div class="order-info">
+                            <div class="info-group">
+                                <span class="label">Total</span>
+                                <span class="value">R$ 450,00</span>
+                            </div>
+                            <div class="info-group">
+                                <span class="label">Itens</span>
+                                <span class="value">1 produto</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-footer">
+                        <a href="/order-preview" class="btn-details">Ver Detalhes</a>
+                        <button class="btn-rebuy">Comprar Novamente</button>
+                    </div>
+                </div>
+
+                <!-- Pedido 3 -->
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-id">
+                            <h3>Pedido #334902438</h3>
+                            <span class="date">02 Dez, 2023</span>
+                        </div>
+                        <span class="status-badge cancelled">Cancelado</span>
+                    </div>
+                    <div class="order-body">
+                        <div class="order-items-preview">
+                            <div class="item-thumb">
+                                <img src="./assets/image/T-shirt.png" alt="Produto">
+                            </div>
+                            <div class="item-thumb">
+                                <img src="./assets/image/T-shirt.png" alt="Produto">
+                            </div>
+                        </div>
+                        <div class="order-info">
+                            <div class="info-group">
+                                <span class="label">Total</span>
+                                <span class="value">R$ 200,00</span>
+                            </div>
+                            <div class="info-group">
+                                <span class="label">Itens</span>
+                                <span class="value">2 produtos</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-footer">
+                        <a href="/order-preview" class="btn-details">Ver Detalhes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

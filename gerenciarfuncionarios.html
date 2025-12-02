@@ -16,15 +16,13 @@
 
 
     <link rel="stylesheet" href="./css/style.css">
-    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=GrJsPutp4SJzKYFw9zdKJXtBumodrOIEK7GCf2b4qKswNvYFo2koS2MVAEz3UA2_pfR2uhiQbvjXo5De3gShvl2Qfe9AHhoekcn-H30QMi3wLfcunz2eatbIDeRkIarm4rtH8_03jbN2RhiPn6OtNLmY4ecTOIJ92bYMnDa_a5AMrLWcGgZPuVrsSaMukAmRnOVmELM_2dg6H3diav-hEhZfVdpPqHyqcTM0dXYSoR9pXwrAXC8z77lcQDfoZ2qtzZX6w1kSqEuO8JsrvxmrYg" charset="UTF-8"></script><script src="./assets/js/script.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="./assets/js/script.js"></script>
     
 
-    <title>Tabela de Usuários - Bennettii</title>
+    <title>Gerenciamento de equipe - Bennettii</title>
 </head>
 <body>
-
-    <div class="left-sidebar">
+<div class="left-sidebar">
       <center><img src="./assets/image/bennettii_nobackground.png" height="130px"></center>
       <ul>
         <li><a><svg class="amarelo-bennettii" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -41,6 +39,14 @@
       </ul>
     </div>
 
+    <div class="admin-profile">
+      <div class="admin-profile-card">
+        <h2 id="admin-profile-name">NOME DO ADMINISTRADOR</h2><br>
+        <h4 id="admin-profile-role">FUNÇÃO</h4>
+      </div>
+      <img src="./assets/image/placeholder_pfp.png" class="admin-pfp">
+    </div>
+
 <main>
 
   <div class="page-content">
@@ -52,17 +58,90 @@
           <a class="breadcrumb__link" href="#">Dashboard</a>
         </li>
         <li class="breadcrumb__item">
-          <a class="breadcrumb__link">Registro de Dados</a>
+            <a class="breadcrumb__link" href="#">Registro de Dados</a>
         </li>
         <li class="breadcrumb__item">
-          <a class="breadcrumb__link breadcrumb__link--active" href="./index.html">Tabela de Usuários</a>
+          <a class="breadcrumb__link breadcrumb__link--active" href="./index.html">Gerenciamento de equipe</a>
         </li>
       </ul>
     </div><br>
-    <input type="file">
-  </div>
 
+<main>
+  <div class="texto-centro">
+    <label class="cor-cinza icon-pesquisa"></label><input type="text" class="barraPesquisa">
+  </div>
   
+  <div class="tabela-box">
+    <table class="tabela">
+    <tr id="usuario">
+      <th>Ícone</th>
+      <th>ID</th>
+      <th>UID</th>
+      <th>Nome</th>
+      <th>E-mail</th>
+      <th>CPF</th>
+      <th>Endereço</th>
+      <th>Telefone</th>
+      <th>Data de cadastro</th>
+      <th>Total Compras</th>
+      <th>Funcionário</th>
+      <th>Status</th>
+    </tr>
+    <!--Repetir a partir daqui-->
+    <tr data-href="https://twitch.tv/">
+      <td><img src="./assets/image/placeholder_pfp.png"></td>
+      <td>{id}</td>
+      <td>{UID}</td>
+      <td>{Nome}</td>
+      <td>{Email}</td>
+      <td>{CPF}</td>
+      <td>{Endereco}</td>
+      <td>{Telefone}</td>
+      <td>{DataInclusao}</td>
+      <td>{TotalCompras}</td>
+      <td>{Funcionario}</td>
+      <td>{Status}</td>
+    </tr>
+    <!--Parar aqui-->
+    <tr data-href="https://discord.com/">
+      <td><img src="./assets/image/placeholder_pfp.png"></td>
+      <td>{id}</td>
+      <td>{UID}</td>
+      <td>{Nome}</td>
+      <td>{Email}</td>
+      <td>{CPF}</td>
+      <td>{Endereco}</td>
+      <td>{Telefone}</td>
+      <td>{DataInclusao}</td>
+      <td>{TotalCompras}</td>
+      <td>{Funcionario}</td>
+      <td>{Status}</td>
+    </tr>
+    <tr>
+      <td><img src="./assets/image/placeholder_pfp.png"></td>
+      <td>{id}</td>
+      <td>{UID}</td>
+      <td>{Nome}</td>
+      <td>{Email}</td>
+      <td>{CPF}</td>
+      <td>{Endereco}</td>
+      <td>{Telefone}</td>
+      <td>{DataInclusao}</td>
+      <td>{TotalCompras}</td>
+      <td>{Funcionario}</td>
+      <td>{Status}</td>
+    </tr>
+  </table>
+  <div class="navbuttons texto-centro">
+    <button>&lt;&lt;</button>
+    <span>1</span>
+    <span>2</span>
+    <span>3</span>
+    <span>4</span>
+    <button>&gt;&gt;</button>
+  </div>
+  </div>
+  </div>
 </main>
 </body>
 </html>

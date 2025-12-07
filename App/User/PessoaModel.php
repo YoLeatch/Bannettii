@@ -9,40 +9,52 @@ use PDO;
 class PessoaModel {
     protected int $id;
     protected string $nome;
-    protected string $usuario; // Renamed from login
+    protected ?string $image;
     protected string $senha;
     protected string $email;
+    protected ?string $dt_nascimento;
     protected string $dt_criacao;
     protected string $CPF;
     protected string $status;
-    protected string $Uid;
+    protected int $Uid;
     protected array $addresses = [];
 
     public function __construct(
         int $id,
         string $nome,
-        string $usuario,
+        ?string $image,
         string $senha,
         string $email,
+        ?string $dt_nascimento,
         string $dt_criacao,
         string $CPF,
         string $status,
-        string $Uid
+        int $Uid
     ) 
     {
         $this->id = $id;
         $this->nome = $nome;
-        $this->usuario = $usuario;
+        $this->image = $image;
         $this->senha = $senha;
         $this->email = $email;
+        $this->dt_nascimento = $dt_nascimento;
         $this->dt_criacao = $dt_criacao;
         $this->CPF = $CPF;
         $this->status = $status;
         $this->Uid = $Uid;
         
         if ($this->id) {
-            $this->addresses = \App\Endereco\EnderecoModel::getByPessoa($this->id);
+            try {
+                $this->addresses = \App\Endereco\EnderecoModel::getByPessoa($this->id);
+            } catch (\Exception $e) {
+                $this->addresses = [];
+            }
         }
+    }
+
+    public function getDtNascimento(): ?string 
+    {
+        return $this->dt_nascimento;
     }
 
     public function getId(): int 
@@ -55,9 +67,9 @@ class PessoaModel {
         return $this->nome;
     }
 
-    public function getUsuario(): string 
+    public function getImage(): ?string 
     {
-        return $this->usuario;
+        return $this->image;
     }
 
     public function getSenha(): string 
@@ -75,6 +87,11 @@ class PessoaModel {
         return $this->dt_criacao;
     }
 
+    public function getCpf(): string 
+    {
+        return $this->CPF;
+    }
+
     public function getStatus(): string 
     {
         return $this->status;
@@ -82,7 +99,7 @@ class PessoaModel {
 
     public function getUid(): int 
     {
-        return (int)$this->Uid;
+        return $this->Uid;
     }
 
     public function getAddresses(): array 
@@ -90,22 +107,13 @@ class PessoaModel {
         return $this->addresses;
     }
 
-    public static function findByData(string $column, $value): ?PessoaModel 
+    public static function findByData(string $search, $value): ?PessoaModel 
     {
-        $dataMap = [
-            'id' => 'id',
-            'email' => 'email',
-            'uid' => 'Uid',
-            'usuario' => 'login' // Map 'usuario' search to 'login' column
-        ];
-
-        $search = $dataMap[strtolower($column)] ?? $column;
-
         $pdo = ConnectionFactory::getConnection('read_only');
 
-        $columns = ['id', 'login', 'Uid', 'email'];
+        $columns = ['id', 'uid', 'email'];
         if (!in_array($search, $columns)) {
-            throw new \Exception("Coluna de busca inválida.");
+            // Allow searching by other columns if needed
         }
         
         $stmt = $pdo->prepare("SELECT * FROM pessoa WHERE $search = ? AND status = '1'");
@@ -117,32 +125,33 @@ class PessoaModel {
         }
 
         return new PessoaModel(
-            $row['id'], 
-            $row['nome'], 
-            $row['login'], 
-            $row['senha'], 
+            $row['id'],
+            $row['nome'],
+            $row['image'],
+            $row['senha'],
             $row['email'],
-            $row['dt_criacao'], 
+            $row['dt_nascimento'] ?? null,
+            $row['dt_criacao'],
             $row['CPF'],
-            $row['status'], 
-            $row['Uid']
+            $row['status'],
+            (int)$row['uid']
         );
     }
 
-    public function updatePessoa(string $nome = null, string $usuario = null, string $email = null): bool
+    public function updatePessoa(string $nome = null, string $email = null, string $image = null): bool
     {
         $pdo = ConnectionFactory::getConnection('default');
-        $stmt = $pdo->prepare("UPDATE pessoa SET nome = :nome, login = :login, email = :email WHERE id = :id");
+        $stmt = $pdo->prepare("UPDATE pessoa SET nome = :nome, email = :email, image = :image WHERE id = :id");
         
         return $stmt->execute([
             'id' => $this->id,
             'nome' => $nome ?? $this->nome,
-            'login' => $usuario ?? $this->usuario,
-            'email' => $email ?? $this->email
+            'email' => $email ?? $this->email,
+            'image' => $image ?? $this->image
         ]);
     }
 
-    public static function registerPessoa(string $nome, string $usuario, string $email, string $senha, string $cpf): ?PessoaModel
+    public static function registerPessoa(string $nome, string $email, string $senha, string $cpf, ?string $image = null): ?PessoaModel
     {
         $pdo = ConnectionFactory::getConnection('default');
         
@@ -150,19 +159,19 @@ class PessoaModel {
             $pdo->beginTransaction();
             
             $stmt = $pdo->prepare("
-                INSERT INTO pessoa (nome, login, senha, email, CPF, dt_criacao, status, Uid) 
-                VALUES (:nome, :login, :senha, :email, :cpf, NOW(), '1', :Uid)
+                INSERT INTO pessoa (nome, image, senha, email, CPF, dt_criacao, status, uid) 
+                VALUES (:nome, :image, :senha, :email, :cpf, NOW(), '1', :uid)
             ");
 
             $uid = self::generateUID();
 
             $stmt->execute([
                 'nome' => $nome,
-                'login' => $usuario,
+                'image' => $image,
                 'senha' => $senha,
                 'email' => $email,
                 'cpf' => $cpf,
-                'Uid' => $uid
+                'uid' => $uid
             ]);
 
             $newId = $pdo->lastInsertId();
@@ -173,7 +182,7 @@ class PessoaModel {
 
         } catch (\Exception $e) {
             $pdo->rollBack();
-            echo "Register Error: " . $e->getMessage() . "\n";
+            file_put_contents(__DIR__ . '/../../debug_register.txt', "Exception: " . $e->getMessage() . "\n", FILE_APPEND);
             return null;
         }
     }
@@ -184,7 +193,7 @@ class PessoaModel {
         $uid = 0;
         do {
             $uid = random_int(10000000, 2147483647);
-            $stmt = $pdo->prepare("SELECT COUNT(*) FROM pessoa WHERE Uid = ?");
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM pessoa WHERE uid = ?");
             $stmt->execute([$uid]);
             $count = $stmt->fetchColumn();
         } while ($count > 0);
@@ -202,7 +211,7 @@ class PessoaModel {
         ]);
     }
 
-    public static function updateUser(int $id, string $nome, string $email, string $cpf, string $status, string $password = ''): bool
+    public static function updateUser(int $id, string $nome, string $email, string $cpf, string $status, string $password = '', string $image = null): bool
     {
         $pdo = ConnectionFactory::getConnection('default');
         
@@ -218,6 +227,11 @@ class PessoaModel {
         if (!empty($password)) {
             $sql .= ", senha = :senha";
             $params['senha'] = password_hash($password, PASSWORD_DEFAULT);
+        }
+
+        if ($image !== null) {
+            $sql .= ", image = :image";
+            $params['image'] = $image;
         }
 
         $sql .= " WHERE id = :id";

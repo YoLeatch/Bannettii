@@ -1,0 +1,61 @@
+@use '../base/variables' as *;
+
+.main-footer {
+    background-color: $nav-bg-color;
+    color: $white;
+    padding: 3rem 0 0;
+    margin-top: 4rem;
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px 3rem;
+
+        .footer-col {
+            h4 {
+                font-family: $font-secondary;
+                font-size: 1.2rem;
+                margin-bottom: 1.5rem;
+                color: $nav-text-color;
+            }
+
+            p {
+                margin-bottom: 1rem;
+                line-height: 1.6;
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+            a {
+                display: block;
+                color: rgba(255, 255, 255, 0.8);
+                text-decoration: none;
+                margin-bottom: 0.8rem;
+                transition: color 0.2s;
+
+                &:hover {
+                    color: $nav-text-color;
+                }
+            }
+
+            .social-links {
+                display: flex;
+                gap: 15px;
+
+                a {
+                    display: inline-block;
+                }
+            }
+        }
+    }
+
+    .footer-bottom {
+        background-color: darken($nav-bg-color, 5%);
+        padding: 1.5rem;
+        text-align: center;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.6);
+    }
+}

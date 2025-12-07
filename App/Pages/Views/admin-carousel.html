@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrossel - Admin Bennettii</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .admin-pfp {
+            width: 50px;
+            height: 50px;
+            flex-shrink: 0;
+        }
+
+        .admin-pfp img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .btn-primary {
+            background-color: #D0D558;
+            color: #1a1a2e;
+            font-weight: 600;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #b8bd40;
+        }
+
+        .slides-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .slide-item {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(208, 213, 88, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .slide-item:hover {
+            border-color: rgba(208, 213, 88, 0.3);
+        }
+
+        .slide-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .slide-info {
+            padding: 1rem;
+        }
+
+        .slide-info strong {
+            color: #fff;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .slide-info p {
+            color: #a0a0a0;
+            margin: 0;
+            font-size: 0.85rem;
+        }
+
+        .slide-actions {
+            padding: 0 1rem 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background: rgba(239, 68, 68, 0.4);
+        }
+
+        .card {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(208, 213, 88, 0.1);
+        }
+
+        .card h3 {
+            color: #D0D558;
+            margin: 0 0 1rem 0;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #e0e0e0;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #D0D558;
+        }
+
+        .form-actions {
+            margin-top: 1rem;
+        }
+
+        .no-slides {
+            text-align: center;
+            padding: 2rem;
+            color: #a0a0a0;
+        }
+
+        .success-message {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #4ade80;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="/assets/image/bennettii_nobackground_horizontal.png" alt="Bennettii Admin">
+            </div>
+
+            <nav class="admin-nav">
+                <div class="nav-section">
+                    <h3>Principal</h3>
+                    <a href="/admin/dashboard">
+                        Dashboard
+                    </a>
+                    <a href="/admin/team-list">
+                        Equipe
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Gestão de Conteúdo</h3>
+                    <a href="/admin/carousel" class="active">
+                        Carrossel
+                    </a>
+                    <a href="/admin/promotions">
+                        Promoções
+                    </a>
+                    <a href="/admin/news">
+                        Novidades
+                    </a>
+                    <a href="/admin/bestsellers">
+                        Mais Vendidos
+                    </a>
+                    <a href="/admin/settings">
+                        Configurações (Logo/Menu)
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Produtos</h3>
+                    <a href="/admin/products">
+                        Gerenciar Produtos
+                    </a>
+                    <a href="/admin/categories">
+                        Categorias
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Clientes</h3>
+                    <a href="/admin/customers">
+                        Gerenciar Clientes
+                    </a>
+                    <a href="/admin/customers/search">
+                        Buscar Clientes
+                    </a>
+                    <a href="/admin/gerenciar-logs">
+                        Gerenciar Logs
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Vendas & Relatórios</h3>
+                    <a href="/admin/orders">
+                        Pedidos
+                    </a>
+                    <a href="/admin/reports">
+                        Relatórios
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Feedback</h3>
+                    <a href="/admin/reviews">
+                        Avaliações
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="admin-profile">
+                <div class="admin-profile-card">
+                    <div class="admin-pfp">{admin_avatar}</div>
+                    <div class="admin-profile-info">
+                        <h2>{admin_name}</h2>
+                        <h4>{admin_role}</h4>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="breadcrumb" style="margin-bottom: 20px;">
+                <li><a href="/admin/dashboard">Dashboard</a></li>
+                <li class="active">Carrossel</li>
+            </ul>
+
+            <header class="admin-header">
+                <div class="header-title">
+                    <h1>Gerenciar Carrossel</h1>
+                    <p>Adicione ou remova slides da página inicial.</p>
+                </div>
+            </header>
+
+            {messages}
+
+            <div class="content-wrapper">
+                <!-- Add New Slide Form -->
+                <div class="card">
+                    <h3>Adicionar Novo Slide</h3>
+                    <form action="/admin/carousel/add" method="POST">
+                        <div class="form-group">
+                            <label for="image_url">URL da Imagem</label>
+                            <input type="text" id="image_url" name="image_url" placeholder="https://..." required
+                                class="form-control">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="caption">Legenda (Opcional)</label>
+                                <input type="text" id="caption" name="caption" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="link_url">Link de Destino (Opcional)</label>
+                                <input type="text" id="link_url" name="link_url" placeholder="/products/..."
+                                    class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">Adicionar Slide</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Existing Slides List -->
+                <div class="card">
+                    <h3>Slides Ativos</h3>
+                    <div class="slides-grid">
+                        {slides_list}
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

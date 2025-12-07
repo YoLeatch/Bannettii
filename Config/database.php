@@ -1,19 +1,26 @@
 <?php
+require_once __DIR__ . '/../Core/Environment.php';
+
+use Core\Environment;
+
+// Carregar variáveis de ambiente
+Environment::load();
+
 return [
     'default' => [
-        'driver'   => 'mysql',
-        'host'     => 'localhost',
-        'port'     => 3306,
-        'dbname'   => 'bennettii',
-        'user'     => 'default',
-        'password' => 'u*!v2aSN#0^9sNR_'
+        'driver'   => Environment::get('DB_DRIVER', 'mysql'),
+        'host'     => Environment::get('DB_HOST', 'localhost'),
+        'port'     => (int)Environment::get('DB_PORT', 3306),
+        'dbname'   => Environment::get('DB_NAME', 'bennettii'),
+        'user'     => Environment::get('DB_USER', 'root'),
+        'password' => Environment::get('DB_PASSWORD', '')
     ],
     'read_only' => [
-        'driver'   => 'mysql',
-        'host'     => 'localhost',
-        'port'     => 3306,
-        'dbname'   => 'bennettii',
-        'user'     => 'read_only',
-        'password' => '95kw2hT{UiJ[+d[9'
+        'driver'   => Environment::get('DB_DRIVER', 'mysql'),
+        'host'     => Environment::get('DB_HOST', 'localhost'),
+        'port'     => (int)Environment::get('DB_PORT', 3306),
+        'dbname'   => Environment::get('DB_NAME', 'bennettii'),
+        'user'     => Environment::get('DB_USER', 'root'),
+        'password' => Environment::get('DB_PASSWORD', '')
     ],
 ];

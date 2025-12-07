@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categorias - Admin Bennettii</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="/assets/image/bennettii_nobackground_horizontal.png" alt="Bennettii Admin">
+            </div>
+
+            <nav class="admin-nav">
+                <div class="nav-section">
+                    <h3>Principal</h3>
+                    <a href="/admin/dashboard">
+                        Dashboard
+                    </a>
+                    <a href="/admin/team-list">
+                        Equipe
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Gestão de Conteúdo</h3>
+                    <a href="/admin/carousel">
+                        Carrossel
+                    </a>
+                    <a href="/admin/promotions">
+                        Promoções
+                    </a>
+                    <a href="/admin/news">
+                        Novidades
+                    </a>
+                    <a href="/admin/bestsellers">
+                        Mais Vendidos
+                    </a>
+                    <a href="/admin/settings">
+                        Configurações (Logo/Menu)
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Produtos</h3>
+                    <a href="/admin/products">
+                        Gerenciar Produtos
+                    </a>
+                    <a href="/admin/categories" class="active">
+                        Categorias
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Clientes</h3>
+                    <a href="/admin/customers">
+                        Gerenciar Clientes
+                    </a>
+                    <a href="/admin/customers/search">
+                        Buscar Clientes
+                    </a>
+                    <a href="/admin/gerenciar-logs">
+                        Gerenciar Logs
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Vendas & Relatórios</h3>
+                    <a href="/admin/orders">
+                        Pedidos
+                    </a>
+                    <a href="/admin/reports">
+                        Relatórios
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Feedback</h3>
+                    <a href="/admin/reviews">
+                        Avaliações
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <div class="page-content">
+                <div class="admin-profile">
+                    <div class="admin-profile-card">
+                        <div class="admin-pfp">{admin_avatar}</div>
+                        <div class="admin-profile-info">
+                            <h2 id="admin-profile-name">{admin_name}</h2>
+                            <h4 id="admin-profile-role">{admin_role}</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="breadcrumb" style="margin-bottom: 20px;">
+                    <li><a href="/admin/dashboard">Dashboard</a></li>
+                    <li class="active">Categorias</li>
+                </ul>
+
+                <div class="product-list-container">
+                    <div class="header-section">
+                        <div class="title-area">
+                            <h1>Categorias</h1>
+                            <p>Gerencie as categorias e subcategorias de produtos.</p>
+                        </div>
+                        <div class="actions-area">
+                            <a href="/admin/categories/create" class="btn-add">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                Nova Categoria
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Info</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {category_rows}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

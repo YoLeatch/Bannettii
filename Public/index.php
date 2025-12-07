@@ -1,3 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<body> <!-- Inicio do corpo da página -->
+     <!-- Conteúdo da página -->
+
+  <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
+  </div>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+  </script>
+</body> <!-- Fim do corpo da página -->
+</html>
 <?php
 require_once __DIR__ . '/../autoload.php';
 if (session_status() === PHP_SESSION_NONE) {
@@ -29,50 +46,92 @@ if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
     }
 }
 
-header("X-XSS-Protection: 1; mode=block");
-header("X-Frame-Options: DENY");
-header("Strict-Transport-Security: max-age=31536000; includeSubDomains");
-header("X-Content-Type-Options: nosniff");
+//sistema de autenticação 
+Router::addRoute("GET", "/login", "App\\User\\Controllers\\AuthController@showLoginForm", [GuestMiddleware::class, 'handle']);
+Router::addRoute("POST", "/login", "App\\User\\Controllers\\AuthController@login", [GuestMiddleware::class, 'handle']);
+Router::addRoute("GET", "/register", "App\\User\\Controllers\\RegisterController@showRegisterForm", [GuestMiddleware::class, 'handle']);
+Router::addRoute("POST", "/register", "App\\User\\Controllers\\RegisterController@register", [GuestMiddleware::class, 'handle']);
+Router::addRoute("GET", "/logout", "App\\User\\Controllers\\AuthController@logout", [AuthMiddleware::class, 'handle']);
 
-Router::addRoute("GET", "/", "App\Pages\Controllers\HomeController@index", []);
-Router::addRoute("GET", "/home", "App\Pages\Controllers\HomeController@index", []);
-Router::addRoute("GET", "/login", "App\User\Controllers\AuthController@showLoginForm", [GuestMiddleware::class, 'handle']);
-Router::addRoute("POST", "/login", "App\User\Controllers\AuthController@login", [GuestMiddleware::class, 'handle']);
-Router::addRoute("GET", "/register", "App\User\Controllers\RegisterController@showRegisterForm", [GuestMiddleware::class, 'handle']);
-Router::addRoute("POST", "/register", "App\User\Controllers\RegisterController@register", [GuestMiddleware::class, 'handle']);
-Router::addRoute("GET", "/forgot-password", "App\User\Controllers\ForgotPasswordController@showForgotPasswordForm", [GuestMiddleware::class, 'handle']);
-Router::addRoute("POST", "/forgot-password", "App\User\Controllers\ForgotPasswordController@sendResetLinkEmail", [GuestMiddleware::class, 'handle']);
-Router::addRoute("GET", "/logout", "App\User\Controllers\AuthController@logout", [AuthMiddleware::class, 'handle']);
+//sistema de dados do usuario
+Router::addRoute("GET", "/perfil", "App\\Pages\\Controllers\\ProfileController@handle", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/perfil/update", "App\\Pages\\Controllers\\ProfileController@update", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/perfil/upload-avatar", "App\\Pages\\Controllers\\ProfileController@uploadAvatar", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/completar-cadastro", "App\\User\\Controllers\\CompleteRegistrationController@showForm", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/completar-cadastro", "App\\User\\Controllers\\CompleteRegistrationController@complete", [AuthMiddleware::class, 'handle']);
 
-Router::addRoute("GET", "/cart", "App\Cart\CartController@index", [AuthMiddleware::class, 'handle']);
-Router::addRoute("POST", "/cart/add", "App\Cart\CartController@add", [AuthMiddleware::class, 'handle']);
-Router::addRoute("POST", "/cart/remove", "App\Cart\CartController@remove", [AuthMiddleware::class, 'handle']);
-Router::addRoute("POST", "/cart/update", "App\Cart\CartController@update", [AuthMiddleware::class, 'handle']);
-Router::addRoute("POST", "/cart/clear", "App\Cart\CartController@clear", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/", "App\\Pages\\Controllers\\HomeController@index", []);
+Router::addRoute("GET", "/home", "App\\Pages\\Controllers\\HomeController@index", []);
+Router::addRoute("GET", "/produto/{id}", "App\\Pages\\Controllers\\ProductController@show", []);
+Router::addRoute("GET", "/catalogo", "App\\Pages\\Controllers\\CatalogController@index", []);
 
-Router::addRoute("GET", "/gerenciarfuncionarios", "App\Pages\Controllers\TeamController@index", [AuthMiddleware::class, 'handle']);
+Router::group("/admin", function () {
+    Router::addRoute("GET", "/dashboard", "App\\User\\Controllers\\AdminController@dashboard", []);
+    Router::addRoute("GET", "/team-list", "App\\User\\Controllers\\AdminController@teamList", []);
+    
+    // Carousel
+    Router::addRoute("GET", "/carousel", "App\\User\\Controllers\\AdminController@carousel", []);
+    Router::addRoute("POST", "/carousel/add", "App\\User\\Controllers\\AdminController@addSlide", []);
+    Router::addRoute("POST", "/carousel/delete", "App\\User\\Controllers\\AdminController@deleteSlide", []);
+    
+    // Content Management
+    Router::addRoute("GET", "/news", "App\\User\\Controllers\\AdminController@news", []);
+    Router::addRoute("GET", "/bestsellers", "App\\User\\Controllers\\AdminController@bestsellers", []);
+    Router::addRoute("GET", "/settings", "App\\User\\Controllers\\AdminController@settings", []);
 
-// Admin Auth Routes
-// Router::addRoute("GET", "/admin/login", "App\Pages\Controllers\AdminAuthController@login", []); // Removed
-// Router::addRoute("POST", "/admin/login", "App\Pages\Controllers\AdminAuthController@login", []); // Removed
-Router::addRoute("GET", "/admin/register", "App\Pages\Controllers\AdminAuthController@register", []);
-Router::addRoute("POST", "/admin/register", "App\Pages\Controllers\AdminAuthController@register", []);
-Router::addRoute("GET", "/admin/logout", "App\Pages\Controllers\AdminAuthController@logout", []);
+    // Products
+    Router::addRoute("GET", "/products", "App\\User\\Controllers\\AdminProductController@index", []);
+    Router::addRoute("GET", "/products/create", "App\\User\\Controllers\\AdminProductController@create", []);
+    Router::addRoute("POST", "/products/store", "App\\User\\Controllers\\AdminProductController@store", []);
+    Router::addRoute("GET", "/products/edit/{id}", "App\\User\\Controllers\\AdminProductController@edit", []);
+    Router::addRoute("POST", "/products/update/{id}", "App\\User\\Controllers\\AdminProductController@update", []);
+    Router::addRoute("GET", "/products/delete/{id}", "App\\User\\Controllers\\AdminProductController@delete", []);
 
-// Admin System Routes
-Router::addRoute("GET", "/admin/products", "App\Pages\Controllers\AdminProductController@index", []); // List or Dashboard
-Router::addRoute("GET", "/tabela-produtos", "App\Pages\Controllers\AdminProductController@index", []); // Alias as per view link
-Router::addRoute("GET", "/registrar-produto", "App\Pages\Controllers\AdminProductController@index", []); // Alias
-Router::addRoute("POST", "/admin/products/store", "App\Pages\Controllers\AdminProductController@store", []);
+    // Categories
+    Router::addRoute("GET", "/categories", "App\\User\\Controllers\\AdminCategoryController@index", []);
+    Router::addRoute("GET", "/categories/create", "App\\User\\Controllers\\AdminCategoryController@create", []);
+    Router::addRoute("POST", "/categories/store", "App\\User\\Controllers\\AdminCategoryController@store", []);
+    Router::addRoute("GET", "/categories/edit/{id}", "App\\User\\Controllers\\AdminCategoryController@edit", []);
+    Router::addRoute("POST", "/categories/update/{id}", "App\\User\\Controllers\\AdminCategoryController@update", []);
+    Router::addRoute("GET", "/categories/delete/{id}", "App\\User\\Controllers\\AdminCategoryController@delete", []);
 
-Router::addRoute("GET", "/admin/users", "App\Pages\Controllers\AdminUserController@index", []);
-Router::addRoute("GET", "/tabela-usuarios", "App\Pages\Controllers\AdminUserController@index", []); // Alias
-Router::addRoute("GET", "/admin/users/edit", "App\Pages\Controllers\AdminUserController@edit", []);
-Router::addRoute("POST", "/admin/users/update", "App\Pages\Controllers\AdminUserController@update", []);
+    // Subcategories
+    Router::addRoute("GET", "/subcategories", "App\\User\\Controllers\\AdminSubCategoryController@index", []);
+    Router::addRoute("GET", "/subcategories/create", "App\\User\\Controllers\\AdminSubCategoryController@create", []);
+    Router::addRoute("POST", "/subcategories/store", "App\\User\\Controllers\\AdminSubCategoryController@store", []);
+    Router::addRoute("GET", "/subcategories/edit/{id}", "App\\User\\Controllers\\AdminSubCategoryController@edit", []);
+    Router::addRoute("POST", "/subcategories/update/{id}", "App\\User\\Controllers\\AdminSubCategoryController@update", []);
+    Router::addRoute("GET", "/subcategories/delete/{id}", "App\\User\\Controllers\\AdminSubCategoryController@delete", []);
+    Router::addRoute("GET", "/subcategories/by-category/{id}", "App\\User\\Controllers\\AdminSubCategoryController@getByCategory", []);
 
-Router::addRoute("GET", "/admin/reports", "App\Pages\Controllers\AdminReportController@index", []);
-Router::addRoute("GET", "/orders-preview", "App\Pages\Controllers\AdminReportController@index", []); // Alias
+    // Customers
+    Router::addRoute("GET", "/customers", "App\\User\\Controllers\\AdminCustomerController@index", []);
+    Router::addRoute("GET", "/customers/search", "App\\User\\Controllers\\AdminCustomerController@search", []);
 
+    // Orders
+    Router::addRoute("GET", "/orders", "App\\User\\Controllers\\AdminOrderController@index", []);
+    Router::addRoute("GET", "/orders/show/{id}", "App\\User\\Controllers\\AdminOrderController@show", []);
+    Router::addRoute("POST", "/orders/update-status", "App\\User\\Controllers\\AdminOrderController@updateStatus", []);
+
+    // Logs
+    Router::addRoute("GET", "/gerenciar-logs", "App\\User\\Controllers\\AdminLogController@index", []);
+    
+    // Promotions
+    Router::addRoute("GET", "/promotions", "App\\User\\Controllers\\PromoteController@index", []);
+    Router::addRoute("POST", "/promotions/search", "App\\User\\Controllers\\PromoteController@search", []);
+    Router::addRoute("POST", "/promotions/promote", "App\\User\\Controllers\\PromoteController@promote", []);
+    
+    // Reviews
+    Router::addRoute("GET", "/reviews", "App\\User\\Controllers\\AdminReviewController@index", []);
+    
+    // Reports
+    Router::addRoute("GET", "/reports", "App\\User\\Controllers\\AdminReportController@index", []);
+
+    Router::addRoute("GET", "/", "App\\User\\Controllers\\AdminController@dashboard", []);
+    Router::addRoute("GET", "/tabela-order", "App\\Pages\\Controllers\\TabelaOrdersController@index", []);
+    Router::addRoute("GET", "/registrar-produto", "App\\Pages\\Controllers\\GerenciarProdutoController@index", []);
+    Router::addRoute("POST", "/new/produto", "App\\Pages\\Controllers\\GerenciarProdutoController@add", []);
+});
 
 $router = new Router();
 $method = $_SERVER['REQUEST_METHOD'];

@@ -2,25 +2,49 @@
 namespace App\User\Controllers;
 
 use Core\Security;
+use Core\Recaptcha;
 use App\User\PessoaModel;
 use Core\ViewerPlace;
 
 class AuthController {
 
     public function showLoginForm() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_set_cookie_params(0);
+            session_start();
+        }
         $token = Security::generateCSRFToken();
         $error = $_SESSION['ERROR'] ?? '';
         unset($_SESSION['ERROR']);
-        echo ViewerPlace::render('login', ['csrf_token' => $token, 'error' => $error]);
+        
+        // Passa a chave do reCAPTCHA para o template
+        echo ViewerPlace::render('login', [
+            'csrf_token' => $token, 
+            'error' => $error,
+            'recaptcha_site_key' => Recaptcha::getSiteKey()
+        ]);
     }
 
     public function login() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_set_cookie_params(0);
+            session_start();
+        }
         $token = $_POST['csrf_token'] ?? '';
         if (!Security::validateCSRFToken($token)) {
             $_SESSION['ERROR'] = 'Não foi possível processar o login.';
             $this->showLoginForm();     
             exit;
         }
+
+        // Validação do reCAPTCHA
+        $recaptchaToken = $_POST['g-recaptcha-response'] ?? '';
+        if (!Recaptcha::verify($recaptchaToken)) {
+            $_SESSION['ERROR'] = 'Por favor, confirme que você não é um robô.';
+            header("Location: /login");
+            exit;
+        }
+
         $email = Security::sanitizeInput($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
 
@@ -38,17 +62,22 @@ class AuthController {
             }
             
             if ($Pessoa = PessoaModel::findByData('email', $email)){
-                if (Security::verifyPassword($password, $Pessoa->getPasswordHash())) {
+                if (Security::verifyPassword($password, $Pessoa->getSenha())) {
                     $_SESSION['user_id'] = $Pessoa->getId();
                     $_SESSION['logged_in'] = true;
 
                     // Check if user is also an Admin (Funcionario)
-                    $funcionario = \App\User\FuncionarioModel::findByFuncionarioId($Pessoa->getId());
-                    if ($funcionario) {
-                        $_SESSION['admin_logged_in'] = true;
-                        $_SESSION['admin_id'] = $funcionario->getId();
-                        $_SESSION['admin_name'] = $funcionario->getNome();
-                    }
+                    //$funcionario = \App\User\FuncionarioModel::findByFuncionarioId($Pessoa->getId());
+                    //if ($funcionario) {
+                    //    $_SESSION['admin_logged_in'] = true;
+                    //    $_SESSION['admin_id'] = $funcionario->getId();
+                    //    $_SESSION['admin_name'] = $funcionario->getNome();
+                    //    $_SESSION['is_employee'] = true; // Flag for middleware
+                    //    
+                    //    // Redirect to Admin Dashboard
+                    //    header("Location: /admin/dashboard");
+                    //    exit;
+                    //}
 
                     if (isset($_POST['remember_me'])) {
                         $UID = [

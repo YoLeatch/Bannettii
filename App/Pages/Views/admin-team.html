@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <title>Equipe - Admin Bennettii</title>
+    <style>
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem 0;
+        }
+
+        .team-card {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            border: 1px solid rgba(208, 213, 88, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(208, 213, 88, 0.3);
+        }
+
+        .team-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #D0D558, #a8ad3f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #1a1a2e;
+            font-weight: 700;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .team-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .team-info h3 {
+            color: #fff;
+            margin: 0 0 0.3rem 0;
+            font-size: 1.1rem;
+        }
+
+        .team-role {
+            color: #D0D558;
+            margin: 0 0 0.3rem 0;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .team-email {
+            color: #a0a0a0;
+            margin: 0 0 0.2rem 0;
+            font-size: 0.85rem;
+        }
+
+        .team-id {
+            color: #666;
+            margin: 0;
+            font-size: 0.8rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-header h2 {
+            color: #fff;
+            margin: 0;
+        }
+
+        .no-data,
+        .error {
+            text-align: center;
+            padding: 3rem;
+            color: #a0a0a0;
+        }
+    </style>
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="/assets/image/bennettii_nobackground_horizontal.png" alt="Bennettii Admin">
+            </div>
+
+            <nav class="admin-nav">
+                <div class="nav-section">
+                    <h3>Principal</h3>
+                    <a href="/admin/dashboard">
+                        Dashboard
+                    </a>
+                    <a href="/admin/team-list" class="active">
+                        Equipe
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Gestão de Conteúdo</h3>
+                    <a href="/admin/carousel">
+                        Carrossel
+                    </a>
+                    <a href="/admin/promotions">
+                        Promoções
+                    </a>
+                    <a href="/admin/news">
+                        Novidades
+                    </a>
+                    <a href="/admin/bestsellers">
+                        Mais Vendidos
+                    </a>
+                    <a href="/admin/settings">
+                        Configurações (Logo/Menu)
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Produtos</h3>
+                    <a href="/admin/products">
+                        Gerenciar Produtos
+                    </a>
+                    <a href="/admin/categories">
+                        Categorias
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Clientes</h3>
+                    <a href="/admin/customers">
+                        Gerenciar Clientes
+                    </a>
+                    <a href="/admin/customers/search">
+                        Buscar Clientes
+                    </a>
+                    <a href="/admin/gerenciar-logs">
+                        Gerenciar Logs
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Vendas & Relatórios</h3>
+                    <a href="/admin/orders">
+                        Pedidos
+                    </a>
+                    <a href="/admin/reports">
+                        Relatórios
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Feedback</h3>
+                    <a href="/admin/reviews">
+                        Avaliações
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="admin-profile">
+                <div class="admin-profile-card">
+                    <div class="admin-pfp">{admin_avatar}</div>
+                    <div class="admin-profile-info">
+                        <h2 id="admin-profile-name">{admin_name}</h2>
+                        <h4 id="admin-profile-role">{admin_role}</h4>
+                    </div>
+                </div>
+            </div>
+            <header class="admin-header">
+                <h1>Equipe</h1>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="section-header">
+                    <h2>Membros da Equipe</h2>
+                </div>
+
+                <div class="team-grid">
+                    {team_list}
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

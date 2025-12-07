@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subcategorias - Bennettii</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <style>
+        .admin-pfp {
+            width: 50px;
+            height: 50px;
+            flex-shrink: 0;
+        }
+
+        .admin-pfp img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .title-area h1 {
+            color: #fff;
+            margin: 0;
+        }
+
+        .title-area p {
+            color: #a0a0a0;
+            margin: 0.5rem 0 0 0;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #D0D558, #a8ad3f);
+            color: #1a1a2e;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(208, 213, 88, 0.3);
+        }
+
+        .table-container {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(208, 213, 88, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(208, 213, 88, 0.1);
+            color: #D0D558;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            color: #e0e0e0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-icon.edit {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
+
+        .btn-icon.edit:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-icon.delete {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .btn-icon.delete:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        .success-message {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #4ade80;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="/assets/image/bennettii_nobackground_horizontal.png" alt="Bennettii Admin">
+            </div>
+
+            <nav class="admin-nav">
+                <div class="nav-section">
+                    <h3>Principal</h3>
+                    <a href="/admin/dashboard">Dashboard</a>
+                    <a href="/admin/team-list">Equipe</a>
+                </div>
+                <div class="nav-section">
+                    <h3>Produtos</h3>
+                    <a href="/admin/products">Gerenciar Produtos</a>
+                    <a href="/admin/categories">Categorias</a>
+                    <a href="/admin/subcategories" class="active">Subcategorias</a>
+                </div>
+                <div class="nav-section">
+                    <h3>Clientes</h3>
+                    <a href="/admin/customers">Gerenciar Clientes</a>
+                </div>
+                <div class="nav-section">
+                    <h3>Vendas</h3>
+                    <a href="/admin/orders">Pedidos</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <div class="page-content">
+                <div class="admin-profile">
+                    <div class="admin-profile-card">
+                        <div class="admin-pfp">{admin_avatar}</div>
+                        <div class="admin-profile-info">
+                            <h2>{admin_name}</h2>
+                            <h4>{admin_role}</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="breadcrumb" style="margin-bottom: 20px;">
+                    <li><a href="/admin/dashboard">Dashboard</a></li>
+                    <li class="active">Subcategorias</li>
+                </ul>
+
+                <div class="page-header">
+                    <div class="title-area">
+                        <h1>Subcategorias</h1>
+                        <p>Gerencie as subcategorias dos produtos.</p>
+                    </div>
+                    <a href="/admin/subcategories/create" class="btn-add">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Nova Subcategoria
+                    </a>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Subcategoria</th>
+                                <th>Categoria</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {subcategory_rows}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Cliente - Admin Bennettii</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="/assets/image/bennettii_nobackground_horizontal.png" alt="Bennettii Admin">
+            </div>
+
+            <nav class="admin-nav">
+                <div class="nav-section">
+                    <h3>Principal</h3>
+                    <a href="/admin/dashboard">
+                        Dashboard
+                    </a>
+                    <a href="/admin/team-list" class="active">
+                        Equipe
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Gestão de Conteúdo</h3>
+                    <a href="/admin/carousel">
+                        Carrossel
+                    </a>
+                    <a href="/admin/promotions">
+                        Promoções
+                    </a>
+                    <a href="/admin/news">
+                        Novidades
+                    </a>
+                    <a href="/admin/bestsellers">
+                        Mais Vendidos
+                    </a>
+                    <a href="/admin/settings">
+                        Configurações (Logo/Menu)
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Produtos</h3>
+                    <a href="/admin/products">
+                        Gerenciar Produtos
+                    </a>
+                    <a href="/admin/categories">
+                        Categorias
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Clientes</h3>
+                    <a href="/admin/customers">
+                        Gerenciar Clientes
+                    </a>
+                    <a href="/admin/customers/search">
+                        Buscar Clientes
+                    </a>
+                    <a href="/admin/gerenciar-logs">
+                        Gerenciar Logs
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Vendas & Relatórios</h3>
+                    <a href="/admin/orders">
+                        Pedidos
+                    </a>
+                    <a href="/admin/reports">
+                        Relatórios
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Feedback</h3>
+                    <a href="/admin/reviews">
+                        Avaliações
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="admin-profile">
+                <div class="admin-profile-card">
+                    <img src="/assets/image/placeholder_pfp.png" class="admin-pfp">
+                    <div class="admin-profile-info">
+                        <h2 id="admin-profile-name">{admin_name}</h2>
+                        <h4 id="admin-profile-role">{admin_role}</h4>
+                    </div>
+                </div>
+            </div>
+            <ul class="breadcrumb" style="margin-bottom: 20px;">
+                <li><a href="/admin/dashboard">Dashboard</a></li>
+                <li class="active"> Gerenciar Clientes</li>
+            </ul>
+            <header class="admin-header">
+                <div class="header-title">
+                    <a href="/admin/customers" class="back-link">← Voltar</a>
+                    <h1>Cliente:
+                        <?= htmlspecialchars($customer->getNome()) ?>
+                    </h1>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="details-grid">
+                    <!-- Left Column: Orders & Addresses -->
+                    <div class="details-main">
+                        <!-- Customer Info Card -->
+                        <div class="card">
+                            <h3>Informações Pessoais</h3>
+                            <div class="info-row">
+                                <div class="info-group">
+                                    <label>Nome Completo</label>
+                                    <p>
+                                        <?= htmlspecialchars($customer->getNome()) ?>
+                                    </p>
+                                </div>
+                                <div class="info-group">
+                                    <label>Email</label>
+                                    <p>
+                                        <?= htmlspecialchars($customer->getEmail()) ?>
+                                    </p>
+                                </div>
+                                <div class="info-group">
+                                    <label>CPF</label>
+                                    <p>
+                                        <?= htmlspecialchars($customer->getCpf()) ?>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Orders History -->
+                        <div class="card">
+                            <h3>Histórico de Pedidos</h3>
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Pedido</th>
+                                        <th>Data</th>
+                                        <th>Valor</th>
+                                        <th>Status</th>
+                                        <th>Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (empty($orders)): ?>
+                                    <tr>
+                                        <td colspan="5">Nenhum pedido encontrado.</td>
+                                    </tr>
+                                    <?php else: ?>
+                                    <?php foreach ($orders as $order): ?>
+                                    <tr>
+                                        <td>#
+                                            <?= $order->getId() ?>
+                                        </td>
+                                        <td>
+                                            <?= date('d/m/Y', strtotime($order->getData() ?? 'now')) ?>
+                                        </td>
+                                        <td>R$
+                                            <?= number_format($order->getValorTotal(), 2, ',', '.') ?>
+                                        </td>
+                                        <td><span class="status-badge <?= strtolower($order->getStatus()) ?>">
+                                                <?= $order->getStatus() ?>
+                                            </span></td>
+                                        <td><a href="/admin/orders/show/<?= $order->getId() ?>" class="btn-sm">Ver</a>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Contact & Notes -->
+                    <div class="details-sidebar">
+                        <div class="card">
+                            <h3>Contato</h3>
+                            <div class="contact-info">
+                                <p><span class="icon">📧</span> <a href="mailto:<?= $customer->getEmail() ?>">
+                                        <?= $customer->getEmail() ?>
+                                    </a></p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>Endereços</h3>
+                            <?php if (empty($addresses)): ?>
+                            <p class="text-muted">Nenhum endereço cadastrado.</p>
+                            <?php else: ?>
+                            <?php foreach ($addresses as $addr): ?>
+                            <div class="address-box">
+                                <p><strong>
+                                        <?= htmlspecialchars($addr->getRua()) ?>,
+                                        <?= $addr->getNumero() ?>
+                                    </strong></p>
+                                <p>
+                                    <?= htmlspecialchars($addr->getBairro()) ?> -
+                                    <?= htmlspecialchars($addr->getCidade()) ?>/
+                                    <?= htmlspecialchars($addr->getEstado()) ?>
+                                </p>
+                                <p>CEP:
+                                    <?= htmlspecialchars($addr->getCep()) ?>
+                                </p>
+                            </div>
+                            <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

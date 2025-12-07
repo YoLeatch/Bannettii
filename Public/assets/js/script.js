@@ -1,22 +1,32 @@
-
-function mostrarBarraLateral() {
-  const sidebar = document.querySelector('.sidebar');
-  sidebar.style.display = 'flex';
-  sidebar.style.animation = 'appear 0.2s'
-}
-
-function esconderBarraLateral() {
-  const sidebar = document.querySelector('.sidebar');
-  sidebar.style.animation = 'disappear 0.2s';
-  sidebar.style.display = 'none';
-}
-
-/*document.getElementById('celular').addEventListener('input', function (e) {
-  var x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
-  e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-});*/
-
 document.addEventListener('DOMContentLoaded', function () {
+  // Sidebar Logic
+  const menuTrigger = document.getElementById('menuTrigger');
+  const closeSidebar = document.getElementById('closeSidebar');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  if (menuTrigger && sidebar) {
+    menuTrigger.addEventListener('click', function () {
+      sidebar.classList.add('active');
+      if (overlay) overlay.classList.add('active');
+    });
+  }
+
+  if (closeSidebar && sidebar) {
+    closeSidebar.addEventListener('click', function () {
+      sidebar.classList.remove('active');
+      if (overlay) overlay.classList.remove('active');
+    });
+  }
+
+  if (overlay && sidebar) {
+    overlay.addEventListener('click', function () {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+  }
+
+  // CPF Input Mask
   const cpfInput = document.getElementById('cpf');
   if (cpfInput) {
     cpfInput.addEventListener('input', function (e) {

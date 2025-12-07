@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use App\Pages\Controllers\oops;
+
 class ViewerPlace {
     public static function render($view, $data = []) {
         $viewFile = __DIR__ . '/../App/Pages/Views/' . $view . '.html';
@@ -18,8 +20,8 @@ class ViewerPlace {
 
             return str_replace($search, $values, $page);
         } else {
-            throw new \Exception("View file not found: " . $viewFile);
-        }
+            echo oops::index();
+        }   
     }
 }
 

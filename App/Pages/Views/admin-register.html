@@ -12,70 +12,136 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
     <script src="/assets/js/script.js"></script>
 
     <title>Cadastro Admin - Bennettii</title>
 </head>
 
-<body>
-
-    <nav class="navbar">
-        <ul class="sidebar">
-            <li onclick="esconderBarraLateral()"><a><svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                        viewBox="0 -960 960 960" width="24px" fill="#D0D558">
-                        <path
-                            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                    </svg></a></li>
-            <li><a href="/">Home</a></li>
-        </ul>
-        <ul>
-            <li><a href="/"><img src="/assets/image/bennettii_nobackground_horizontal.png" height="35px"></a>
-            </li>
-            <li onclick="mostrarBarraLateral()" class="menu-btn"><a><svg xmlns="http://www.w3.org/2000/svg"
-                        height="50px" viewBox="0 -960 960 960" fill="#D0D558">
-                        <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
-                    </svg></a></li>
-        </ul>
-    </nav>
-
-    <main class="special-margin">
-        <div id="login-container">
-
-            <div class="login-modal" style="background-color: #4D5C49; color: white;">
-                <form method="POST" action="/admin/register">
-                    <center><img src="/assets/image/bennettii_nobackground.png" height="120px"><br></center>
-                    <br>
-                    <h3 style="color: #D0D558;">Promover Usuário a Admin</h3><br>
-                    <h3 class="warning" style="color: #ff8888;">{error}</h3><br>
-
-                    <label style="color: white;">Email do Usuário Existente</label><br>
-                    <input required type="email" name="email" maxlength="255" placeholder="email@usuario.com"><br>
-
-                    <label style="color: white;">Senha do Usuário</label><br>
-                    <input required type="password" name="password" maxlength="255"
-                        placeholder="Confirme a senha do usuário"><br>
-                    <br>
-
-                    <label style="color: white;">Cargo a Atribuir</label><br>
-                    <select name="cargo" required
-                        style="width: 100%; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
-                        <option value="1">Administrador</option>
-                        <option value="2">Gerente</option>
-                        <option value="3">Suporte</option>
-                    </select><br>
-
-                    <input type="submit" class="button" value="Promover a Admin"
-                        style="background-color: #D0D558; color: #4D5C49;">
-                    <br><br>
-
-                    <span class="possuiConta"><a href="/admin/login" style="color: #c2ccab;">Já possui acesso?
-                            Login</a></span>
-
-                    <input type="hidden" name="csrf_token" value="{csrf_token}">
-                </form>
+<body class="admin-body">
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="/assets/image/bennettii_nobackground_horizontal.png" alt="Bennettii Admin">
             </div>
-        </div>
-    </main>
+
+            <nav class="admin-nav">
+                <div class="nav-section">
+                    <h3>Principal</h3>
+                    <a href="/admin/dashboard">
+                        Dashboard
+                    </a>
+                    <a href="/admin/team-list" class="active">
+                        Equipe
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Gestão de Conteúdo</h3>
+                    <a href="/admin/carousel">
+                        Carrossel
+                    </a>
+                    <a href="/admin/promotions">
+                        Promoções
+                    </a>
+                    <a href="/admin/news">
+                        Novidades
+                    </a>
+                    <a href="/admin/bestsellers">
+                        Mais Vendidos
+                    </a>
+                    <a href="/admin/settings">
+                        Configurações (Logo/Menu)
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Produtos</h3>
+                    <a href="/admin/products">
+                        Gerenciar Produtos
+                    </a>
+                    <a href="/admin/categories">
+                        Categorias
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Clientes</h3>
+                    <a href="/admin/customers">
+                        Gerenciar Clientes
+                    </a>
+                    <a href="/admin/customers/search">
+                        Buscar Clientes
+                    </a>
+                    <a href="/admin/gerenciar-logs">
+                        Gerenciar Logs
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Vendas & Relatórios</h3>
+                    <a href="/admin/orders">
+                        Pedidos
+                    </a>
+                    <a href="/admin/reports">
+                        Relatórios
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Feedback</h3>
+                    <a href="/admin/reviews">
+                        Avaliações
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-profile">
+                <div class="admin-profile-card">
+                    <img src="/assets/image/placeholder_pfp.png" class="admin-pfp">
+                    <div class="admin-profile-info">
+                        <h2 id="admin-profile-name">{admin_name}</h2>
+                        <h4 id="admin-profile-role">{admin_role}</h4>
+                    </div>
+                </div>
+            </div>
+            <div id="login-container">
+                <ul class="breadcrumb" style="margin-bottom: 20px; width: 100%;">
+                    <li><a href="/">Dashboard</a></li>
+                </ul>
+                <div class="login-modal">
+                    <form method="POST" action="/admin/register">
+                        <center><img src="/assets/image/bennettii_nobackground.png" height="120px"><br></center>
+                        <br>
+                        <h3>Promover Usuário a Admin</h3><br>
+                        <h3 class="warning">{error}</h3><br>
+
+                        <label>Email do Usuário Existente</label>
+                        <input required type="email" name="email" maxlength="255" placeholder="email@usuario.com"><br>
+
+                        <label>Senha do Usuário</label>
+                        <input required type="password" name="password" maxlength="255"
+                            placeholder="Confirme a senha do usuário"><br>
+
+                        <label>Cargo a Atribuir</label>
+                        <select name="cargo" required
+                            style="width: 100%; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+                            <option value="1">Administrador</option>
+                            <option value="2">Gerente</option>
+                            <option value="3">Suporte</option>
+                        </select><br><br>
+
+                        <input type="submit" class="button" value="Promover a Admin">
+                        <br>
+
+                        <input type="hidden" name="csrf_token" value="{csrf_token}">
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
 </body>
 
 </html>

@@ -1,0 +1,42 @@
+// Definindo cores e fontes que serão usadas em todo o projeto
+$primary-color: #007bff; // Azul vibrante (mantido do original, mas não usado no style.css)
+$secondary-color: #6c757d; // Cinza (mantido)
+$text-color: #343a40;
+$border-radius: 4px;
+$white: #ffffff;
+$gray: #6c757d;
+$light-gray: #f8f9fa;
+
+// Colors extracted from style.css
+$bg-color: #D9D9D9;
+$nav-bg-color: #53613F;
+$nav-text-color: #D0D558;
+$nav-hover-bg: #343d28;
+$modal-bg-color: #c9cac6;
+$btn-bg-color: #4D5C49;
+$btn-text-color: #FFFFFF;
+$link-hover-color: #e8ec77;
+$table-header-bg: #53613F;
+$table-row-bg: #acacac;
+$status-approved: rgb(0, 122, 0);
+$status-processing: rgb(179, 179, 4);
+$status-cancelled: rgb(173, 1, 1);
+
+// New Forest Palette (Dashboard)
+$forest-lightest: #c2ccab;
+$forest-light: #a0b192;
+$forest-medium-light: #7fb0a0;
+$forest-medium: #6fa897;
+$forest-primary: #579984;
+$forest-dark: #44826d;
+$forest-darker: #2f6957;
+$forest-deep: #245e4c;
+$forest-deeper: #1e4d3e;
+$forest-deepest: #174536;
+$forest-black: #0f3b2c;
+$forest-text: #223229;
+$forest-text-muted: #455541;
+
+// Fonts
+$font-primary: 'Inter', sans-serif;
+$font-secondary: 'Belleza', sans-serif;

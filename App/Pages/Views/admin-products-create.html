@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/image/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/image/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/image/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <title>Adicionar Produto - Bennettii</title>
+    <style>
+        .admin-pfp {
+            width: 50px;
+            height: 50px;
+            flex-shrink: 0;
+        }
+
+        .admin-pfp img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .product-form-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: #223229;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(208, 213, 88, 0.1);
+        }
+
+        .card h2 {
+            color: #c2ccab;
+            margin: 0 0 1rem 0;
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #e0e0e0;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #D0D558;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .title-area {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .title-area h1 {
+            color: #223229;
+            margin: 0;
+        }
+
+        .btn-back {
+            color: #a0a0a0;
+            text-decoration: none;
+        }
+
+        .btn-add {
+            background: #D0D558;
+            color: #1a1a2e;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-add:hover {
+            background: #b8bd40;
+        }
+
+        .image-upload-area {
+            border: 2px dashed rgba(208, 213, 88, 0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .image-upload-area:hover {
+            border-color: #D0D558;
+        }
+
+        .image-upload-area input {
+            display: none;
+        }
+
+        .image-upload-area svg {
+            color: #D0D558;
+            margin-bottom: 0.5rem;
+        }
+
+        .image-upload-area p {
+            color: #a0a0a0;
+            margin: 0;
+        }
+
+        .size-selector {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .size-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: transparent;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .size-btn:hover,
+        .size-btn.active {
+            border-color: #D0D558;
+            background: rgba(208, 213, 88, 0.2);
+        }
+
+        .success-message {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #4ade80;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .product-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="/assets/image/bennettii_nobackground_horizontal.png" alt="Bennettii Admin">
+            </div>
+
+            <nav class="admin-nav">
+                <div class="nav-section">
+                    <h3>Principal</h3>
+                    <a href="/admin/dashboard">Dashboard</a>
+                    <a href="/admin/team-list">Equipe</a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Gestão de Conteúdo</h3>
+                    <a href="/admin/carousel">Carrossel</a>
+                    <a href="/admin/promotions">Promoções</a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Produtos</h3>
+                    <a href="/admin/products" class="active">Gerenciar Produtos</a>
+                    <a href="/admin/categories">Categorias</a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Clientes</h3>
+                    <a href="/admin/customers">Gerenciar Clientes</a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Vendas & Relatórios</h3>
+                    <a href="/admin/orders">Pedidos</a>
+                    <a href="/admin/reports">Relatórios</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <div class="page-content">
+                <div class="admin-profile">
+                    <div class="admin-profile-card">
+                        <div class="admin-pfp">{admin_avatar}</div>
+                        <div class="admin-profile-info">
+                            <h2 id="admin-profile-name">{admin_name}</h2>
+                            <h4 id="admin-profile-role">{admin_role}</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="breadcrumb" style="margin-bottom: 20px;">
+                    <li><a href="/admin/dashboard">Dashboard</a></li>
+                    <li><a href="/admin/products">Produtos</a></li>
+                    <li class="active">Adicionar</li>
+                </ul>
+
+                <form action="/admin/products/store" method="POST" enctype="multipart/form-data">
+                    <div class="page-header">
+                        <div class="title-area">
+                            <a href="/admin/products" class="btn-back">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                                </svg>
+                            </a>
+                            <h1>{page_title}</h1>
+                        </div>
+                        <div class="actions-area">
+                            <button type="submit" class="btn-add">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                Salvar Produto
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="product-form-grid">
+                        <!-- Left Column -->
+                        <div class="left-column">
+                            <!-- General Information -->
+                            <div class="card">
+                                <h2>Informações Gerais</h2>
+
+                                <div class="form-group">
+                                    <label>Nome do Produto *</label>
+                                    <input type="text" name="nome" placeholder="Ex: Jaqueta Puffer" value="{nome}"
+                                        required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Descrição</label>
+                                    <textarea name="descricao" rows="5"
+                                        placeholder="Descrição detalhada do produto...">{descricao}</textarea>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label>Categoria *</label>
+                                        <select name="categoria" id="categoria" required>
+                                            <option value="">Selecione...</option>
+                                            {category_options}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Sub-Categoria</label>
+                                        <select name="sub_categoria" id="sub_categoria">
+                                            {subcategory_options}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label>Material</label>
+                                        <input type="text" name="material" value="{material}"
+                                            placeholder="Ex: Algodão, Poliéster">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Cor</label>
+                                        <input type="text" name="cor" value="{cor}" placeholder="Ex: Azul, Preto">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Tamanhos Disponíveis</label>
+                                    <div class="size-selector">
+                                        <input type="hidden" name="tamanho" id="selected-size" value="{tamanho}">
+                                        <button type="button" class="size-btn" onclick="selectSize('XS')">XS</button>
+                                        <button type="button" class="size-btn" onclick="selectSize('S')">S</button>
+                                        <button type="button" class="size-btn" onclick="selectSize('M')">M</button>
+                                        <button type="button" class="size-btn" onclick="selectSize('L')">L</button>
+                                        <button type="button" class="size-btn" onclick="selectSize('XL')">XL</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pricing and Stock -->
+                            <div class="card">
+                                <h2>Preço e Estoque</h2>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label>Preço (R$) *</label>
+                                        <input type="number" step="0.01" name="preco" value="{preco}" required
+                                            placeholder="0.00">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Estoque *</label>
+                                        <input type="number" name="estoque" value="{estoque}" required placeholder="0">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label>Desconto (%)</label>
+                                        <input type="number" name="desconto" value="{desconto}" placeholder="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Status</label>
+                                        <select name="status">
+                                            <option value="1">Ativo</option>
+                                            <option value="0">Inativo</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label>Peso Líquido</label>
+                                        <input type="text" name="pesoliq" value="{pesoliq}" placeholder="Ex: 0.5kg">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Peso Total</label>
+                                        <input type="text" name="pesototal" value="{pesototal}" placeholder="Ex: 0.6kg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="right-column">
+                            <!-- Upload Img -->
+                            <div class="card">
+                                <h2>Imagens do Produto</h2>
+                                <label class="image-upload-area" for="product-images">
+                                    <input type="file" name="images[]" id="product-images" accept="image/*" multiple>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                        <polyline points="21 15 16 10 5 21"></polyline>
+                                    </svg>
+                                    <p>Clique para upload ou arraste as imagens</p>
+                                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">PNG, JPG até 5MB</p>
+                                </label>
+                                <div id="image-preview"
+                                    style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function selectSize(size) {
+            document.getElementById('selected-size').value = size;
+            document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Image preview
+        document.getElementById('product-images').addEventListener('change', function (e) {
+            const preview = document.getElementById('image-preview');
+            preview.innerHTML = '';
+
+            Array.from(e.target.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.style.width = '80px';
+                    img.style.height = '80px';
+                    img.style.objectFit = 'cover';
+                    img.style.borderRadius = '8px';
+                    preview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+    </script>
+    <script>
+        // Carregar subcategorias ao selecionar categoria
+        document.getElementById('categoria').addEventListener('change', function () {
+            const categoriaId = this.value;
+            const subSelect = document.getElementById('sub_categoria');
+
+            subSelect.innerHTML = '<option value="">Carregando...</option>';
+
+            if (!categoriaId) {
+                subSelect.innerHTML = '<option value="">Selecione uma categoria primeiro</option>';
+                return;
+            }
+
+            fetch('/admin/subcategories/by-category/' + categoriaId)
+                .then(response => response.json())
+                .then(data => {
+                    subSelect.innerHTML = '<option value="">Selecione...</option>';
+                    data.forEach(sub => {
+                        const option = document.createElement('option');
+                        option.value = sub.id;
+                        option.textContent = sub.nome;
+                        subSelect.appendChild(option);
+                    });
+
+                    if (data.length === 0) {
+                        subSelect.innerHTML = '<option value="">Nenhuma subcategoria</option>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    subSelect.innerHTML = '<option value="">Erro ao carregar</option>';
+                });
+        });
+    </script>
+</body>
+
+</html>

@@ -19,4 +19,11 @@ class AuthMiddleware {
         }
         return true;
     }
+
+    public static function check(): bool {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        return (isset($_SESSION['user_id']) && !empty($_SESSION['user_id']) && ((isset($_SESSION['logged_in']) && !empty($_SESSION['logged_in']))));
+    }
 }

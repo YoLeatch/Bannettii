@@ -63,15 +63,12 @@ class Router {
             if ($route['method'] === strtoupper($method) && preg_match($route['regex'], $uri, $matches)) {
                 
                 if (!empty($route['middleware'])) {
-                    $middlewares = $route['middleware'];
-                    if (is_callable($middlewares)) {
-                        $middlewares = [$middlewares];
-                    }
-                    
-                    foreach ($middlewares as $mw) {
-                        if (is_callable($mw)) {
-                            call_user_func($mw);
-                        }
+                    $middleware = $route['middleware'];
+                    // O middleware é um array [ClassName, methodName]
+                    if (is_array($middleware) && count($middleware) === 2 && is_string($middleware[0]) && is_string($middleware[1])) {
+                        call_user_func([$middleware[0], $middleware[1]]);
+                    } elseif (is_callable($middleware)) {
+                        call_user_func($middleware);
                     }
                 }
 

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios - Admin Bennettii</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="/assets/image/bennettii_nobackground_horizontal.png" alt="Bennettii Admin">
+            </div>
+
+            <nav class="admin-nav">
+                <div class="nav-section">
+                    <h3>Principal</h3>
+                    <a href="/admin/dashboard">
+                        Dashboard
+                    </a>
+                    <a href="/admin/team-list">
+                        Equipe
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Gestão de Conteúdo</h3>
+                    <a href="/admin/carousel">
+                        Carrossel
+                    </a>
+                    <a href="/admin/promotions">
+                        Promoções
+                    </a>
+                    <a href="/admin/news">
+                        Novidades
+                    </a>
+                    <a href="/admin/bestsellers">
+                        Mais Vendidos
+                    </a>
+                    <a href="/admin/settings">
+                        Configurações (Logo/Menu)
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Produtos</h3>
+                    <a href="/admin/products">
+                        Gerenciar Produtos
+                    </a>
+                    <a href="/admin/categories">
+                        Categorias
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Clientes</h3>
+                    <a href="/admin/customers">
+                        Gerenciar Clientes
+                    </a>
+                    <a href="/admin/customers/search">
+                        Buscar Clientes
+                    </a>
+                    <a href="/admin/gerenciar-logs">
+                        Gerenciar Logs
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Vendas & Relatórios</h3>
+                    <a href="/admin/orders">
+                        Pedidos
+                    </a>
+                    <a href="/admin/reports" class="active">
+                        Relatórios
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Feedback</h3>
+                    <a href="/admin/reviews">
+                        Avaliações
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="admin-profile">
+                <div class="admin-profile-card">
+                    <div class="admin-pfp">{admin_avatar}</div>
+                    <div class="admin-profile-info">
+                        <h2 id="admin-profile-name">{admin_name}</h2>
+                        <h4 id="admin-profile-role">{admin_role}</h4>
+                    </div>
+                </div>
+            </div>
+            <ul class="breadcrumb" style="margin-bottom: 20px;">
+                <li><a href="/admin/dashboard">Dashboard</a></li>
+                <li class="active"> Relatórios</li>
+            </ul>
+            <header class="admin-header">
+                <div class="header-title">
+                    <h1>Relatórios de Vendas</h1>
+                    <p>Análise detalhada do desempenho da loja.</p>
+                </div>
+                <div class="header-actions">
+                    <select class="form-control">
+                        <option>Últimos 30 dias</option>
+                        <option>Este Mês</option>
+                        <option>Este Ano</option>
+                    </select>
+                    <button class="btn-primary">Exportar CSV</button>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <!-- Summary Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Vendas Totais</h3>
+                        <p class="value">R$ {totalSales}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Ticket Médio</h3>
+                        <p class="value">R$ {avgTicket}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total de Pedidos</h3>
+                        <p class="value">{totalOrders}</p>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="card mt-4">
+                    <h3>Vendas por Período</h3>
+                    <canvas id="salesChart" height="100"></canvas>
+                </div>
+
+                <div class="grid-2-col mt-4">
+                    <div class="card">
+                        <h3>Produtos Mais Vendidos</h3>
+                        <table class="simple-table">
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Qtd</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {topProductsRows}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card">
+                        <h3>Vendas por Categoria</h3>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Placeholder Charts
+        const ctxSales = document.getElementById('salesChart').getContext('2d');
+        new Chart(ctxSales, {
+            type: 'bar',
+            data: {
+                labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4'],
+                datasets: [{
+                    label: 'Vendas (R$)',
+                    data: [1200, 1900, 3000, 2500],
+                    backgroundColor: '#2d4a3e'
+                }]
+            }
+        });
+
+        const ctxCat = document.getElementById('categoryChart').getContext('2d');
+        new Chart(ctxCat, {
+            type: 'pie',
+            data: {
+                labels: ['Roupas', 'Acessórios', 'Calçados'],
+                datasets: [{
+                    data: [50, 30, 20],
+                    backgroundColor: ['#2d4a3e', '#D0D558', '#1a1a1a']
+                }]
+            }
+        });
+    </script>
+</body>
+
+</html>

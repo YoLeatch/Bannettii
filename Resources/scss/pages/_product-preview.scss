@@ -1,4 +1,5 @@
 @use '../base/variables' as *;
+@use 'sass:color';
 
 .product-preview-container {
     max-width: 1200px;
@@ -82,7 +83,7 @@
         width: 100%;
 
         &:hover {
-            background-color: lighten(#2d4a3e, 5%);
+            background-color: color.adjust(#2d4a3e, $lightness: 5%);
         }
 
         svg {

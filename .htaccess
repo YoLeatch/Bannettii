@@ -1,18 +1,27 @@
-<IfModule mod_rewrite.c>
-    # Ativa o motor de reescrita de URL
-    RewriteEngine On
+# Habilitar RewriteEngine
+RewriteEngine On
 
-    # Define a base para as regras de reescrita (opcional, mas bom ter)
-    # Se seu site estiver em um subdiretório, mude / para /seusubdiretorio/
-    RewriteBase /
+# Redirecionar para HTTPS (opcional mas recomendado)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-    # Condição 1: Se a requisição NÃO for para um arquivo existente
-    RewriteCond %{REQUEST_FILENAME} !-f
-    
-    # Condição 2: Se a requisição NÃO for para um diretório existente
-    RewriteCond %{REQUEST_FILENAME} !-d
+# Bloquear acesso a arquivos sensíveis
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
 
-    # Regra: Reescreve todas as outras requisições para o public/index.php
-    # O que for digitado na URL é capturado e passado como um parâmetro "url"
-    RewriteRule ^(.*)$ public/index.php?url=$1 [L,QSA]
-</IfModule>
+# Proteger arquivos de configuração
+<FilesMatch "(composer\.json|composer\.lock|\.env|\.git)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Redirecionar tudo para public/index.php
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule ^(.*)$ /public/$1 [L]
+
+# Se o arquivo não existir, redirecionar para index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /public/index.php [QSA,L]

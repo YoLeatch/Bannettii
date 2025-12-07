@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Subcategoria - Bennettii</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <style>
+        .admin-pfp {
+            width: 50px;
+            height: 50px;
+            flex-shrink: 0;
+        }
+
+        .admin-pfp img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .title-area {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .title-area h1 {
+            color: #fff;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .btn-back {
+            color: #a0a0a0;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #D0D558, #a8ad3f);
+            color: #1a1a2e;
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(208, 213, 88, 0.3);
+        }
+
+        .card {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(208, 213, 88, 0.1);
+            max-width: 600px;
+        }
+
+        .card h2 {
+            color: #D0D558;
+            margin: 0 0 1.5rem 0;
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #e0e0e0;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #D0D558;
+        }
+
+        .form-group select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        .helper-text {
+            color: #a0a0a0;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="/assets/image/bennettii_nobackground_horizontal.png" alt="Bennettii Admin">
+            </div>
+
+            <nav class="admin-nav">
+                <div class="nav-section">
+                    <h3>Principal</h3>
+                    <a href="/admin/dashboard">Dashboard</a>
+                    <a href="/admin/team-list">Equipe</a>
+                </div>
+                <div class="nav-section">
+                    <h3>Produtos</h3>
+                    <a href="/admin/products">Gerenciar Produtos</a>
+                    <a href="/admin/categories">Categorias</a>
+                    <a href="/admin/subcategories" class="active">Subcategorias</a>
+                </div>
+                <div class="nav-section">
+                    <h3>Clientes</h3>
+                    <a href="/admin/customers">Gerenciar Clientes</a>
+                </div>
+                <div class="nav-section">
+                    <h3>Vendas</h3>
+                    <a href="/admin/orders">Pedidos</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <div class="page-content">
+                <div class="admin-profile">
+                    <div class="admin-profile-card">
+                        <div class="admin-pfp">{admin_avatar}</div>
+                        <div class="admin-profile-info">
+                            <h2>{admin_name}</h2>
+                            <h4>{admin_role}</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="breadcrumb" style="margin-bottom: 20px;">
+                    <li><a href="/admin/dashboard">Dashboard</a></li>
+                    <li><a href="/admin/subcategories">Subcategorias</a></li>
+                    <li class="active">Adicionar</li>
+                </ul>
+
+                <form action="/admin/subcategories/store" method="POST">
+                    <div class="page-header">
+                        <div class="title-area">
+                            <a href="/admin/subcategories" class="btn-back">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                                </svg>
+                            </a>
+                            <h1>Adicionar Subcategoria</h1>
+                        </div>
+                        <div class="actions-area">
+                            <button type="submit" class="btn-add">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                Salvar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Informações da Subcategoria</h2>
+
+                        <div class="form-group">
+                            <label for="categoria_id">Categoria Pai *</label>
+                            <select id="categoria_id" name="categoria_id" required>
+                                <option value="">Selecione uma categoria...</option>
+                                {category_options}
+                            </select>
+                            <p class="helper-text">Selecione a categoria à qual esta subcategoria pertence.</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subcategoria">Nome da Subcategoria *</label>
+                            <input type="text" id="subcategoria" name="subcategoria" required
+                                placeholder="Ex: Camisetas, Calças, Tênis..." value="{subcategoria}">
+                        </div>
+
+                        <div class="form-actions">
+                            <a href="/admin/subcategories" class="btn-secondary">Cancelar</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

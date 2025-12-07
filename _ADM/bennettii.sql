@@ -1,4 +1,5 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET FOREIGN_KEY_CHECKS = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -205,7 +206,7 @@ CREATE TABLE `funcionario_cargo` (
 DROP TABLE IF EXISTS `imagem`;
 CREATE TABLE `imagem` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `imagem` varchar(45) NOT NULL,
+  `imagem` varchar(155) NOT NULL,
   `produto` int(11) NOT NULL,
     primary key (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -221,11 +222,12 @@ ALTER TABLE `imagem`
 DROP TABLE IF EXISTS `pessoa`;
 CREATE TABLE `pessoa` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nome` varchar(45) NOT NULL,
-  `login` varchar(200) NOT NULL,
+  `nome` varchar(200) NOT NULL,
+  `image` varchar(155) UNIQUE,
   `senha` varchar(255) NOT NULL,
-  `CPF` varchar(13) NOT NULL UNIQUE,
+  `CPF` varchar(14) NOT NULL UNIQUE,
   `email` varchar(256) NOT NULL UNIQUE,
+  `dt_nascimento` date DEFAULT NULL,
   `dt_criacao` datetime NOT NULL,
   `status` varchar(1) NOT NULL,
   `uid` int(11) NOT NULL,
@@ -270,13 +272,21 @@ DROP TABLE IF EXISTS `produto_vendas`;
 CREATE TABLE `produto_vendas` (
   `produto_id` int(11) NOT NULL,
   `vendas_id` int(11) NOT NULL,
+  `pessoa_id` int(11) NOT NULL,
   `valor` int(11) NOT NULL,
+  `avalaliacao_num` float default null,
+  `avaliacao_tit` varchar(50) default null,
+  `avaliacao_desc` text default null,
+  `avaliacao_data` date default null,
   `quantidade` int(11) NOT NULL,
+  `status` varchar(100) NOT NULL,
     primary key (`produto_id`, `vendas_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 ALTER TABLE `produto_vendas`
-  ADD KEY `fk_ProdVenda_Venda` (`vendas_id`);
+  ADD KEY `fk_ProdVenda_Venda` (`vendas_id`),
+  ADD KEY `fk_ProdVenda_Prod` (`produto_id`),
+  ADD KEY `fk_ProdVenda_pessoa` (`pessoa_id`);
 -- --------------------------------------------------------
 
 --
@@ -322,6 +332,8 @@ CREATE TABLE `venda` (
   `valor_total` int(11) NOT NULL,
   `cliente` int(11) NOT NULL,
   `endereco` int(11) NOT NULL,
+  `status` varchar(1) NOT NULL,
+  `data` datetime NOT NULL,
   `cod` varchar(45) NOT NULL,
     primary key (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -425,6 +437,7 @@ ALTER TABLE `venda`
   ADD CONSTRAINT `fk_Venda_Cliente` FOREIGN KEY (`cliente`) REFERENCES `cliente` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_Venda_Endereco` FOREIGN KEY (`endereco`) REFERENCES `endereco` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
+SET FOREIGN_KEY_CHECKS = 1;
 
 -- 2. Criar o usuário (substitua 'sua_senha_app' por uma senha segura)
 CREATE USER 'read_only'@'localhost' IDENTIFIED BY '95kw2hT{UiJ[+d[9';

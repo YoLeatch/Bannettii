@@ -2,6 +2,24 @@
   0 => 
   array (
     'method' => 'GET',
+    'handler' => 'App\\Pages\\Controllers\\HomeController@index',
+    'regex' => '#^/?$#',
+    'middleware' => 
+    array (
+    ),
+  ),
+  1 => 
+  array (
+    'method' => 'GET',
+    'handler' => 'App\\Pages\\Controllers\\HomeController@index',
+    'regex' => '#^/home/?$#',
+    'middleware' => 
+    array (
+    ),
+  ),
+  2 => 
+  array (
+    'method' => 'GET',
     'handler' => 'App\\User\\Controllers\\AuthController@showLoginForm',
     'regex' => '#^/login/?$#',
     'middleware' => 
@@ -10,7 +28,7 @@
       1 => 'handle',
     ),
   ),
-  1 => 
+  3 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\User\\Controllers\\AuthController@login',
@@ -21,7 +39,7 @@
       1 => 'handle',
     ),
   ),
-  2 => 
+  4 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\User\\Controllers\\RegisterController@showRegisterForm',
@@ -32,7 +50,7 @@
       1 => 'handle',
     ),
   ),
-  3 => 
+  5 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\User\\Controllers\\RegisterController@register',
@@ -43,7 +61,7 @@
       1 => 'handle',
     ),
   ),
-  4 => 
+  6 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\User\\Controllers\\AuthController@logout',
@@ -54,7 +72,7 @@
       1 => 'handle',
     ),
   ),
-  5 => 
+  7 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\ProfileController@handle',
@@ -65,7 +83,7 @@
       1 => 'handle',
     ),
   ),
-  6 => 
+  8 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\Pages\\Controllers\\ProfileController@update',
@@ -76,7 +94,7 @@
       1 => 'handle',
     ),
   ),
-  7 => 
+  9 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\Pages\\Controllers\\ProfileController@uploadAvatar',
@@ -87,47 +105,40 @@
       1 => 'handle',
     ),
   ),
-  8 => 
-  array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\CompleteRegistrationController@showForm',
-    'regex' => '#^/completar-cadastro/?$#',
-    'middleware' => 
-    array (
-      0 => 'App\\User\\Middlewares\\AuthMiddleware',
-      1 => 'handle',
-    ),
-  ),
-  9 => 
-  array (
-    'method' => 'POST',
-    'handler' => 'App\\User\\Controllers\\CompleteRegistrationController@complete',
-    'regex' => '#^/completar-cadastro/?$#',
-    'middleware' => 
-    array (
-      0 => 'App\\User\\Middlewares\\AuthMiddleware',
-      1 => 'handle',
-    ),
-  ),
   10 => 
   array (
     'method' => 'GET',
-    'handler' => 'App\\Pages\\Controllers\\HomeController@index',
-    'regex' => '#^/?$#',
+    'handler' => 'App\\Pages\\Controllers\\OrderController@handle',
+    'regex' => '#^/pedidos/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   11 => 
   array (
     'method' => 'GET',
-    'handler' => 'App\\Pages\\Controllers\\HomeController@index',
-    'regex' => '#^/home/?$#',
+    'handler' => 'App\\Pages\\Controllers\\OrderController@detalhes',
+    'regex' => '#^/pedidos/(?P<id>[^/]+)/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   12 => 
+  array (
+    'method' => 'POST',
+    'handler' => 'App\\Pages\\Controllers\\OrderController@cancelar',
+    'regex' => '#^/pedidos/cancelar/?$#',
+    'middleware' => 
+    array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
+    ),
+  ),
+  13 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\ProductController@show',
@@ -136,391 +147,246 @@
     array (
     ),
   ),
-  13 => 
-  array (
-    'method' => 'GET',
-    'handler' => 'App\\Pages\\Controllers\\CatalogController@index',
-    'regex' => '#^/catalogo/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
   14 => 
   array (
     'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminController@dashboard',
-    'regex' => '#^/admin/dashboard/?$#',
+    'handler' => 'App\\Pages\\Controllers\\CatalogController@handle',
+    'regex' => '#^/catalogo/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   15 => 
   array (
     'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminController@teamList',
-    'regex' => '#^/admin/team-list/?$#',
+    'handler' => 'App\\Pages\\Controllers\\CartController@handle',
+    'regex' => '#^/carrinho/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   16 => 
   array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminController@carousel',
-    'regex' => '#^/admin/carousel/?$#',
+    'method' => 'POST',
+    'handler' => 'App\\Pages\\Controllers\\CartController@add',
+    'regex' => '#^/carrinho/add/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   17 => 
   array (
     'method' => 'POST',
-    'handler' => 'App\\User\\Controllers\\AdminController@addSlide',
-    'regex' => '#^/admin/carousel/add/?$#',
+    'handler' => 'App\\Pages\\Controllers\\CartController@remove',
+    'regex' => '#^/carrinho/remove/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   18 => 
   array (
     'method' => 'POST',
-    'handler' => 'App\\User\\Controllers\\AdminController@deleteSlide',
-    'regex' => '#^/admin/carousel/delete/?$#',
+    'handler' => 'App\\Pages\\Controllers\\CartController@update',
+    'regex' => '#^/carrinho/update/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   19 => 
   array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminController@news',
-    'regex' => '#^/admin/news/?$#',
+    'method' => 'POST',
+    'handler' => 'App\\Pages\\Controllers\\CartController@clear',
+    'regex' => '#^/carrinho/clear/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   20 => 
   array (
     'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminController@bestsellers',
-    'regex' => '#^/admin/bestsellers/?$#',
+    'handler' => 'App\\Pages\\Controllers\\CartController@count',
+    'regex' => '#^/carrinho/count/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   21 => 
   array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminController@settings',
-    'regex' => '#^/admin/settings/?$#',
+    'method' => 'POST',
+    'handler' => 'App\\Pages\\Controllers\\CartController@applyCupom',
+    'regex' => '#^/carrinho/apply-cupom/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   22 => 
   array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminProductController@index',
-    'regex' => '#^/admin/products/?$#',
+    'method' => 'POST',
+    'handler' => 'App\\Pages\\Controllers\\CartController@removeCupom',
+    'regex' => '#^/carrinho/remove-cupom/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   23 => 
   array (
     'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminProductController@create',
-    'regex' => '#^/admin/products/create/?$#',
+    'handler' => 'App\\Pages\\Controllers\\EnderecoController@handle',
+    'regex' => '#^/enderecos/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   24 => 
   array (
     'method' => 'POST',
-    'handler' => 'App\\User\\Controllers\\AdminProductController@store',
-    'regex' => '#^/admin/products/store/?$#',
+    'handler' => 'App\\Pages\\Controllers\\EnderecoController@add',
+    'regex' => '#^/enderecos/add/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   25 => 
   array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminProductController@edit',
-    'regex' => '#^/admin/products/edit/(?P<id>[^/]+)/?$#',
+    'method' => 'POST',
+    'handler' => 'App\\Pages\\Controllers\\EnderecoController@update',
+    'regex' => '#^/enderecos/update/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   26 => 
   array (
     'method' => 'POST',
-    'handler' => 'App\\User\\Controllers\\AdminProductController@update',
-    'regex' => '#^/admin/products/update/(?P<id>[^/]+)/?$#',
+    'handler' => 'App\\Pages\\Controllers\\EnderecoController@delete',
+    'regex' => '#^/enderecos/delete/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   27 => 
   array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminProductController@delete',
-    'regex' => '#^/admin/products/delete/(?P<id>[^/]+)/?$#',
+    'method' => 'POST',
+    'handler' => 'App\\Pages\\Controllers\\EnderecoController@addTipo',
+    'regex' => '#^/enderecos/add-tipo/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   28 => 
   array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminCategoryController@index',
-    'regex' => '#^/admin/categories/?$#',
+    'method' => 'POST',
+    'handler' => 'App\\Pages\\Controllers\\EnderecoController@removeTipo',
+    'regex' => '#^/enderecos/remove-tipo/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   29 => 
   array (
     'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminCategoryController@create',
-    'regex' => '#^/admin/categories/create/?$#',
+    'handler' => 'App\\Pages\\Controllers\\EnderecoController@getCidades',
+    'regex' => '#^/enderecos/cidades/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   30 => 
   array (
-    'method' => 'POST',
-    'handler' => 'App\\User\\Controllers\\AdminCategoryController@store',
-    'regex' => '#^/admin/categories/store/?$#',
+    'method' => 'GET',
+    'handler' => 'App\\Pages\\Controllers\\MyCardsController@handle',
+    'regex' => '#^/cartoes/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   31 => 
   array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminCategoryController@edit',
-    'regex' => '#^/admin/categories/edit/(?P<id>[^/]+)/?$#',
+    'method' => 'POST',
+    'handler' => 'App\\Pages\\Controllers\\MyCardsController@add',
+    'regex' => '#^/cartoes/add/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   32 => 
   array (
     'method' => 'POST',
-    'handler' => 'App\\User\\Controllers\\AdminCategoryController@update',
-    'regex' => '#^/admin/categories/update/(?P<id>[^/]+)/?$#',
+    'handler' => 'App\\Pages\\Controllers\\MyCardsController@delete',
+    'regex' => '#^/cartoes/delete/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   33 => 
   array (
     'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminCategoryController@delete',
-    'regex' => '#^/admin/categories/delete/(?P<id>[^/]+)/?$#',
+    'handler' => 'App\\Pages\\Controllers\\CheckoutController@handle',
+    'regex' => '#^/checkout/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   34 => 
   array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminSubCategoryController@index',
-    'regex' => '#^/admin/subcategories/?$#',
+    'method' => 'POST',
+    'handler' => 'App\\Pages\\Controllers\\CheckoutController@processar',
+    'regex' => '#^/checkout/processar/?$#',
     'middleware' => 
     array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
   35 => 
   array (
     'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminSubCategoryController@create',
-    'regex' => '#^/admin/subcategories/create/?$#',
+    'handler' => 'App\\Pages\\Controllers\\CheckoutController@compraEfetuada',
+    'regex' => '#^/compra-efetuada/?$#',
     'middleware' => 
     array (
-    ),
-  ),
-  36 => 
-  array (
-    'method' => 'POST',
-    'handler' => 'App\\User\\Controllers\\AdminSubCategoryController@store',
-    'regex' => '#^/admin/subcategories/store/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  37 => 
-  array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminSubCategoryController@edit',
-    'regex' => '#^/admin/subcategories/edit/(?P<id>[^/]+)/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  38 => 
-  array (
-    'method' => 'POST',
-    'handler' => 'App\\User\\Controllers\\AdminSubCategoryController@update',
-    'regex' => '#^/admin/subcategories/update/(?P<id>[^/]+)/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  39 => 
-  array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminSubCategoryController@delete',
-    'regex' => '#^/admin/subcategories/delete/(?P<id>[^/]+)/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  40 => 
-  array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminSubCategoryController@getByCategory',
-    'regex' => '#^/admin/subcategories/by-category/(?P<id>[^/]+)/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  41 => 
-  array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminCustomerController@index',
-    'regex' => '#^/admin/customers/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  42 => 
-  array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminCustomerController@search',
-    'regex' => '#^/admin/customers/search/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  43 => 
-  array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminOrderController@index',
-    'regex' => '#^/admin/orders/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  44 => 
-  array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminOrderController@show',
-    'regex' => '#^/admin/orders/show/(?P<id>[^/]+)/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  45 => 
-  array (
-    'method' => 'POST',
-    'handler' => 'App\\User\\Controllers\\AdminOrderController@updateStatus',
-    'regex' => '#^/admin/orders/update-status/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  46 => 
-  array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminLogController@index',
-    'regex' => '#^/admin/gerenciar-logs/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  47 => 
-  array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\PromoteController@index',
-    'regex' => '#^/admin/promotions/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  48 => 
-  array (
-    'method' => 'POST',
-    'handler' => 'App\\User\\Controllers\\PromoteController@search',
-    'regex' => '#^/admin/promotions/search/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  49 => 
-  array (
-    'method' => 'POST',
-    'handler' => 'App\\User\\Controllers\\PromoteController@promote',
-    'regex' => '#^/admin/promotions/promote/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  50 => 
-  array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminReviewController@index',
-    'regex' => '#^/admin/reviews/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  51 => 
-  array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminReportController@index',
-    'regex' => '#^/admin/reports/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  52 => 
-  array (
-    'method' => 'GET',
-    'handler' => 'App\\User\\Controllers\\AdminController@dashboard',
-    'regex' => '#^/admin/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  53 => 
-  array (
-    'method' => 'GET',
-    'handler' => 'App\\Pages\\Controllers\\TabelaOrdersController@index',
-    'regex' => '#^/admin/tabela-order/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  54 => 
-  array (
-    'method' => 'GET',
-    'handler' => 'App\\Pages\\Controllers\\GerenciarProdutoController@index',
-    'regex' => '#^/admin/registrar-produto/?$#',
-    'middleware' => 
-    array (
-    ),
-  ),
-  55 => 
-  array (
-    'method' => 'POST',
-    'handler' => 'App\\Pages\\Controllers\\GerenciarProdutoController@add',
-    'regex' => '#^/admin/new/produto/?$#',
-    'middleware' => 
-    array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
     ),
   ),
 );

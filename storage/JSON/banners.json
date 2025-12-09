@@ -1,1 +1,14 @@
-[]
+[
+    {
+        "titulo": "Bem-vindo à Bennettii",
+        "descricao": "Moda com estilo e conforto para você",
+        "imagem": "\/uploads\/banners\/banner1.png",
+        "link": "\/catalogo",
+        "ordem": 1,
+        "ativo": true,
+        "dataInicio": null,
+        "dataFim": null,
+        "id": 1,
+        "criacao": "2025-12-09 00:09:28"
+    }
+]

@@ -38,6 +38,7 @@ DROP TABLE IF EXISTS `cartao_credito`;
 CREATE TABLE `cartao_credito` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(40) NOT NULL,
+  `numero` varchar(20) DEFAULT NULL,
   `validade` date NOT NULL,
   `usuario` int(11) NOT NULL,
   `status` varchar(1) NOT NULL,
@@ -438,20 +439,3 @@ ALTER TABLE `venda`
   ADD CONSTRAINT `fk_Venda_Endereco` FOREIGN KEY (`endereco`) REFERENCES `endereco` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 SET FOREIGN_KEY_CHECKS = 1;
-
--- 2. Criar o usuário (substitua 'sua_senha_app' por uma senha segura)
-CREATE USER 'read_only'@'localhost' IDENTIFIED BY '95kw2hT{UiJ[+d[9';
-
--- 3. Dar permissões ao usuário
-GRANT SELECT ON bennettii.* TO 'read_only'@'localhost';
-
--- 4. Aplicar as permissões 
-FLUSH PRIVILEGES;
-
-CREATE USER 'default'@'localhost' IDENTIFIED BY 'u*!v2aSN#;^9sNR_';
-
--- 3. Dar permissões ao usuário
-GRANT ALL PRIVILEGES ON bennettii.* TO 'default'@'localhost';
-
--- 4. Aplicar as permissões
-FLUSH PRIVILEGES;

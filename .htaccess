@@ -1,27 +1,13 @@
-# Habilitar RewriteEngine
-RewriteEngine On
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # 1. Proteger o arquivo .env (CRÍTICO!)
+    <Files .env>
+        Order allow,deny
+        Deny from all
+    </Files>
 
-# Redirecionar para HTTPS (opcional mas recomendado)
-# RewriteCond %{HTTPS} off
-# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
-# Bloquear acesso a arquivos sensíveis
-<FilesMatch "^\.">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
-
-# Proteger arquivos de configuração
-<FilesMatch "(composer\.json|composer\.lock|\.env|\.git)">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
-
-# Redirecionar tudo para public/index.php
-RewriteCond %{REQUEST_URI} !^/public/
-RewriteRule ^(.*)$ /public/$1 [L]
-
-# Se o arquivo não existir, redirecionar para index.php
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /public/index.php [QSA,L]
+    # 2. Redirecionar todo o tráfego para a pasta public
+    RewriteRule ^$ public/ [L]
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

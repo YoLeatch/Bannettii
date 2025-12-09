@@ -3,7 +3,7 @@ namespace App\User\Controllers;
 
 use Core\Security;
 use Core\Recaptcha;
-use App\User\ClienteModel;
+use App\User\Models\ClienteModel;
 use Core\ViewerPlace;
 
 class RegisterController {
@@ -46,14 +46,14 @@ class RegisterController {
             file_put_contents($logFile, "CSRF Validated\n", FILE_APPEND);
 
             // Validação do reCAPTCHA
-            $recaptchaToken = $_POST['g-recaptcha-response'] ?? '';
-            if (!Recaptcha::verify($recaptchaToken)) {
-                $_SESSION['ERROR'] = 'Por favor, confirme que você não é um robô.';
-                file_put_contents($logFile, "reCAPTCHA failed\n", FILE_APPEND);
-                header("Location: /register");
-                exit;
-            }
-            file_put_contents($logFile, "reCAPTCHA Validated\n", FILE_APPEND);
+            //$recaptchaToken = $_POST['g-recaptcha-response'] ?? '';
+            //if (!Recaptcha::verify($recaptchaToken)) {
+            //    $_SESSION['ERROR'] = 'Por favor, confirme que você não é um robô.';
+            //    file_put_contents($logFile, "reCAPTCHA failed\n", FILE_APPEND);
+            //    header("Location: /register");
+            //    exit;
+            //}
+            //file_put_contents($logFile, "reCAPTCHA Validated\n", FILE_APPEND);
 
             if (!Security::validateEmail($email)) {
                 $_SESSION['ERROR'] = 'E-mail inválido.';
@@ -72,35 +72,36 @@ class RegisterController {
             $passwordHash = Security::hashPassword($password);
 
             // Criar registro em pessoa E cliente usando ClienteModel
-            //$user = ClienteModel::createCliente($username, $email, $passwordHash, $cpf, $idade);
-//
-            //if ($user) {
-            //    file_put_contents($logFile, "User created successfully: " . $user->getId() . "\n", FILE_APPEND);
-            //    $_SESSION['user_id'] = $user->getId();
-            //    $_SESSION['logged_in'] = true;
-//
-            //    if (isset($_POST['remember_me'])) {
-            //        $UID = [
-            //            'user_uid' => $user->getUid(),
-            //            'exp' => time() + (86400 * 30)
-            //        ];
-//
-            //        $token = Security::generateJWT($UID);
-//
-            //        setcookie('remember_token', $token, [
-            //            'expires' => time() + (86400 * 30),
-            //            'path' => '/',
-            //            'httponly' => true,
-            //        ]);
-            //    }
-            //    header("Location: /home");
-            //    exit;
-            //} else {
-            //    file_put_contents($logFile, "ClienteModel::createCliente returned null\n", FILE_APPEND);
-            //    $_SESSION['ERROR'] = 'Falha ao registrar usuário (Model retornou null).';
-            //    header("Location: /register");
-            //    exit;
-            //}
+            // O método register() cria tanto a pessoa quanto o cliente
+            $user = ClienteModel::register($username, $email, $passwordHash, $cpf, $idade);
+
+            if ($user) {
+                file_put_contents($logFile, "User created successfully: " . $user->getId() . "\n", FILE_APPEND);
+                $_SESSION['user_id'] = $user->getId();
+                $_SESSION['logged_in'] = true;
+
+                if (isset($_POST['remember_me'])) {
+                    $UID = [
+                        'user_uid' => $user->getUid(),
+                        'exp' => time() + (86400 * 30)
+                    ];
+
+                    $token = Security::generateJWT($UID);
+
+                    setcookie('remember_token', $token, [
+                        'expires' => time() + (86400 * 30),
+                        'path' => '/',
+                        'httponly' => true,
+                    ]);
+                }
+                header("Location: /home");
+                exit;
+            } else {
+                file_put_contents($logFile, "ClienteModel::register returned null\n", FILE_APPEND);
+                $_SESSION['ERROR'] = 'Email ou CPF já estão cadastrados.';
+                header("Location: /register");
+                exit;
+            }
 
         } catch (\Exception $e) {
             file_put_contents($logFile, "Exception caught: " . $e->getMessage() . "\n", FILE_APPEND);

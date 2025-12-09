@@ -36,10 +36,10 @@
         </div>
     </header>
     <div class="lower-header">
-        <a href="/catalog?category=camisetas">Camisetas</a>
-        <a href="/catalog?category=calcas">Calças</a>
-        <a href="/catalog?category=blusas">Blusas e Jaquetas</a>
-        <a href="/catalog?category=bolsas">Bolsas</a>
+        <a href="/catalogo?category=camisetas">Camisetas</a>
+        <a href="/catalogo?category=calcas">Calças</a>
+        <a href="/catalogo?category=blusas">Blusas e Jaquetas</a>
+        <a href="/catalogo?category=bolsas">Bolsas</a>
     </div>
 
     <!-- Sidebar Navigation -->
@@ -57,7 +57,7 @@
                     </svg>
                     Gerenciar Conta
                 </a>
-                <a href="/orders" class="nav-item">
+                <a href="/pedidos" class="nav-item">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
@@ -66,7 +66,16 @@
                     </svg>
                     Meus Pedidos
                 </a>
-                <a href="/addresses" class="nav-item">
+                <a href="/carrinho" class="nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    Meu Carrinho
+                </a>
+                <a href="/enderecos" class="nav-item">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -203,64 +212,23 @@
                                 <option value="relevance">Relevância</option>
                                 <option value="price_asc">Menor Preço</option>
                                 <option value="price_desc">Maior Preço</option>
-                                <h4>Preço</h4>
-                                <div class="price-range">
-                                    <input type="number" placeholder="Min" min="0">
-                                    <span>-</span>
-                                    <input type="number" placeholder="Max" min="0">
-                                </div>
+                                <option value="newest">Mais Recentes</option>
+                            </select>
                         </div>
-
-                        <div class="filter-group">
-                            <h4>Tamanho</h4>
-                            <div class="size-options">
-                                <label class="size-box"><input type="checkbox" name="size"
-                                        value="xs"><span>XS</span></label>
-                                <label class="size-box"><input type="checkbox" name="size"
-                                        value="s"><span>S</span></label>
-                                <label class="size-box"><input type="checkbox" name="size"
-                                        value="m"><span>M</span></label>
-                                <label class="size-box"><input type="checkbox" name="size"
-                                        value="l"><span>L</span></label>
-                                <label class="size-box"><input type="checkbox" name="size"
-                                        value="xl"><span>XL</span></label>
-                            </div>
-                        </div>
-
-                        <div class="filter-group">
-                            <h4>Cores</h4>
-                            <div class="color-options">
-                                <label class="color-circle" style="background-color: #000;"><input type="checkbox"
-                                        name="color" value="black"></label>
-                                <label class="color-circle"
-                                    style="background-color: #fff; border: 1px solid #ddd;"><input type="checkbox"
-                                        name="color" value="white"></label>
-                                <label class="color-circle" style="background-color: #2d4a3e;"><input type="checkbox"
-                                        name="color" value="green"></label>
-                                <label class="color-circle" style="background-color: #1a237e;"><input type="checkbox"
-                                        name="color" value="blue"></label>
-                                <label class="color-circle" style="background-color: #b71c1c;"><input type="checkbox"
-                                        name="color" value="red"></label>
-                            </div>
-                        </div>
-                        </aside>
-
-                        <!-- Product Grid -->
-                        <section class="catalog-content">
-                            <div class="catalog-header">
-                                <h1>Todos os Produtos</h1>
-                                <div class="sort-options">
-                                    <label>Ordenar por:</label>
-                                    <select>
-                                        <option value="relevance">Relevância</option>
-                                        <option value="price_asc">Menor Preço</option>
-                                        <option value="price_desc">Maior Preço</option>
-                                        <span>...</span>
-                                        <button class="page-btn">Next</button>
-                                </div>
-                        </section>
                     </div>
+
+                    <!-- Grid de Produtos Dinâmico -->
+                    {products_grid}
+
+                    <!-- Paginação -->
+                    <div class="pagination">
+                        <button class="page-btn">Anterior</button>
+                        <span class="page-info">Página 1</span>
+                        <button class="page-btn">Próximo</button>
+                    </div>
+                </section>
             </div>
+        </div>
     </main>
 
     <footer class="main-footer">
@@ -308,21 +276,128 @@
             if (closeSidebar) closeSidebar.addEventListener('click', toggleSidebar);
             if (overlay) overlay.addEventListener('click', toggleSidebar);
 
-            // Cookie Consent
-            const cookieBanner = document.getElementById('cookieConsent');
-            if (!localStorage.getItem('cookiesAccepted')) {
-                cookieBanner.classList.add('show');
+            // ========== FILTROS ==========
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Marcar checkboxes das categorias baseado na URL
+            const currentCategory = urlParams.get('category');
+            if (currentCategory) {
+                const checkbox = document.querySelector(`input[name="category"][value="${currentCategory}"]`);
+                if (checkbox) checkbox.checked = true;
             }
 
-            const acceptBtn = document.getElementById('acceptCookies');
-            if (acceptBtn) {
-                acceptBtn.addEventListener('click', () => {
-                    localStorage.setItem('cookiesAccepted', 'true');
-                    cookieBanner.classList.remove('show');
+            // Preencher campos de preço
+            const minPrice = urlParams.get('min_price');
+            const maxPrice = urlParams.get('max_price');
+            const priceInputs = document.querySelectorAll('.price-range input');
+            if (priceInputs[0] && minPrice) priceInputs[0].value = minPrice;
+            if (priceInputs[1] && maxPrice) priceInputs[1].value = maxPrice;
+
+            // Marcar ordenação atual
+            const currentSort = urlParams.get('sort');
+            const sortSelect = document.querySelector('.sort-options select');
+            if (sortSelect && currentSort) sortSelect.value = currentSort;
+
+            // Função para aplicar filtros
+            function applyFilters() {
+                const params = new URLSearchParams();
+
+                // Categoria selecionada
+                const selectedCategory = document.querySelector('input[name="category"]:checked');
+                if (selectedCategory) {
+                    params.set('category', selectedCategory.value);
+                }
+
+                // Preço
+                const minPriceInput = document.querySelector('.price-range input:first-child');
+                const maxPriceInput = document.querySelector('.price-range input:last-child');
+                if (minPriceInput && minPriceInput.value) {
+                    params.set('min_price', minPriceInput.value);
+                }
+                if (maxPriceInput && maxPriceInput.value) {
+                    params.set('max_price', maxPriceInput.value);
+                }
+
+                // Tamanhos selecionados
+                const selectedSizes = document.querySelectorAll('input[name="size"]:checked');
+                if (selectedSizes.length > 0) {
+                    const sizes = Array.from(selectedSizes).map(s => s.value).join(',');
+                    params.set('sizes', sizes);
+                }
+
+                // Cores selecionadas
+                const selectedColors = document.querySelectorAll('input[name="color"]:checked');
+                if (selectedColors.length > 0) {
+                    const colors = Array.from(selectedColors).map(c => c.value).join(',');
+                    params.set('colors', colors);
+                }
+
+                // Ordenação
+                const sortSelect = document.querySelector('.sort-options select');
+                if (sortSelect && sortSelect.value !== 'relevance') {
+                    params.set('sort', sortSelect.value);
+                }
+
+                // Pesquisa (manter se existir)
+                const searchTerm = urlParams.get('search');
+                if (searchTerm) params.set('search', searchTerm);
+
+                // Redirecionar com os parâmetros
+                const queryString = params.toString();
+                window.location.href = '/catalogo' + (queryString ? '?' + queryString : '');
+            }
+
+            // Event listeners para filtros
+            document.querySelectorAll('input[name="category"]').forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    // Desmarcar outros se quiser filtro único
+                    if (this.checked) {
+                        document.querySelectorAll('input[name="category"]').forEach(cb => {
+                            if (cb !== this) cb.checked = false;
+                        });
+                    }
+                    applyFilters();
+                });
+            });
+
+            // Tamanhos e cores - aplicar com debounce
+            document.querySelectorAll('input[name="size"], input[name="color"]').forEach(checkbox => {
+                checkbox.addEventListener('change', applyFilters);
+            });
+
+            // Ordenação
+            if (sortSelect) {
+                sortSelect.addEventListener('change', applyFilters);
+            }
+
+            // Preço - aplicar ao sair do campo
+            document.querySelectorAll('.price-range input').forEach(input => {
+                input.addEventListener('change', applyFilters);
+            });
+
+            // Botão limpar filtros
+            const clearBtn = document.querySelector('.clear-filters');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => {
+                    window.location.href = '/catalogo';
+                });
+            }
+
+            // Barra de pesquisa funcional
+            const searchForm = document.querySelector('header form');
+            const searchInput = document.querySelector('.barraPesquisa');
+            if (searchForm && searchInput) {
+                searchForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const term = searchInput.value.trim();
+                    if (term) {
+                        window.location.href = '/catalogo?search=' + encodeURIComponent(term);
+                    }
                 });
             }
         });
     </script>
+    <script src="/assets/js/cart-ajax.js"></script>
 </body>
 
 </html>

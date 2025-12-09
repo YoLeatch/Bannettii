@@ -14,6 +14,19 @@ class AuthMiddleware {
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
         if (!$isAuthenticated) {
+            // Se for requisição AJAX, retorna JSON ao invés de redirecionar
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                header('Content-Type: application/json');
+                http_response_code(401);
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Você precisa estar logado para realizar esta ação.',
+                    'redirect' => '/login'
+                ]);
+                exit;
+            }
+            
             header("Location: /login");
             exit;
         }

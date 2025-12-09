@@ -3,7 +3,8 @@ namespace App\User\Controllers;
 
 use Core\Security;
 use Core\Recaptcha;
-use App\User\PessoaModel;
+use App\User\Models\PessoaModel;
+use App\User\Models\FuncionarioModel;
 use Core\ViewerPlace;
 
 class AuthController {
@@ -38,12 +39,12 @@ class AuthController {
         }
 
         // Validação do reCAPTCHA
-        $recaptchaToken = $_POST['g-recaptcha-response'] ?? '';
-        if (!Recaptcha::verify($recaptchaToken)) {
-            $_SESSION['ERROR'] = 'Por favor, confirme que você não é um robô.';
-            header("Location: /login");
-            exit;
-        }
+        //$recaptchaToken = $_POST['g-recaptcha-response'] ?? '';
+        //if (!Recaptcha::verify($recaptchaToken)) {
+        //    $_SESSION['ERROR'] = 'Por favor, confirme que você não é um robô.';
+        //    header("Location: /login");
+        //    exit;
+        //}
 
         $email = Security::sanitizeInput($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
@@ -66,18 +67,18 @@ class AuthController {
                     $_SESSION['user_id'] = $Pessoa->getId();
                     $_SESSION['logged_in'] = true;
 
-                    // Check if user is also an Admin (Funcionario)
-                    //$funcionario = \App\User\FuncionarioModel::findByFuncionarioId($Pessoa->getId());
-                    //if ($funcionario) {
-                    //    $_SESSION['admin_logged_in'] = true;
-                    //    $_SESSION['admin_id'] = $funcionario->getId();
-                    //    $_SESSION['admin_name'] = $funcionario->getNome();
-                    //    $_SESSION['is_employee'] = true; // Flag for middleware
-                    //    
-                    //    // Redirect to Admin Dashboard
-                    //    header("Location: /admin/dashboard");
-                    //    exit;
-                    //}
+                    // Verifica se o usuário também é um Funcionário (Admin)
+                    $funcionario = FuncionarioModel::findById($Pessoa->getId());
+                    if ($funcionario) {
+                        $_SESSION['admin_logged_in'] = true;
+                        $_SESSION['admin_id'] = $funcionario->getId();
+                        $_SESSION['admin_name'] = $funcionario->getNome();
+                        $_SESSION['is_employee'] = true;
+                        
+                        // Redireciona para o Dashboard Admin
+                        header("Location: /admin/dashboard");
+                        exit;
+                    }
 
                     if (isset($_POST['remember_me'])) {
                         $UID = [

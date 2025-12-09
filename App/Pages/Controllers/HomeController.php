@@ -4,8 +4,9 @@ namespace App\Pages\Controllers;
 
 use Core\ViewerPlace;
 use Core\ConnectionFactory;
-use App\Product\ProductModel;
-use App\Content\CarouselModel;
+use App\Product\Models\ProductModel;
+use App\Pages\Models\BannerModel;
+use App\User\Models\FuncionarioModel;
 use App\User\Middlewares\AuthMiddleware;
 use PDO;
 
@@ -18,22 +19,22 @@ class HomeController
             session_start();
         }
 
-        // Fetch Carousel
-        $carouselModel = new CarouselModel();
-        $slides = $carouselModel->getAll();
+        // Busca banners visíveis usando o BannerModel (dados do JSON)
+        $banners = BannerModel::findAllVisible();
         $carouselHtml = '';
         $activeClass = 'active';
 
-        foreach ($slides as $slide) {
-            $image = htmlspecialchars($slide['image_url']);
-            $link = htmlspecialchars($slide['link_url']);
-            $caption = htmlspecialchars($slide['caption']);
+        foreach ($banners as $banner) {
+            $image = htmlspecialchars($banner->getImagem());
+            $link = htmlspecialchars($banner->getLink() ?? '/catalogo');
+            $titulo = htmlspecialchars($banner->getTitulo());
+            $descricao = htmlspecialchars($banner->getDescricao() ?? 'Confira nossa coleção');
             
             $carouselHtml .= <<<HTML
             <div class="carousel-slide {$activeClass}" style="background-image: url('{$image}');">
                 <div class="carousel-content">
-                    <h2>{$caption}</h2>
-                    <p>Confira nossa coleção</p>
+                    <h2>{$titulo}</h2>
+                    <p>{$descricao}</p>
                     <a href="{$link}" class="btn-primary">Ver Coleção</a>
                 </div>
             </div>
@@ -41,35 +42,22 @@ HTML;
             $activeClass = ''; 
         }
         
+        // Banner padrão caso não haja banners cadastrados
         if (empty($carouselHtml)) {
              $carouselHtml = <<<HTML
             <div class="carousel-slide active" style="background-image: url('https://placehold.co/1200x400/e0e0e0/333?text=Bem-vindo+a+Bennettii');">
                 <div class="carousel-content">
                     <h2>Bem-vindo à Bennettii</h2>
                     <p>Moda com estilo e conforto</p>
-                    <a href="/products" class="btn-primary">Ver Produtos</a>
+                    <a href="/catalogo" class="btn-primary">Ver Produtos</a>
                 </div>
             </div>
 HTML;
         }
 
-        // Fetch Products
-        $allProducts = ProductModel::fetchAll(1); 
-        
-        usort($allProducts, fn($a, $b) => $b->getId() <=> $a->getId());
-        $newArrivals = array_slice($allProducts, 0, 4);
-        
-        $featured = array_slice($allProducts, 0, 4); 
-        if (count($allProducts) > 4) {
-             $featured = array_slice($allProducts, 4, 4);
-        }
-
-        $newArrivalsHtml = $this->generateProductGrid($newArrivals);
-        $featuredHtml = $this->generateProductGrid($featured);
-
         if($logged_in){
             // Check if user is admin
-            $isAdmin = $this->isUserAdmin($_SESSION['user_id'] ?? 0);
+            $isAdmin = $this->isUserFuncionario($_SESSION['user_id'] ?? 0);
             
             $adminLink = '';
             if ($isAdmin) {
@@ -103,7 +91,7 @@ HTML;
                     </svg>
                     Gerenciar Conta
                 </a>
-                <a href="/orders" class="nav-item">
+                <a href="/pedidos" class="nav-item">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
@@ -112,7 +100,16 @@ HTML;
                     </svg>
                     Meus Pedidos
                 </a>
-                <a href="/addresses" class="nav-item">
+                <a href="/carrinho" class="nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    Meu Carrinho
+                </a>
+                <a href="/enderecos" class="nav-item">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -182,6 +179,24 @@ HTML;
     </aside>';
         }
 
+        // Busca todos os produtos ativos usando o novo modelo
+        $allProducts = ProductModel::findAll();
+        
+        // Ordena por ID decrescente (mais novos primeiro)
+        usort($allProducts, fn($a, $b) => $b->getId() <=> $a->getId());
+        
+        // Novidades: 4 produtos mais recentes
+        $newArrivals = array_slice($allProducts, 0, 4);
+        
+        // Destaques: próximos 4 produtos (ou os primeiros se não houver mais)
+        $featured = array_slice($allProducts, 0, 4); 
+        if (count($allProducts) > 4) {
+             $featured = array_slice($allProducts, 4, 4);
+        }
+
+        $newArrivalsHtml = $this->generateProductGrid($newArrivals);
+        $featuredHtml = $this->generateProductGrid($featured);
+
         echo ViewerPlace::render('index', [
             'carousel_slides' => $carouselHtml,
             'new_arrivals' => $newArrivalsHtml,
@@ -191,45 +206,69 @@ HTML;
     }
 
     /**
-     * Check if user is an administrator
+     * Verifica se o usuário é um administrador/funcionário
+     * 
+     * Utiliza o FuncionarioModel para verificar se o usuário
+     * possui algum cargo ativo no sistema.
+     * 
+     * @param int $userId ID do usuário
+     * @return bool Retorna true se for funcionário com cargo ativo
      */
-    private function isUserAdmin(int $userId): bool
+    private function isUserFuncionario(int $userId): bool
     {
+        // ID inválido não pode ser admin
         if ($userId <= 0) {
             return false;
         }
         
         try {
-            $pdo = ConnectionFactory::getConnection('read_only');
-            $stmt = $pdo->prepare("
-                SELECT COUNT(*) 
-                FROM funcionario f
-                JOIN funcionario_cargo fc ON fc.funcionario_id = f.id
-                JOIN cargo c ON c.id = fc.cargo_id
-                WHERE f.id = ? AND f.status = '1' AND fc.status = '1'
-            ");
-            $stmt->execute([$userId]);
-            return (int)$stmt->fetchColumn() > 0;
+            // Busca o funcionário pelo ID usando o modelo
+            $funcionario = FuncionarioModel::findById($userId);
+            
+            // Se não encontrou funcionário, não é admin
+            if (!$funcionario) {
+                return false;
+            }
+            
+            // Verifica se possui algum cargo ativo
+            return !empty($funcionario->getCargos());
         } catch (\Exception $e) {
             return false;
         }
     }
 
+    /**
+     * Gera o HTML do grid de produtos
+     * 
+     * @param array $products Lista de ProductModel
+     * @return string HTML gerado
+     */
     private function generateProductGrid(array $products): string
     {
         $html = '';
         foreach ($products as $product) {
             $id = $product->getId();
             $name = htmlspecialchars($product->getNome());
-            $price = number_format($product->getPreco(), 2, ',', '.');
-            $images = $product->getImages();
+            
+            // Usa preço final (com desconto aplicado se houver)
+            $precoFinal = $product->getPrecoFinal();
+            $price = number_format($precoFinal, 2, ',', '.');
+            
+            // Busca imagens usando o método correto
+            $images = $product->getImagens();
             $image = !empty($images) ? $images[0]['imagem'] : '/assets/image/placeholder.png';
+            
+            // Mostra tag de desconto se houver
+            $descontoTag = '';
+            if ($product->getDesconto() && $product->getDesconto() > 0) {
+                $descontoTag = '<span class="tag-discount">-' . $product->getDesconto() . '%</span>';
+            }
             
             $html .= <<<HTML
             <div class="product-card">
                 <div class="product-image">
                     <img src="{$image}" alt="{$name}">
-                    <!-- <span class="tag-new">Novo</span> -->
+                    {$descontoTag}
                 </div>
                 <div class="product-info">
                     <h3>{$name}</h3>

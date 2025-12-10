@@ -38,7 +38,7 @@ DROP TABLE IF EXISTS `cartao_credito`;
 CREATE TABLE `cartao_credito` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(40) NOT NULL,
-  `numero` varchar(20) DEFAULT NULL,
+  `numero` TEXT DEFAULT NULL COMMENT 'Numero criptografado com AES-256-GCM',
   `validade` date NOT NULL,
   `usuario` int(11) NOT NULL,
   `status` varchar(1) NOT NULL,
@@ -253,6 +253,9 @@ CREATE TABLE `produto` (
   `pesototal` varchar(45) DEFAULT NULL,
   `dimensoes` varchar(45) DEFAULT NULL,
   `descricao` text DEFAULT NULL,
+  `tamanho` varchar(50) DEFAULT NULL COMMENT 'Tamanhos disponíveis (ex: P, M, G)',
+  `cor` varchar(100) DEFAULT NULL COMMENT 'Cores disponíveis',
+  `material` varchar(100) DEFAULT NULL COMMENT 'Material do produto',
   `data` datetime NOT NULL,
   `status` varchar(1) NOT NULL,
   `desconto` int(11) DEFAULT NULL,

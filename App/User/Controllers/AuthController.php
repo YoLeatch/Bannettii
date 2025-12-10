@@ -39,12 +39,12 @@ class AuthController {
         }
 
         // Validação do reCAPTCHA
-        //$recaptchaToken = $_POST['g-recaptcha-response'] ?? '';
-        //if (!Recaptcha::verify($recaptchaToken)) {
-        //    $_SESSION['ERROR'] = 'Por favor, confirme que você não é um robô.';
-        //    header("Location: /login");
-        //    exit;
-        //}
+        $recaptchaToken = $_POST['g-recaptcha-response'] ?? '';
+        if (!Recaptcha::verify($recaptchaToken)) {
+            $_SESSION['ERROR'] = 'Por favor, confirme que você não é um robô.';
+            header("Location: /login");
+            exit;
+        }
 
         $email = Security::sanitizeInput($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';

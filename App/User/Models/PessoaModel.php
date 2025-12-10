@@ -476,6 +476,7 @@ class PessoaModel {
      * @param string $status Novo status
      * @param string $password Nova senha (vazia = não alterar)
      * @param string|null $image Nova imagem (null = não alterar)
+     * @param string|null $dt_nascimento Nova data de nascimento (null = não alterar)
      * @return bool Retorna true se atualizado com sucesso
      */
     public static function updateUser(
@@ -485,7 +486,8 @@ class PessoaModel {
         string $cpf, 
         string $status, 
         string $password = '', 
-        string $image = null
+        string $image = null,
+        string $dt_nascimento = null
     ): bool {
         $pdo = ConnectionFactory::getConnection('default');
         
@@ -497,6 +499,13 @@ class PessoaModel {
             'cpf' => $cpf,
             'status' => $status
         ];
+
+        // Adiciona data de nascimento se fornecida
+        if ($dt_nascimento !== null) {
+            $sql .= ", dt_nascimento = :dt_nascimento";
+            // Garante formato YYYY-MM-DD ou NULL se vazio
+            $params['dt_nascimento'] = !empty($dt_nascimento) ? $dt_nascimento : null;
+        }
 
         // Adiciona senha à query se fornecida
         if (!empty($password)) {

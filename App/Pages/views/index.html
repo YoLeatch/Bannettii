@@ -9,7 +9,139 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Belleza&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style.css?v=2">
+    <style>
+        /* Estilos críticos do carrossel - inline para garantir carregamento */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            max-height: 80vh;
+            overflow: hidden;
+            margin-bottom: 30px;
+            background-color: #1a1a2e;
+        }
+
+        .carousel-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .carousel-slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 1;
+        }
+
+        .carousel-slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .carousel-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        .carousel-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 3rem 5%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+            color: white;
+            z-index: 3;
+            box-sizing: border-box;
+        }
+
+        .carousel-content h2 {
+            font-size: 2.5rem;
+            color: #D0D558;
+            margin-bottom: 0.5rem;
+        }
+
+        .carousel-content p {
+            font-size: 1.1rem;
+            color: #f0f0f0;
+            margin-bottom: 1rem;
+        }
+
+        .carousel-content .btn-primary {
+            display: inline-block;
+            background: #D0D558;
+            color: #1a1a2e;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-control:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .carousel-control.prev {
+            left: 20px;
+        }
+
+        .carousel-control.next {
+            right: 20px;
+        }
+
+        .carousel-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .indicator-dot.active {
+            background: #D0D558;
+        }
+    </style>
 </head>
 
 <body>
@@ -23,8 +155,8 @@
                 </a>
             </div>
             <div>
-                <form>
-                    <input type="search">
+                <form id="searchForm" action="/catalogo" method="GET">
+                    <input type="search" name="search" class="barraPesquisa" placeholder="Buscar produtos...">
                 </form>
             </div>
 
@@ -38,10 +170,10 @@
 
     </header>
     <div class="lower-header">
-        <a href="#">Camisetas</a>
-        <a href="#">Calças</a>
-        <a href="#">Blusas e Jaquetas</a>
-        <a href="#">Bolsas</a>
+        <a href="/catalogo?category=camisetas">Camisetas</a>
+        <a href="/catalogo?category=calcas">Calças</a>
+        <a href="/catalogo?category=blusas">Blusas e Jaquetas</a>
+        <a href="/catalogo?category=bolsas">Bolsas</a>
     </div>
 
     {sidebar}
@@ -57,26 +189,8 @@
             </div>
         </section>
 
-        <!-- Recommendations -->
-        <section class="section-container promotions">
-            <div class="section-header">
-                <h2>Novidades</h2>
-            </div>
-            <div class="product-grid">
-                {new_arrivals}
-            </div>
-        </section>
-
-        <!-- Recommendations -->
-        <section class="section-container promotions">
-            <div class="section-header">
-                <h2>Mais Vendidos</h2>
-                <a href="/products" class="view-all">Ver tudo &rarr;</a>
-            </div>
-            <div class="product-grid">
-                {featured_products}
-            </div>
-        </section>
+        <!-- Seções de Produtos Dinâmicas -->
+        {product_sections}
 
     </main>
 
@@ -142,6 +256,23 @@
             if (closeSidebar) closeSidebar.addEventListener('click', toggleSidebar);
             if (overlay) overlay.addEventListener('click', toggleSidebar);
 
+            // Barra de Pesquisa Funcional
+            const searchForm = document.getElementById('searchForm');
+            const searchInput = document.querySelector('.barraPesquisa');
+
+            if (searchForm && searchInput) {
+                searchForm.addEventListener('submit', (e) => {
+                    const term = searchInput.value.trim();
+                    if (!term) {
+                        e.preventDefault();
+                        searchInput.classList.add('shake');
+                        searchInput.focus();
+                        setTimeout(() => searchInput.classList.remove('shake'), 500);
+                    }
+                    // Se tiver termo, deixa o formulário submeter normalmente via GET
+                });
+            }
+
             // Cookie Consent
             const cookieBanner = document.getElementById('cookieConsent');
             if (!localStorage.getItem('cookiesAccepted')) {
@@ -154,6 +285,91 @@
                     localStorage.setItem('cookiesAccepted', 'true');
                     cookieBanner.classList.remove('show');
                 });
+            }
+
+            // Hero Carousel Rotation & Controls
+            const slides = document.querySelectorAll('.carousel-slide');
+            const dots = document.querySelectorAll('.indicator-dot');
+            const prevBtn = document.querySelector('.carousel-control.prev');
+            const nextBtn = document.querySelector('.carousel-control.next');
+
+            console.log('Carousel Init:', { slidesCount: slides.length, dotsCount: dots.length });
+
+            if (slides.length > 0) {
+                let currentSlide = 0;
+                let slideInterval;
+                const intervalTime = 5000;
+
+                // Initialize active slide
+                if (!document.querySelector('.carousel-slide.active')) {
+                    slides[0].classList.add('active');
+                    if (dots.length > 0) dots[0].classList.add('active');
+                    console.log('No active slide found, activated first');
+                } else {
+                    // Find currently active slide index
+                    slides.forEach((slide, index) => {
+                        if (slide.classList.contains('active')) {
+                            currentSlide = index;
+                            console.log('Found active slide at index:', index);
+                        }
+                    });
+                }
+
+                const goToSlide = (index) => {
+                    console.log('goToSlide called - from:', currentSlide, 'to:', index);
+
+                    // Update Slides
+                    slides[currentSlide].classList.remove('active');
+                    currentSlide = (index + slides.length) % slides.length;
+                    slides[currentSlide].classList.add('active');
+
+                    console.log('Slide changed to:', currentSlide, 'classList:', slides[currentSlide].className);
+
+                    // Update Dots
+                    if (dots.length > 0) {
+                        document.querySelector('.indicator-dot.active')?.classList.remove('active');
+                        dots[currentSlide].classList.add('active');
+                    }
+                };
+
+                const nextSlide = () => {
+                    goToSlide(currentSlide + 1);
+                };
+
+                const prevSlide = () => {
+                    goToSlide(currentSlide - 1);
+                };
+
+                const startAutoSlide = () => {
+                    clearInterval(slideInterval);
+                    slideInterval = setInterval(nextSlide, intervalTime);
+                };
+
+                // Event Listeners
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', () => {
+                        nextSlide();
+                        startAutoSlide(); // Reset timer
+                    });
+                }
+
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', () => {
+                        prevSlide();
+                        startAutoSlide(); // Reset timer
+                    });
+                }
+
+                dots.forEach(dot => {
+                    dot.addEventListener('click', () => {
+                        const index = parseInt(dot.getAttribute('data-slide'));
+                        goToSlide(index);
+                        startAutoSlide();
+                    });
+                });
+
+                // Start loop
+                startAutoSlide();
             }
         });
     </script>

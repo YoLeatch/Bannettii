@@ -9,7 +9,7 @@ use Core\Router;
 use App\User\Middlewares\GuestMiddleware;
 use App\User\Middlewares\AuthMiddleware;
 use Core\Security;
-use App\User\PessoaModel;
+use App\User\Models\PessoaModel;
 
 if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
     if (isset($_COOKIE['remember_token']) && !empty($_COOKIE['remember_token'])) {
@@ -51,7 +51,7 @@ Router::addRoute("POST", "/pedidos/cancelar", "App\\Pages\\Controllers\\OrderCon
 
 //Produtos
 Router::addRoute("GET", "/produto/{id}", "App\\Pages\\Controllers\\ProductController@show", []);
-Router::addRoute("GET", "/catalogo", "App\\Pages\\Controllers\\CatalogController@handle", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/catalogo", "App\\Pages\\Controllers\\CatalogController@handle", []);
 Router::addRoute("GET", "/carrinho", "App\\Pages\\Controllers\\CartController@handle", [AuthMiddleware::class, 'handle']);
 Router::addRoute("POST", "/carrinho/add", "App\\Pages\\Controllers\\CartController@add", [AuthMiddleware::class, 'handle']);
 Router::addRoute("POST", "/carrinho/remove", "App\\Pages\\Controllers\\CartController@remove", [AuthMiddleware::class, 'handle']);
@@ -80,8 +80,93 @@ Router::addRoute("GET", "/checkout", "App\\Pages\\Controllers\\CheckoutControlle
 Router::addRoute("POST", "/checkout/processar", "App\\Pages\\Controllers\\CheckoutController@processar", [AuthMiddleware::class, 'handle']);
 Router::addRoute("GET", "/compra-efetuada", "App\\Pages\\Controllers\\CheckoutController@compraEfetuada", [AuthMiddleware::class, 'handle']);
 
+//Wishlist (Lista de Desejos) - usa cookies, não precisa de login
+Router::addRoute("GET", "/wishlist", "App\\Pages\\Controllers\\WishListController@index", []);
+Router::addRoute("POST", "/wishlist/add", "App\\Pages\\Controllers\\WishListController@add", []);
+Router::addRoute("POST", "/wishlist/remove", "App\\Pages\\Controllers\\WishListController@remove", []);
+Router::addRoute("POST", "/wishlist/toggle", "App\\Pages\\Controllers\\WishListController@toggle", []);
+Router::addRoute("GET", "/wishlist/check", "App\\Pages\\Controllers\\WishListController@check", []);
+Router::addRoute("GET", "/wishlist/count", "App\\Pages\\Controllers\\WishListController@count", []);
 
-//Admin
+
+//Admin Dashboard
+Router::addRoute("GET", "/admin/dashboard", "App\\Pages\\Controllers\\admin\\DashboardController@index", [AuthMiddleware::class, 'handle']);
+
+//Admin Team
+Router::addRoute("GET", "/admin/team-list", "App\\Pages\\Controllers\\admin\\TeamController@index", [AuthMiddleware::class, 'handle']);
+
+//Admin Products
+Router::addRoute("GET", "/admin/products", "App\\Pages\\Controllers\\admin\\ProductsController@index", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/products/create", "App\\Pages\\Controllers\\admin\\ProductsController@create", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/products/store", "App\\Pages\\Controllers\\admin\\ProductsController@store", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/products/{id}/edit", "App\\Pages\\Controllers\\admin\\ProductsController@edit", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/products/{id}/update", "App\\Pages\\Controllers\\admin\\ProductsController@update", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/products/{id}/delete", "App\\Pages\\Controllers\\admin\\ProductsController@delete", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/products/{id}/images/{image_id}/delete", "App\\Pages\\Controllers\\admin\\ProductsController@deleteImage", [AuthMiddleware::class, 'handle']);
+
+//Admin Customers
+Router::addRoute("GET", "/admin/customers", "App\\Pages\\Controllers\\admin\\CustomersController@index", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/customers/search", "App\\Pages\\Controllers\\admin\\CustomersController@search", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/customers/{id}", "App\\Pages\\Controllers\\admin\\CustomersController@show", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/customers/{id}/toggle", "App\\Pages\\Controllers\\admin\\CustomersController@toggleStatus", [AuthMiddleware::class, 'handle']);
+
+//Admin Orders
+Router::addRoute("GET", "/admin/orders", "App\\Pages\\Controllers\\admin\\OrdersController@index", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/orders/{id}", "App\\Pages\\Controllers\\admin\\OrdersController@show", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/orders/{id}/status", "App\\Pages\\Controllers\\admin\\OrdersController@updateStatus", [AuthMiddleware::class, 'handle']);
+
+//Admin Categories
+Router::addRoute("GET", "/admin/categories", "App\\Pages\\Controllers\\admin\\CategoriesController@index", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/categories/create", "App\\Pages\\Controllers\\admin\\CategoriesController@create", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/categories/store", "App\\Pages\\Controllers\\admin\\CategoriesController@store", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/categories/{id}/edit", "App\\Pages\\Controllers\\admin\\CategoriesController@edit", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/categories/{id}/update", "App\\Pages\\Controllers\\admin\\CategoriesController@update", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/categories/{id}/delete", "App\\Pages\\Controllers\\admin\\CategoriesController@delete", [AuthMiddleware::class, 'handle']);
+
+//Admin Subcategories
+Router::addRoute("GET", "/admin/subcategorias", "App\\Pages\\Controllers\\admin\\CategoriesController@subcategorias", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/subcategorias/create", "App\\Pages\\Controllers\\admin\\CategoriesController@subcategoriasCreate", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/subcategorias/store", "App\\Pages\\Controllers\\admin\\CategoriesController@subcategoriasStore", [AuthMiddleware::class, 'handle']);
+
+//Admin Reviews
+Router::addRoute("GET", "/admin/reviews", "App\\Pages\\Controllers\\admin\\ReviewsController@index", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/reviews/{id}/approve", "App\\Pages\\Controllers\\admin\\ReviewsController@approve", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/reviews/{id}/reject", "App\\Pages\\Controllers\\admin\\ReviewsController@reject", [AuthMiddleware::class, 'handle']);
+
+//Admin Carousel
+Router::addRoute("GET", "/admin/carousel", "App\\Pages\\Controllers\\admin\\CarouselController@index", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/carousel/store", "App\\Pages\\Controllers\\admin\\CarouselController@store", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/carousel/{id}/edit", "App\\Pages\\Controllers\\admin\\CarouselController@edit", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/carousel/{id}/update", "App\\Pages\\Controllers\\admin\\CarouselController@update", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/carousel/{id}/delete", "App\\Pages\\Controllers\\admin\\CarouselController@delete", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/carousel/reorder", "App\\Pages\\Controllers\\admin\\CarouselController@reorder", [AuthMiddleware::class, 'handle']);
+
+//Admin Settings
+Router::addRoute("GET", "/admin/settings", "App\\Pages\\Controllers\\admin\\SettingsController@index", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/settings/update", "App\\Pages\\Controllers\\admin\\SettingsController@update", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/configuracoes", "App\\Pages\\Controllers\\admin\\SettingsController@general", [AuthMiddleware::class, 'handle']);
+
+//Admin Reports
+Router::addRoute("GET", "/admin/reports", "App\\Pages\\Controllers\\admin\\ReportsController@index", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/reports/export", "App\\Pages\\Controllers\\admin\\ReportsController@export", [AuthMiddleware::class, 'handle']);
+
+//Suporte - Usuário (não precisa de login para abrir ticket)
+Router::addRoute("GET", "/help", "App\\Pages\\Controllers\\admin\\SupportController@index", []);
+Router::addRoute("POST", "/help/create", "App\\Pages\\Controllers\\admin\\SupportController@create", []);
+Router::addRoute("GET", "/help/ticket/{id}", "App\\Pages\\Controllers\\admin\\SupportController@show", []);
+Router::addRoute("POST", "/help/reply", "App\\Pages\\Controllers\\admin\\SupportController@reply", []);
+
+//Suporte - Admin
+Router::addRoute("GET", "/admin/tickets", "App\\Pages\\Controllers\\admin\\SupportController@adminList", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/tickets/{id}", "App\\Pages\\Controllers\\admin\\SupportController@adminShow", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/tickets/reply", "App\\Pages\\Controllers\\admin\\SupportController@adminReply", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/tickets/status", "App\\Pages\\Controllers\\admin\\SupportController@adminUpdateStatus", [AuthMiddleware::class, 'handle']);
+
+//Suporte - AJAX (polling tempo real)
+Router::addRoute("GET", "/api/tickets/{id}/updates", "App\\Pages\\Controllers\\admin\\SupportController@getUpdates", []);
+Router::addRoute("GET", "/api/tickets/list", "App\\Pages\\Controllers\\admin\\SupportController@getTicketsList", [AuthMiddleware::class, 'handle']);
+
+//Admin (outras rotas - comentadas)
 //Router::group("/admin", function () {
 //    Router::addRoute("GET", "/dashboard", "App\\User\\Controllers\\AdminController@dashboard", []);
 //    Router::addRoute("GET", "/team-list", "App\\User\\Controllers\\AdminController@teamList", []);

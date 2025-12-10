@@ -16,7 +16,7 @@
     <script src="/assets/js/script.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-    <title>Adicionar Produto - Bennettii</title>
+    <title>Editar Produto - Bennettii</title>
 </head>
 
 <body class="admin-body">
@@ -117,7 +117,7 @@
                         </ul>
                     </div><br>
 
-                    <form action="/gerenciar-produto" method="POST" enctype="multipart/form-data">
+                    <form action="/admin/products/{product_id}/update" method="POST" enctype="multipart/form-data">
                         <div class="page-header">
                             <div class="title-area">
                                 <a href="/tabela-produtos" class="btn-back">
@@ -127,7 +127,7 @@
                                         <path d="M19 12H5M12 19l-7-7 7-7" />
                                     </svg>
                                 </a>
-                                <h1>{page_title}</h1>
+                                <h1>Editar Produto #{product_id}</h1>
                             </div>
                             <div class="actions-area">
                                 <button type="submit" class="btn-add">
@@ -150,44 +150,48 @@
 
                                     <div class="form-group">
                                         <label>Nome do Produto</label>
-                                        <input type="text" name="nome" placeholder="Ex: Jaqueta Puffer" value="{nome}">
+                                        <input type="text" name="nome" placeholder="Ex: Jaqueta Puffer"
+                                            value="{product_name}">
                                     </div>
 
                                     <div class="form-group">
                                         <label>Descrição</label>
                                         <textarea name="descricao" rows="5"
-                                            placeholder="Descrição detalhada do produto...">{descricao}</textarea>
+                                            placeholder="Descrição detalhada do produto...">{product_description}</textarea>
                                     </div>
 
                                     <div class="row">
                                         <div class="col">
                                             <label>Tamanho</label>
-                                            <span class="sub-label">Selecione o tamanho</span>
+                                            <span class="sub-label">Selecione os tamanhos disponíveis</span>
                                             <div class="size-selector">
-                                                <input type="hidden" name="tamanho" id="selected-size"
-                                                    value="{tamanho}">
-                                                <button type="button" class="size-btn"
-                                                    onclick="selectSize('XS')">XS</button>
-                                                <button type="button" class="size-btn"
-                                                    onclick="selectSize('S')">S</button>
-                                                <button type="button" class="size-btn"
-                                                    onclick="selectSize('M')">M</button>
-                                                <button type="button" class="size-btn"
-                                                    onclick="selectSize('L')">L</button>
-                                                <button type="button" class="size-btn"
-                                                    onclick="selectSize('XL')">XL</button>
+                                                <input type="hidden" name="tamanho" id="selected-sizes"
+                                                    value="{product_tamanho}">
+                                                <button type="button" class="size-btn" data-size="PP"
+                                                    onclick="toggleSize('PP')">PP</button>
+                                                <button type="button" class="size-btn" data-size="P"
+                                                    onclick="toggleSize('P')">P</button>
+                                                <button type="button" class="size-btn" data-size="M"
+                                                    onclick="toggleSize('M')">M</button>
+                                                <button type="button" class="size-btn" data-size="G"
+                                                    onclick="toggleSize('G')">G</button>
+                                                <button type="button" class="size-btn" data-size="GG"
+                                                    onclick="toggleSize('GG')">GG</button>
+                                                <button type="button" class="size-btn" data-size="XG"
+                                                    onclick="toggleSize('XG')">XG</button>
                                             </div>
                                         </div>
                                         <div class="col">
                                             <label>Material</label>
-                                            <input type="text" name="material" value="{material}"
+                                            <input type="text" name="material" value="{product_material}"
                                                 placeholder="Ex: Algodão, Poliéster">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col">
                                             <label>Cor</label>
-                                            <input type="text" name="cor" value="{cor}" placeholder="Ex: Azul, Preto">
+                                            <input type="text" name="cor" value="{product_cor}"
+                                                placeholder="Ex: Azul, Preto">
                                         </div>
                                     </div>
                                 </div>
@@ -199,12 +203,12 @@
                                     <div class="row">
                                         <div class="col">
                                             <label>Preço Base (R$)</label>
-                                            <input type="number" step="0.01" name="preco" value="{preco}" required
-                                                placeholder="0.00">
+                                            <input type="number" step="0.01" name="preco" value="{product_price}"
+                                                required placeholder="0.00">
                                         </div>
                                         <div class="col">
                                             <label>Estoque</label>
-                                            <input type="number" name="estoque" value="{estoque}" required
+                                            <input type="number" name="estoque" value="{product_stock}" required
                                                 placeholder="0">
                                         </div>
                                     </div>
@@ -212,17 +216,19 @@
                                     <div class="row">
                                         <div class="col">
                                             <label>Desconto (%)</label>
-                                            <input type="number" name="desconto" value="{desconto}" placeholder="0">
+                                            <input type="number" name="desconto" value="{product_discount}"
+                                                placeholder="0">
                                         </div>
                                         <div class="col">
                                             <label>Peso Líquido</label>
-                                            <input type="text" name="pesoliq" value="{pesoliq}" placeholder="Ex: 0.5kg">
+                                            <input type="text" name="pesoliq" value="{product_pesoliq}"
+                                                placeholder="Ex: 0.5kg">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col">
                                             <label>Peso Total</label>
-                                            <input type="text" name="pesototal" value="{pesototal}"
+                                            <input type="text" name="pesototal" value="{product_pesototal}"
                                                 placeholder="Ex: 0.6kg">
                                         </div>
                                     </div>
@@ -234,17 +240,139 @@
                                 <!-- Upload Img -->
                                 <div class="card">
                                     <h2>Imagens do Produto</h2>
-                                    <div class="image-preview-area">
+
+                                    <!-- Imagens existentes -->
+                                    <div class="existing-images" style="margin-bottom: 1.5rem;">
+                                        <h4 style="font-size: 0.9rem; color: #888; margin-bottom: 0.5rem;">Imagens
+                                            Atuais</h4>
+                                        <div class="image-grid"
+                                            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                                            {product_images}
+                                        </div>
                                     </div>
+
+                                    <!-- Adicionar novas imagens -->
+                                    <div class="add-images">
+                                        <h4 style="font-size: 0.9rem; color: #888; margin-bottom: 0.5rem;">Adicionar
+                                            Novas Imagens</h4>
+                                        <div class="upload-area"
+                                            style="border: 2px dashed #444; border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.3s;"
+                                            onclick="document.getElementById('image-input').click()">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"
+                                                viewBox="0 0 24 24" fill="none" stroke="#D0D558" stroke-width="2"
+                                                style="margin-bottom: 1rem;">
+                                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                                <polyline points="21 15 16 10 5 21" />
+                                            </svg>
+                                            <p style="color: #888; margin: 0;">Clique para selecionar imagens</p>
+                                            <p style="color: #666; font-size: 0.85rem; margin-top: 0.5rem;">JPG, PNG ou
+                                                WEBP (máx. 5MB cada)</p>
+                                        </div>
+                                        <input type="file" id="image-input" name="novas_imagens[]" multiple
+                                            accept="image/*" style="display: none;" onchange="previewImages(this)">
+
+                                        <!-- Preview das novas imagens -->
+                                        <div id="new-images-preview"
+                                            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 1rem;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Status do Produto -->
+                                <div class="card" style="margin-top: 1rem;">
+                                    <h2>Status</h2>
+                                    <div class="form-group">
+                                        <label class="switch-label"
+                                            style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                            <input type="checkbox" name="status" value="1" {product_status_checked}
+                                                style="width: 20px; height: 20px;">
+                                            <span>Produto Ativo</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </main>
 
+
         <script>
-            function selectSize(size) {
-                document.getElementById('selected-size').value = size;
-                // Visual feedback
-                document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
-                event.target.classList.add('active');
+            // Array para armazenar tamanhos selecionados
+            let selectedSizes = [];
+
+            // Inicializa tamanhos já selecionados ao carregar a página
+            function initSizes() {
+                const input = document.getElementById('selected-sizes');
+                if (input && input.value) {
+                    selectedSizes = input.value.split(',').map(s => s.trim()).filter(s => s);
+                    // Marca os botões correspondentes como ativos
+                    selectedSizes.forEach(size => {
+                        const btn = document.querySelector(`.size-btn[data-size="${size}"]`);
+                        if (btn) btn.classList.add('active');
+                    });
+                }
             }
+
+            // Toggle de tamanho (adiciona/remove da seleção)
+            function toggleSize(size) {
+                const btn = event.target;
+                const index = selectedSizes.indexOf(size);
+
+                if (index > -1) {
+                    // Remove se já está selecionado
+                    selectedSizes.splice(index, 1);
+                    btn.classList.remove('active');
+                } else {
+                    // Adiciona se não está selecionado
+                    selectedSizes.push(size);
+                    btn.classList.add('active');
+                }
+
+                // Atualiza o campo hidden com os tamanhos separados por vírgula
+                document.getElementById('selected-sizes').value = selectedSizes.join(', ');
+            }
+
+            // Preview de novas imagens selecionadas
+            function previewImages(input) {
+                const preview = document.getElementById('new-images-preview');
+                preview.innerHTML = '';
+
+                if (input.files) {
+                    Array.from(input.files).forEach((file, index) => {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const div = document.createElement('div');
+                            div.className = 'image-preview-item';
+                            div.style.cssText = 'position: relative; border-radius: 8px; overflow: hidden; aspect-ratio: 1;';
+                            div.innerHTML = `
+                                <img src="${e.target.result}" alt="Preview ${index + 1}" style="width: 100%; height: 100%; object-fit: cover;">
+                                <button type="button" onclick="removePreview(this, ${index})" style="position: absolute; top: 5px; right: 5px; background: #ff4444; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 14px;">&times;</button>
+                            `;
+                            preview.appendChild(div);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                }
+            }
+
+            // Remove preview e arquivo da seleção
+            function removePreview(btn, index) {
+                btn.parentElement.remove();
+                // Note: Não é possível remover arquivos do FileList, apenas visual
+            }
+
+            // Confirma exclusão de imagem existente
+            function confirmDeleteImage(imageId, productId) {
+                if (confirm('Tem certeza que deseja excluir esta imagem?')) {
+                    window.location.href = `/admin/products/${productId}/images/${imageId}/delete`;
+                }
+            }
+
+            // Inicializa ao carregar
+            document.addEventListener('DOMContentLoaded', initSizes);
 
 
             document.addEventListener('DOMContentLoaded', () => {

@@ -12,6 +12,7 @@
 namespace App\Payment;
 
 use Core\ConnectionFactory;
+use Core\Encryption;
 use PDO;
 
 class CardModel {
@@ -49,7 +50,22 @@ class CardModel {
     
     public function getId(): int { return $this->id; }
     public function getNome(): string { return $this->nome; }
-    public function getNumero(): string { return $this->numero; }
+    
+    /**
+     * Retorna o número do cartão descriptografado
+     * ATENÇÃO: Use com cautela, prefira métodos mascarados
+     */
+    public function getNumero(): string {
+        return Encryption::decrypt($this->numero);
+    }
+    
+    /**
+     * Retorna o número criptografado (como está no banco)
+     */
+    public function getNumeroEncrypted(): string {
+        return $this->numero;
+    }
+    
     public function getValidade(): string { return $this->validade; }
     public function getUsuario(): int { return $this->usuario; }
     public function getStatus(): string { return $this->status; }
@@ -72,7 +88,7 @@ class CardModel {
      * Retorna os últimos 4 dígitos do cartão
      */
     public function getUltimosDigitos(): string {
-        $numeros = preg_replace('/\D/', '', $this->numero);
+        $numeros = preg_replace('/\D/', '', $this->getNumero());
         return substr($numeros, -4);
     }
     
@@ -95,7 +111,7 @@ class CardModel {
      * - Diners Club: começa com 300-305, 36, 38
      */
     public function getBandeira(): string {
-        $numero = preg_replace('/\D/', '', $this->numero);
+        $numero = preg_replace('/\D/', '', $this->getNumero());
         
         if (empty($numero)) {
             return 'CARD';
@@ -185,7 +201,7 @@ class CardModel {
      * Valida se este cartão tem um número válido
      */
     public function isValid(): bool {
-        return self::isValidNumber($this->numero);
+        return self::isValidNumber($this->getNumero());
     }
 
     // === MÉTODOS DE BUSCA ===
@@ -255,6 +271,9 @@ class CardModel {
     public static function create(string $nome, string $numero, string $validade, int $usuarioId): ?CardModel {
         $pdo = ConnectionFactory::getConnection('default');
         
+        // Criptografa o número do cartão antes de salvar
+        $numeroEncrypted = Encryption::encrypt($numero);
+        
         $stmt = $pdo->prepare("
             INSERT INTO cartao_credito (nome, numero, validade, usuario, status) 
             VALUES (:nome, :numero, :validade, :usuario, '1')
@@ -262,7 +281,7 @@ class CardModel {
         
         $result = $stmt->execute([
             'nome' => $nome,
-            'numero' => $numero,
+            'numero' => $numeroEncrypted,
             'validade' => $validade,
             'usuario' => $usuarioId
         ]);

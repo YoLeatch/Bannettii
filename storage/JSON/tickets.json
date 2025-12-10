@@ -1,0 +1,88 @@
+[
+    {
+        "id": 1,
+        "codigo": "TKT-20251209-0001",
+        "user_id": 4,
+        "nome": "Abraão Otaviano Nascimento da Silva",
+        "email": "abraaonascimento940@gmail.com",
+        "assunto": "Helpppp",
+        "categoria": "geral",
+        "mensagem": "Meeeeeuuuu Deeeeeeuuuuuussssss",
+        "prioridade": "urgente",
+        "status": "resolvido",
+        "respostas": [
+            {
+                "autor": "Empresa Bennettii",
+                "autor_tipo": "admin",
+                "mensagem": "Olá",
+                "data": "2025-12-09 21:24:11"
+            },
+            {
+                "autor": "Usuário",
+                "autor_tipo": "usuario",
+                "mensagem": "Ola",
+                "data": "2025-12-09 21:26:43"
+            },
+            {
+                "autor": "Empresa Bennettii",
+                "autor_tipo": "admin",
+                "mensagem": "OK",
+                "data": "2025-12-09 21:27:51"
+            },
+            {
+                "autor": "Empresa Bennettii",
+                "autor_tipo": "admin",
+                "mensagem": "Olá",
+                "data": "2025-12-09 21:30:54"
+            },
+            {
+                "autor": "Usuário",
+                "autor_tipo": "usuario",
+                "mensagem": "Olá",
+                "data": "2025-12-09 21:31:03"
+            },
+            {
+                "autor": "Usuário",
+                "autor_tipo": "usuario",
+                "mensagem": "Heyyy",
+                "data": "2025-12-09 21:32:54"
+            },
+            {
+                "autor": "Empresa Bennettii",
+                "autor_tipo": "admin",
+                "mensagem": "olá",
+                "data": "2025-12-09 21:35:11"
+            }
+        ],
+        "criado_em": "2025-12-09 21:23:29",
+        "atualizado_em": "2025-12-09 21:39:27"
+    },
+    {
+        "id": 2,
+        "codigo": "TKT-20251210-0002",
+        "user_id": 4,
+        "nome": "Abraão Otaviano Nascimento da Silva",
+        "email": "abraaonascimento940@gmail.com",
+        "assunto": "Helpppp",
+        "categoria": "geral",
+        "mensagem": "Lindo gostoso",
+        "prioridade": "media",
+        "status": "fechado",
+        "respostas": [
+            {
+                "autor": "Empresa Bennettii",
+                "autor_tipo": "admin",
+                "mensagem": "Olá",
+                "data": "2025-12-10 00:48:16"
+            },
+            {
+                "autor": "Usuário",
+                "autor_tipo": "usuario",
+                "mensagem": "Lindo",
+                "data": "2025-12-10 00:48:25"
+            }
+        ],
+        "criado_em": "2025-12-10 00:47:22",
+        "atualizado_em": "2025-12-10 00:48:45"
+    }
+]

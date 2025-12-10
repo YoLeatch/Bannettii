@@ -6,6 +6,7 @@ use Core\ViewerPlace;
 use Core\ConnectionFactory;
 use App\Product\Models\ProductModel;
 use App\Pages\Models\BannerModel;
+use App\Pages\Models\SessionModel;
 use App\User\Models\FuncionarioModel;
 use App\User\Middlewares\AuthMiddleware;
 use PDO;
@@ -19,41 +20,69 @@ class HomeController
             session_start();
         }
 
-        // Busca banners visíveis usando o BannerModel (dados do JSON)
-        $banners = BannerModel::findAllVisible();
-        $carouselHtml = '';
-        $activeClass = 'active';
-
-        foreach ($banners as $banner) {
-            $image = htmlspecialchars($banner->getImagem());
-            $link = htmlspecialchars($banner->getLink() ?? '/catalogo');
-            $titulo = htmlspecialchars($banner->getTitulo());
-            $descricao = htmlspecialchars($banner->getDescricao() ?? 'Confira nossa coleção');
+        // Busca as seções ativas da página home
+        $sections = SessionModel::findByPagina('home');
+        
+        // Gera o HTML das seções de produtos dinamicamente
+        $productSectionsHtml = '';
+        
+        foreach ($sections as $section) {
+            if (!$section->isAtivo()) continue;
             
-            $carouselHtml .= <<<HTML
-            <div class="carousel-slide {$activeClass}" style="background-image: url('{$image}');">
-                <div class="carousel-content">
-                    <h2>{$titulo}</h2>
-                    <p>{$descricao}</p>
-                    <a href="{$link}" class="btn-primary">Ver Coleção</a>
-                </div>
+            $tipo = $section->getTipo();
+            $conteudo = $section->getConteudo();
+            
+            if ($tipo === SessionModel::TYPE_PRODUCTS) {
+                $limit = $conteudo['limit'] ?? 4;
+                $orderBy = $conteudo['orderBy'] ?? 'newest';
+                $showViewAll = $conteudo['showViewAll'] ?? false;
+                $viewAllLink = $conteudo['viewAllLink'] ?? '/catalogo';
+                $titulo = htmlspecialchars($section->getTitulo());
+                
+                $products = $this->getProductsByOrder($orderBy, $limit);
+                $productGrid = $this->generateProductGrid($products);
+                
+                // Monta a seção HTML
+                $viewAllHtml = '';
+                if ($showViewAll) {
+                    $viewAllHtml = '<a href="' . htmlspecialchars($viewAllLink) . '" class="view-all">Ver tudo &rarr;</a>';
+                }
+                
+                $productSectionsHtml .= <<<HTML
+        <section class="section-container promotions">
+            <div class="section-header">
+                <h2>{$titulo}</h2>
+                {$viewAllHtml}
             </div>
+            <div class="product-grid">
+                {$productGrid}
+            </div>
+        </section>
+
 HTML;
-            $activeClass = ''; 
+            }
         }
         
-        // Banner padrão caso não haja banners cadastrados
-        if (empty($carouselHtml)) {
-             $carouselHtml = <<<HTML
-            <div class="carousel-slide active" style="background-image: url('https://placehold.co/1200x400/e0e0e0/333?text=Bem-vindo+a+Bennettii');">
-                <div class="carousel-content">
-                    <h2>Bem-vindo à Bennettii</h2>
-                    <p>Moda com estilo e conforto</p>
-                    <a href="/catalogo" class="btn-primary">Ver Produtos</a>
-                </div>
+        // Fallback se não houver seções de produtos configuradas
+        if (empty($productSectionsHtml)) {
+            $allProducts = ProductModel::findAll();
+            usort($allProducts, fn($a, $b) => $b->getId() <=> $a->getId());
+            $productGrid = $this->generateProductGrid(array_slice($allProducts, 0, 4));
+            
+            $productSectionsHtml = <<<HTML
+        <section class="section-container promotions">
+            <div class="section-header">
+                <h2>Novidades</h2>
             </div>
+            <div class="product-grid">
+                {$productGrid}
+            </div>
+        </section>
 HTML;
         }
+        
+        // Gera o carousel
+        $carouselHtml = $this->generateCarouselFromBanners([]);
 
         if($logged_in){
             // Check if user is admin
@@ -179,30 +208,109 @@ HTML;
     </aside>';
         }
 
-        // Busca todos os produtos ativos usando o novo modelo
-        $allProducts = ProductModel::findAll();
-        
-        // Ordena por ID decrescente (mais novos primeiro)
-        usort($allProducts, fn($a, $b) => $b->getId() <=> $a->getId());
-        
-        // Novidades: 4 produtos mais recentes
-        $newArrivals = array_slice($allProducts, 0, 4);
-        
-        // Destaques: próximos 4 produtos (ou os primeiros se não houver mais)
-        $featured = array_slice($allProducts, 0, 4); 
-        if (count($allProducts) > 4) {
-             $featured = array_slice($allProducts, 4, 4);
-        }
-
-        $newArrivalsHtml = $this->generateProductGrid($newArrivals);
-        $featuredHtml = $this->generateProductGrid($featured);
-
+        // Renderiza a view com os dados
         echo ViewerPlace::render('index', [
             'carousel_slides' => $carouselHtml,
-            'new_arrivals' => $newArrivalsHtml,
-            'featured_products' => $featuredHtml,
+            'product_sections' => $productSectionsHtml,
             'sidebar' => $sidebar
         ]);
+    }
+    
+    /**
+     * Gera o HTML do carousel a partir dos banners
+     */
+    private function generateCarouselFromBanners(array $config): string
+    {
+        $banners = BannerModel::findAllVisible();
+        $carouselHtml = '';
+        $activeClass = 'active';
+
+        foreach ($banners as $banner) {
+            $image = htmlspecialchars($banner->getImagem());
+            $link = htmlspecialchars($banner->getLink() ?? '/catalogo');
+            $titulo = htmlspecialchars($banner->getTitulo());
+            $descricao = htmlspecialchars($banner->getDescricao() ?? 'Confira nossa coleção');
+            
+            $carouselHtml .= <<<HTML
+            <div class="carousel-slide {$activeClass}">
+                <img src="{$image}" alt="{$titulo}" class="carousel-image">
+                <div class="carousel-content">
+                    <h2>{$titulo}</h2>
+                    <p>{$descricao}</p>
+                    <a href="{$link}" class="btn-primary">Ver Coleção</a>
+                </div>
+            </div>
+HTML;
+            $activeClass = ''; 
+        }
+        
+        if (empty($carouselHtml)) {
+             $carouselHtml = <<<HTML
+            <div class="carousel-slide active">
+                <img src="https://placehold.co/1920x600/333/D0D558?text=Bem-vindo+a+Bennettii" alt="Bem-vindo" class="carousel-image">
+                <div class="carousel-content">
+                    <h2>Bem-vindo à Bennettii</h2>
+                    <p>Moda com estilo e conforto</p>
+                    <a href="/catalogo" class="btn-primary">Ver Produtos</a>
+                </div>
+            </div>
+HTML;
+        }
+
+        // Adiciona controles se houver mais de um slide (ou se for o placeholder único, não precisa)
+        // Na verdade, se tiver banners reais > 1, adiciona controles.
+        if (count($banners) > 1) {
+            // Indicators
+            $indicatorsHtml = '<div class="carousel-indicators">';
+            for ($i = 0; $i < count($banners); $i++) {
+                $active = $i === 0 ? 'active' : '';
+                $indicatorsHtml .= '<button class="indicator-dot ' . $active . '" data-slide="' . $i . '"></button>';
+            }
+            $indicatorsHtml .= '</div>';
+
+            // Controls
+            $controlsHtml = '
+            <button class="carousel-control prev" aria-label="Anterior">&#10094;</button>
+            <button class="carousel-control next" aria-label="Próximo">&#10095;</button>
+            ';
+
+            $carouselHtml .= $controlsHtml . $indicatorsHtml;
+        }
+        
+        return $carouselHtml;
+    }
+    
+    /**
+     * Busca produtos ordenados por critério
+     */
+    private function getProductsByOrder(string $orderBy, int $limit): array
+    {
+        $allProducts = ProductModel::findAll();
+        
+        switch ($orderBy) {
+            case 'newest':
+                usort($allProducts, fn($a, $b) => $b->getId() <=> $a->getId());
+                break;
+            case 'bestseller':
+                // Por enquanto usa ID como fallback - pode ser implementado com vendas reais
+                usort($allProducts, fn($a, $b) => $b->getId() <=> $a->getId());
+                // Pega os próximos 4 (simula mais vendidos diferentes dos novos)
+                if (count($allProducts) > $limit) {
+                    $allProducts = array_slice($allProducts, $limit);
+                }
+                break;
+            case 'price_asc':
+                usort($allProducts, fn($a, $b) => $a->getPrecoFinal() <=> $b->getPrecoFinal());
+                break;
+            case 'price_desc':
+                usort($allProducts, fn($a, $b) => $b->getPrecoFinal() <=> $a->getPrecoFinal());
+                break;
+            case 'discount':
+                usort($allProducts, fn($a, $b) => ($b->getDesconto() ?? 0) <=> ($a->getDesconto() ?? 0));
+                break;
+        }
+        
+        return array_slice($allProducts, 0, $limit);
     }
 
     /**

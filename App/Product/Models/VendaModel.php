@@ -431,4 +431,94 @@ class VendaModel {
         $stmt->execute([$dataInicio, $dataFim]);
         return (int) $stmt->fetchColumn();
     }
+
+    /**
+     * Retorna o total de vendas de hoje (em centavos)
+     */
+    public static function getSalesToday(): int {
+        $pdo = ConnectionFactory::getConnection('read_only');
+        $stmt = $pdo->prepare("
+            SELECT COALESCE(SUM(valor_total), 0) FROM venda 
+            WHERE DATE(data) = CURDATE() AND status != '0'
+        ");
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
+     * Retorna a quantidade de pedidos pendentes
+     */
+    public static function countPending(): int {
+        $pdo = ConnectionFactory::getConnection('read_only');
+        $stmt = $pdo->query("SELECT COUNT(*) FROM venda WHERE status = 'P' OR status = '1'");
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
+     * Retorna os pedidos mais recentes
+     */
+    public static function findRecent(int $limit = 5): array {
+        $pdo = ConnectionFactory::getConnection('read_only');
+        $stmt = $pdo->prepare("
+            SELECT v.*, p.nome as cliente_nome 
+            FROM venda v
+            LEFT JOIN pessoa p ON p.id = v.cliente
+            ORDER BY v.data DESC
+            LIMIT ?
+        ");
+        $stmt->execute([$limit]);
+        
+        $results = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $venda = self::createFromRow($row);
+            // Adiciona o nome do cliente ao resultado
+            $results[] = [
+                'venda' => $venda,
+                'cliente_nome' => $row['cliente_nome'] ?? 'Cliente não identificado'
+            ];
+        }
+        return $results;
+    }
+
+    /**
+     * Retorna vendas dos últimos N dias agrupadas
+     */
+    public static function getSalesLastDays(int $days = 7): array {
+        $pdo = ConnectionFactory::getConnection('read_only');
+        $stmt = $pdo->prepare("
+            SELECT DATE(data) as dia, SUM(valor_total) as total
+            FROM venda
+            WHERE data >= DATE_SUB(CURDATE(), INTERVAL ? DAY) AND status != '0'
+            GROUP BY DATE(data)
+            ORDER BY dia ASC
+        ");
+        $stmt->execute([$days]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Retorna a média geral de avaliações de todos os produtos
+     */
+    public static function getAverageRating(): float {
+        $pdo = ConnectionFactory::getConnection('read_only');
+        $stmt = $pdo->query("
+            SELECT AVG(avalaliacao_num) as media 
+            FROM produto_vendas 
+            WHERE avalaliacao_num IS NOT NULL AND avalaliacao_num > 0
+        ");
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (float) ($result['media'] ?? 0);
+    }
+
+    /**
+     * Conta total de avaliações
+     */
+    public static function countRatings(): int {
+        $pdo = ConnectionFactory::getConnection('read_only');
+        $stmt = $pdo->query("
+            SELECT COUNT(*) FROM produto_vendas 
+            WHERE avalaliacao_num IS NOT NULL AND avalaliacao_num > 0
+        ");
+        return (int) $stmt->fetchColumn();
+    }
 }

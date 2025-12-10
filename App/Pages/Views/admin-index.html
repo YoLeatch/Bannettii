@@ -178,33 +178,53 @@
     </div>
 
     <script>
-        // Mock Charts
+        // Dados dinâmicos passados pelo servidor
+        const salesData = { sales_chart_data };
+        const salesLabels = { sales_chart_labels };
+
+        // Gráfico de Vendas
         const ctxSales = document.getElementById('salesChart').getContext('2d');
         new Chart(ctxSales, {
             type: 'line',
             data: {
-                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'],
+                labels: salesLabels,
                 datasets: [{
                     label: 'Vendas (R$)',
-                    data: [1200, 1900, 3000, 500, 2000, 3000, 1250],
+                    data: salesData,
                     borderColor: '#2d4a3e',
+                    backgroundColor: 'rgba(45, 74, 62, 0.1)',
+                    fill: true,
                     tension: 0.4
                 }]
             },
-            options: { responsive: true }
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
         });
 
+        // Gráfico de Produtos Mais Vendidos
         const ctxProducts = document.getElementById('productsChart').getContext('2d');
         new Chart(ctxProducts, {
             type: 'doughnut',
             data: {
-                labels: ['Camisetas', 'Calças', 'Acessórios'],
+                labels: { top_products_labels },
                 datasets: [{
-                    data: [300, 50, 100],
-                    backgroundColor: ['#2d4a3e', '#D0D558', '#1a1a1a']
+                    data: { top_products_data },
+                    backgroundColor: ['#2d4a3e', '#D0D558', '#4a7c59', '#8fa84a', '#1a1a1a']
                 }]
             },
-            options: { responsive: true }
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
         });
     </script>
 </body>

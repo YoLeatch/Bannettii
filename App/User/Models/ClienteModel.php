@@ -189,4 +189,65 @@ class ClienteModel extends PessoaModel {
         $stmt = $pdo->prepare("UPDATE cliente SET status = '1' WHERE id = ?");
         return $stmt->execute([$this->clienteId]);
     }
+
+    // === MÉTODOS DE ESTATÍSTICAS ===
+    
+    /**
+     * Conta total de clientes ativos
+     */
+    public static function count(): int {
+        $pdo = ConnectionFactory::getConnection('read_only');
+        $stmt = $pdo->query("
+            SELECT COUNT(*) FROM pessoa p 
+            INNER JOIN cliente c ON c.id = p.id
+            WHERE p.status = '1' AND c.status = '1'
+        ");
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
+     * Conta clientes criados hoje
+     */
+    public static function countCreatedToday(): int {
+        $pdo = ConnectionFactory::getConnection('read_only');
+        $stmt = $pdo->prepare("
+            SELECT COUNT(*) FROM pessoa p 
+            INNER JOIN cliente c ON c.id = p.id
+            WHERE DATE(p.dt_criacao) = CURDATE() AND p.status = '1' AND c.status = '1'
+        ");
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
+     * Conta clientes criados em um período
+     */
+    public static function countByPeriod(string $dataInicio, string $dataFim): int {
+        $pdo = ConnectionFactory::getConnection('read_only');
+        $stmt = $pdo->prepare("
+            SELECT COUNT(*) FROM pessoa p 
+            INNER JOIN cliente c ON c.id = p.id
+            WHERE p.dt_criacao BETWEEN ? AND ? AND p.status = '1' AND c.status = '1'
+        ");
+        $stmt->execute([$dataInicio, $dataFim]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
+     * Retorna clientes criados nos últimos N dias (para gráfico)
+     */
+    public static function getCreatedLastDays(int $days = 7): array {
+        $pdo = ConnectionFactory::getConnection('read_only');
+        $stmt = $pdo->prepare("
+            SELECT DATE(p.dt_criacao) as dia, COUNT(*) as total
+            FROM pessoa p 
+            INNER JOIN cliente c ON c.id = p.id
+            WHERE p.dt_criacao >= DATE_SUB(CURDATE(), INTERVAL ? DAY) 
+              AND p.status = '1' AND c.status = '1'
+            GROUP BY DATE(p.dt_criacao)
+            ORDER BY dia ASC
+        ");
+        $stmt->execute([$days]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Slide - Admin Bennettii</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .admin-pfp {
+            width: 50px;
+            height: 50px;
+            flex-shrink: 0;
+        }
+
+        .admin-pfp img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .btn-primary {
+            background-color: #D0D558;
+            color: #1a1a2e;
+            font-weight: 600;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #b8bd40;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #ccc;
+            border: 1px solid #444;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            border-color: #bbb;
+            color: #fff;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(208, 213, 88, 0.1);
+        }
+
+        .card h3 {
+            color: #D0D558;
+            margin: 0 0 1rem 0;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #e0e0e0;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #D0D558;
+        }
+
+        .current-image {
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #444;
+            max-width: 100%;
+        }
+
+        .current-image img {
+            width: 100%;
+            height: auto;
+            max-height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+    </style>
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="/assets/image/bennettii_nobackground_horizontal.png" alt="Bennettii Admin">
+            </div>
+
+            <nav class="admin-nav">
+                <div class="nav-section">
+                    <h3>Principal</h3>
+                    <a href="/admin/dashboard">Dashboard</a>
+                    <a href="/admin/team-list">Equipe</a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Gestão de Conteúdo</h3>
+                    <a href="/admin/carousel" class="active">Carrossel</a>
+                    <a href="/admin/promotions">Promoções</a>
+                    <a href="/admin/news">Novidades</a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Produtos</h3>
+                    <a href="/admin/products">Gerenciar Produtos</a>
+                    <a href="/admin/categories">Categorias</a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Clientes</h3>
+                    <a href="/admin/customers">Gerenciar Clientes</a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="admin-profile">
+                <div class="admin-profile-card">
+                    <div class="admin-pfp">{admin_avatar}</div>
+                    <div class="admin-profile-info">
+                        <h2>{admin_name}</h2>
+                        <h4>{admin_role}</h4>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="breadcrumb" style="margin-bottom: 20px;">
+                <li><a href="/admin/dashboard">Dashboard</a></li>
+                <li><a href="/admin/carousel">Carrossel</a></li>
+                <li class="active">Editar Slide</li>
+            </ul>
+
+            <header class="admin-header">
+                <div class="header-title">
+                    <h1>Editar Slide</h1>
+                    <p>Atualize as informações do banner.</p>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="card">
+                    <form action="/admin/carousel/{id}/update" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label>Imagem Atual</label>
+                            <div class="current-image">
+                                <img src="{imagem}" alt="Banner atual">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="imagem">Trocar Imagem (Opcional)</label>
+                            <input type="file" id="imagem" name="imagem" accept="image/*" class="form-control"
+                                style="padding-bottom: 35px;">
+                            <small style="color: #666;">Deixe em branco para manter a imagem atual.</small>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="titulo">Título</label>
+                                <input type="text" id="titulo" name="titulo" class="form-control" value="{titulo}">
+                            </div>
+                            <div class="form-group">
+                                <label for="link">Link de Destino</label>
+                                <input type="text" id="link" name="link" class="form-control" value="{link}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="descricao">Descrição</label>
+                            <textarea id="descricao" name="descricao" class="form-control"
+                                rows="2">{descricao}</textarea>
+                        </div>
+
+                        <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="ativo" name="ativo" {checked_ativo}
+                                style="width: 20px; height: 20px;">
+                            <label for="ativo" style="margin: 0; cursor: pointer;">Banner Ativo</label>
+                        </div>
+
+                        <div class="form-actions" style="margin-top: 20px; display: flex; gap: 10px;">
+                            <button type="submit" class="btn-primary">Salvar Alterações</button>
+                            <a href="/admin/carousel" class="btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

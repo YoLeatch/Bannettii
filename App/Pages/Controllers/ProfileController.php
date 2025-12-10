@@ -99,14 +99,36 @@ class ProfileController {
                 exit;
             }
 
-            // Busca dados atuais para manter o CPF e outros campos que não mudam
+            // Busca dados atuais
             $currentUser = PessoaModel::findByData('id', $userId);
             if (!$currentUser) {
                 $_SESSION['ERROR'] = 'Usuário não encontrado.';
                 header("Location: /login");
                 exit;
             }
+
             $cpf = $currentUser->getCPF();
+            $dtNascimento = $_POST['data_nascimento'] ?? null;
+            $telefoneInput = preg_replace('/[^0-9]/', '', $_POST['telefone'] ?? '');
+
+            // Atualiza Telefone
+            $telefonesAtuais = $currentUser->getTelefones();
+            $telefoneAtual = !empty($telefonesAtuais) ? $telefonesAtuais[0] : null;
+
+            if (!empty($telefoneInput)) {
+                if ($telefoneAtual) {
+                    // Se mudou o número
+                    if ($telefoneAtual['numero'] != $telefoneInput) {
+                        $currentUser->updateTelefone($telefoneAtual['id'], $telefoneInput);
+                    }
+                } else {
+                    // Novo telefone
+                    $currentUser->addTelefone($telefoneInput);
+                }
+            } else if ($telefoneAtual) {
+                // Remove telefone se campo estiver vazio e tinha telefone
+                $currentUser->removeTelefone($telefoneAtual['id']);
+            }
             
             // Verifica se quer trocar senha
             $password = '';
@@ -124,14 +146,16 @@ class ProfileController {
                 $password = $newPassword;
             }
             
-            // Atualiza os dados
+            // Atualiza os dados principais
             $result = PessoaModel::updateUser(
                 $userId,
                 $nome,
                 $email,
                 $cpf,
                 '1', // status ativo
-                $password // vazio se não for alterar
+                $password, // vazio se não for alterar
+                null, // imagem handled separadamente
+                $dtNascimento
             );
             
             if ($result) {
@@ -186,7 +210,7 @@ class ProfileController {
         $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
         $filename = 'avatar_' . $userId . '_' . time() . '.' . $ext;
         
-        $uploadDir = __DIR__ . '/../../../Public/uploads/avatars/';
+        $uploadDir = __DIR__ . '/../../../public_html/uploads/avatars/';
         
         // Cria diretório se não existir
         if (!is_dir($uploadDir)) {
@@ -266,6 +290,10 @@ class ProfileController {
         $nome = htmlspecialchars($user->getNome());
         $email = htmlspecialchars($user->getEmail());
         $cpf = htmlspecialchars($user->getCPF());
+        $dtNascimento = $user->getDtNascimento() ?? '';
+        
+        $telefones = $user->getTelefones();
+        $telefone = !empty($telefones) ? htmlspecialchars($telefones[0]['numero']) : '';
         
         return <<<HTML
         <form action="/perfil/update" method="POST">
@@ -279,6 +307,16 @@ class ProfileController {
             <div class="form-group">
                 <label for="email">E-mail</label>
                 <input type="email" id="email" name="email" class="form-control" value="{$email}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="telefone">Telefone</label>
+                <input type="text" id="telefone" name="telefone" class="form-control" value="{$telefone}" placeholder="(00) 00000-0000">
+            </div>
+
+            <div class="form-group">
+                <label for="data_nascimento">Data de Nascimento</label>
+                <input type="date" id="data_nascimento" name="data_nascimento" class="form-control" value="{$dtNascimento}">
             </div>
             
             <div class="form-group">

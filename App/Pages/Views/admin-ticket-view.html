@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/image/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/image/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/image/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <title>Ticket {ticket_codigo} - Admin Bennettii</title>
+    <style>
+        .ticket-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .ticket-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .ticket-main {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(208, 213, 88, 0.1);
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ticket-header h1 {
+            color: #fff;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .ticket-code {
+            color: #D0D558;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .ticket-badges {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .priority-low {
+            background: rgba(107, 114, 128, 0.2);
+            color: #9ca3af;
+        }
+
+        .priority-medium {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
+
+        .priority-high {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        .priority-urgent {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .status-open {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
+
+        .status-progress {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        .status-waiting {
+            background: rgba(139, 92, 246, 0.2);
+            color: #a78bfa;
+        }
+
+        .status-resolved {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+        }
+
+        .status-closed {
+            background: rgba(107, 114, 128, 0.2);
+            color: #9ca3af;
+        }
+
+        .ticket-message {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.25rem;
+            border-radius: 10px;
+            color: #e0e0e0;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .responses-section h2 {
+            color: #D0D558;
+            font-size: 1.1rem;
+            margin: 0 0 1rem 0;
+        }
+
+        .response-item {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .response-admin {
+            background: rgba(208, 213, 88, 0.1);
+            border-left: 3px solid #D0D558;
+        }
+
+        .response-user {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 3px solid #3b82f6;
+        }
+
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .response-author {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .response-date {
+            color: #a0a0a0;
+            font-size: 0.85rem;
+        }
+
+        .response-content {
+            color: #e0e0e0;
+            line-height: 1.5;
+        }
+
+        .no-responses {
+            color: #a0a0a0;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .reply-form {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .reply-form h3 {
+            color: #fff;
+            margin: 0 0 1rem 0;
+            font-size: 1rem;
+        }
+
+        .reply-form textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        .reply-form textarea:focus {
+            outline: none;
+            border-color: #D0D558;
+        }
+
+        .reply-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .reply-actions select {
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .reply-actions select option {
+            background: #1a1a2e;
+        }
+
+        .btn-reply {
+            flex: 1;
+            background: linear-gradient(135deg, #D0D558, #a8ad3f);
+            color: #1a1a2e;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-reply:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(208, 213, 88, 0.3);
+        }
+
+        /* Sidebar Info */
+        .ticket-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .info-card {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border-radius: 16px;
+            padding: 1.25rem;
+            border: 1px solid rgba(208, 213, 88, 0.1);
+        }
+
+        .info-card h3 {
+            color: #D0D558;
+            font-size: 0.9rem;
+            margin: 0 0 1rem 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+        }
+
+        .info-value {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #a0a0a0;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            transition: color 0.3s;
+        }
+
+        .btn-back:hover {
+            color: #D0D558;
+        }
+
+        .status-form {
+            margin-top: 1rem;
+        }
+
+        .status-form select {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-form select option {
+            background: #1a1a2e;
+        }
+
+        .btn-update-status {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-update-status:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+    </style>
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="/assets/image/bennettii_nobackground_horizontal.png" alt="Bennettii Admin">
+            </div>
+
+            <nav class="admin-nav">
+                <div class="nav-section">
+                    <h3>Principal</h3>
+                    <a href="/admin/dashboard">Dashboard</a>
+                    <a href="/admin/team-list">Equipe</a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Suporte</h3>
+                    <a href="/admin/tickets" class="active">Tickets</a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Gestão de Conteúdo</h3>
+                    <a href="/admin/carousel">Carrossel</a>
+                    <a href="/admin/products">Produtos</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-profile">
+                <div class="admin-profile-card">
+                    <div class="admin-pfp">{admin_avatar}</div>
+                    <div class="admin-profile-info">
+                        <h2>{admin_name}</h2>
+                        <h4>{admin_role}</h4>
+                    </div>
+                </div>
+            </div>
+
+            <a href="/admin/tickets" class="btn-back">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                Voltar para Tickets
+            </a>
+
+            <div class="ticket-container">
+                <div class="ticket-main">
+                    <div class="ticket-header">
+                        <div>
+                            <h1>{ticket_assunto}</h1>
+                            <p class="ticket-code">{ticket_codigo}</p>
+                        </div>
+                        <div class="ticket-badges">
+                            <span class="badge {ticket_prioridade_class}">{ticket_prioridade}</span>
+                            <span class="badge {ticket_status_class}">{ticket_status}</span>
+                        </div>
+                    </div>
+
+                    <div class="ticket-message">
+                        {ticket_mensagem}
+                    </div>
+
+                    <div class="responses-section">
+                        <h2>Respostas</h2>
+                        {respostas}
+                    </div>
+
+                    <div class="reply-form">
+                        <h3>Responder ao Ticket</h3>
+                        <form action="/admin/tickets/reply" method="POST">
+                            <input type="hidden" name="ticket_id" value="{ticket_id}">
+                            <textarea name="mensagem" placeholder="Digite sua resposta..." required></textarea>
+                            <div class="reply-actions">
+                                <select name="status">
+                                    <option value="em_andamento">Em Andamento</option>
+                                    <option value="aguardando_resposta">Aguardando Cliente</option>
+                                    <option value="resolvido">Marcar como Resolvido</option>
+                                    <option value="fechado">Fechar Ticket</option>
+                                </select>
+                                <button type="submit" class="btn-reply">Enviar Resposta</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="ticket-sidebar">
+                    <div class="info-card">
+                        <h3>Informações do Cliente</h3>
+                        <div class="info-item">
+                            <span class="info-label">Nome</span>
+                            <span class="info-value">{ticket_nome}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email</span>
+                            <span class="info-value">{ticket_email}</span>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>Detalhes do Ticket</h3>
+                        <div class="info-item">
+                            <span class="info-label">Categoria</span>
+                            <span class="info-value">{ticket_categoria}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Criado em</span>
+                            <span class="info-value">{ticket_data}</span>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>Alterar Status</h3>
+                        <form action="/admin/tickets/status" method="POST" class="status-form">
+                            <input type="hidden" name="ticket_id" value="{ticket_id}">
+                            <select name="status">
+                                <option value="aberto">Aberto</option>
+                                <option value="em_andamento">Em Andamento</option>
+                                <option value="aguardando_resposta">Aguardando Resposta</option>
+                                <option value="resolvido">Resolvido</option>
+                                <option value="fechado">Fechado</option>
+                            </select>
+                            <button type="submit" class="btn-update-status">Atualizar Status</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Configurações de polling para tempo real
+        const TICKET_ID = { ticket_id };
+        const POLLING_INTERVAL = 8000; // 8 segundos
+        let lastCheck = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        let pollingActive = true;
+
+        // Função para verificar atualizações
+        async function checkForUpdates() {
+            if (!pollingActive) return;
+
+            try {
+                const response = await fetch(`/api/tickets/${TICKET_ID}/updates?last_check=${encodeURIComponent(lastCheck)}`);
+                const data = await response.json();
+
+                if (data.success && data.has_updates) {
+                    // Atualiza as respostas
+                    const responsesContainer = document.querySelector('.responses-section');
+                    if (responsesContainer && data.responses_html) {
+                        const h2 = responsesContainer.querySelector('h2');
+                        responsesContainer.innerHTML = '';
+                        responsesContainer.appendChild(h2);
+                        responsesContainer.insertAdjacentHTML('beforeend', data.responses_html);
+
+                        // Notificação visual
+                        showNotification('🔔 Nova mensagem do cliente!');
+                    }
+
+                    // Atualiza o badge de status
+                    const statusBadge = document.querySelector('.ticket-badges .badge:last-child');
+                    if (statusBadge && data.status_label) {
+                        statusBadge.textContent = data.status_label;
+                        statusBadge.className = `badge ${data.status_class}`;
+                    }
+
+                    lastCheck = data.updated_at;
+                }
+            } catch (error) {
+                console.error('Erro ao verificar atualizações:', error);
+            }
+
+            setTimeout(checkForUpdates, POLLING_INTERVAL);
+        }
+
+        // Notificação visual
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'update-notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 10);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+
+            // Som de notificação (opcional)
+            try {
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2teleWw/HH+w0+2pZTVIZ36u2/OnYzlPa3uo0fCsZEBUbnOjzPGwZklZcm6ey/CzZ05dcmmYyO+1aVJgdmWTxe+3a1Zjd2KPwe+5bVhleGCNv++7b1pkemCKvO+9cVxme2CGuO+/c15ofGCEtfDBdF9pfmCCs/DCdl9rfmCAsO/Dd2Bsf2B+r+/FeFxufV98re3HeV9wf156q+3JeGBxgF54quzLe2Fzg155qOrNfGN0g157pujPfmV2hV97pOfQgGd4hl97o+TShGl6h198ouLThmx8iGB9oeDVh258iGF+oN7WiXCAimJ/ntzYioB+i2N/nNvZi4KAjGSAm9jbjIOBjWaAmdbdjYSCjmiBlNLekIaEkGqCk9DglIiFlmuDkcnilomGmG2EjsPkmoyImnKGi77lo4+Jn3aIiLnop5GMo32Khrbqq5WPpYSNg7PsrpmRqIuRgKzvspyUq5OUfanttrCWrrCXeaXuuLaYsbeZdqDsub2btr2ccanrvr+eub+ecqfqv8KgvMKgb6Pnv8SivsSia6DkwMejwselZp3hwMqmxcynYpnewcuox8ypXZbbwM2rycyqWJPZv8+uys6rVJDWvtCyzNCuUI3TvNK109GxTIrQu9O42NK0SYjOutW82dS3RYXMuda/2dW5QoLJt9jC2NO7P3/Gtdm+18q7Pny8sMu4ysG0PnqsqMK0w7qvQHyjorn///+AAIAAAAAA');
+                audio.volume = 0.3;
+                audio.play();
+            } catch (e) { }
+        }
+
+        // Inicia polling quando a página carrega
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(checkForUpdates, POLLING_INTERVAL);
+        });
+
+        // Pausa quando a aba não está visível
+        document.addEventListener('visibilitychange', () => {
+            pollingActive = !document.hidden;
+            if (pollingActive) checkForUpdates();
+        });
+    </script>
+
+    <style>
+        .update-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #D0D558, #a8ad3f);
+            color: #1a1a2e;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(208, 213, 88, 0.4);
+            z-index: 9999;
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+        }
+
+        .update-notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</body>
+
+</html>

@@ -1,1 +1,55 @@
-[]
+[
+    {
+        "id": 1,
+        "slug": "novidades",
+        "tipo": "products",
+        "titulo": "Novidades",
+        "subtitulo": "Confira nossos lançamentos",
+        "conteudo": {
+            "limit": 4,
+            "orderBy": "newest",
+            "showViewAll": false
+        },
+        "ordem": 1,
+        "ativo": true,
+        "pagina": "home",
+        "criacao": "2025-12-09 12:00:00",
+        "atualizacao": "2025-12-09 12:00:00"
+    },
+    {
+        "id": 2,
+        "slug": "mais-vendidos",
+        "tipo": "products",
+        "titulo": "Mais Vendidos",
+        "subtitulo": "Os produtos favoritos dos nossos clientes",
+        "conteudo": {
+            "limit": 4,
+            "orderBy": "bestseller",
+            "showViewAll": true,
+            "viewAllLink": "/catalogo"
+        },
+        "ordem": 2,
+        "ativo": true,
+        "pagina": "home",
+        "criacao": "2025-12-09 12:00:00",
+        "atualizacao": "2025-12-09 12:00:00"
+    },
+    {
+        "id": 3,
+        "slug": "mais-promocao",
+        "tipo": "products",
+        "titulo": "Maiores Promoções",
+        "subtitulo": "Confira os produtos em promoção",
+        "conteudo": {
+            "limit": 4,
+            "orderBy": "discount",
+            "showViewAll": true,
+            "viewAllLink": "/catalogo"
+        },
+        "ordem": 3,
+        "ativo": true,
+        "pagina": "home",
+        "criacao": "2025-12-09 12:00:00",
+        "atualizacao": "2025-12-09 12:00:00"
+    }
+]

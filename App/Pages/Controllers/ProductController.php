@@ -48,8 +48,8 @@ class ProductController {
         // Gera HTML das avaliações
         $listaAvalHtml = $this->buildAvaliacoesList($avaliacoes);
         
-        // Gera HTML das cores (placeholder por enquanto)
-        $coresHtml = $this->buildCoresHtml();
+        // Gera HTML das cores (usando campo cor do produto)
+        $coresHtml = $this->buildCoresHtml($produto);
         
         // Gera HTML dos tamanhos (usando dimensões do produto)
         $tamanhosHtml = $this->buildTamanhosHtml($produto);
@@ -85,6 +85,9 @@ class ProductController {
             }
         }
         
+        // Gera HTML das imagens (thumbnails)
+        $thumbnailsHtml = $this->buildThumbnailsHtml($imagens, $produto->getNome());
+
         // Renderiza a view
         echo ViewerPlace::render('produto', [
             'login_notify' => $loginNotify,
@@ -94,6 +97,7 @@ class ProductController {
             'main_image' => $imagemPrincipal,
             'imagem_principal' => $imagemPrincipal,
             'imagem_principal_nome' => 'Imagem principal',
+            'thumbnails' => $thumbnailsHtml,
             'preco' => $precoFormatado,
             'media_rating' => number_format($mediaRating, 1),
             'quant_aval' => $quantAval,
@@ -101,8 +105,33 @@ class ProductController {
             'cores' => $coresHtml,
             'tamanhos' => $tamanhosHtml,
             'descricao' => $descricaoHtml,
-            'lista_aval' => $listaAvalHtml
+            'lista_aval' => $listaAvalHtml,
+            'material' => htmlspecialchars($produto->getMaterial() ?? 'Não informado'),
+            'peso' => htmlspecialchars($produto->getPesoLiq() ?? 'Não informado')
         ]);
+    }
+
+    /**
+     * Gera HTML dos thumbnails das imagens
+     */
+    private function buildThumbnailsHtml(array $imagens, string $nomeProduto): string {
+        if (empty($imagens)) {
+            // Se não tiver imagens, retorna pelo menos o placeholder como thumb ativo
+            return '<div class="thumb active" onclick="changeImage(this, \'/assets/image/placeholder.png\')">
+                        <img src="/assets/image/placeholder.png" alt="' . htmlspecialchars($nomeProduto) . '">
+                    </div>';
+        }
+
+        $html = '';
+        foreach ($imagens as $index => $img) {
+            $imgPath = htmlspecialchars($img['imagem']);
+            $activeClass = ($index === 0) ? 'active' : '';
+            
+            $html .= '<div class="thumb ' . $activeClass . '" onclick="changeImage(this, \'' . $imgPath . '\')">
+                        <img src="' . $imgPath . '" alt="' . htmlspecialchars($nomeProduto) . ' - Imagem ' . ($index + 1) . '">
+                      </div>';
+        }
+        return $html;
     }
     
     /**
@@ -151,37 +180,45 @@ class ProductController {
     }
     
     /**
-     * Gera HTML das cores disponíveis (placeholder)
+     * Gera HTML das cores disponíveis
      */
-    private function buildCoresHtml(): string {
-        return '
-        <button class="btn-option color-option" style="background-color: #1a1a1a; color: white;">Preto</button>
-        <button class="btn-option color-option" style="background-color: #ffffff; color: #1a1a1a;">Branco</button>
-        <button class="btn-option color-option" style="background-color: #2c3e50; color: white;">Azul Marinho</button>';
+    private function buildCoresHtml(ProductModel $produto): string {
+        $cor = $produto->getCor();
+        
+        if (empty($cor)) {
+            return '<span style="color: #666; font-size: 0.9rem;">Cor única</span>';
+        }
+        
+        // Cores podem estar separadas por vírgula
+        $cores = array_map('trim', explode(',', $cor));
+        
+        $html = '';
+        foreach ($cores as $corItem) {
+            if (!empty($corItem)) {
+                $html .= '<button type="button" class="btn-option color-option" onclick="selectProductOption(this, \'cor\', \'' . htmlspecialchars($corItem) . '\')">' . htmlspecialchars($corItem) . '</button>';
+            }
+        }
+        
+        return $html;
     }
     
     /**
-     * Gera HTML dos tamanhos disponíveis (placeholder)
-     */
-    /**
-     * Gera HTML dos tamanhos disponíveis baseado nas dimensões
+     * Gera HTML dos tamanhos disponíveis baseado no campo tamanho
      */
     private function buildTamanhosHtml(ProductModel $produto): string {
-        $dimensoes = $produto->getDimensoes();
+        $tamanho = $produto->getTamanho();
         
-        if (empty($dimensoes)) {
+        if (empty($tamanho)) {
             return '<span style="color: #666; font-size: 0.9rem;">Tamanho único</span>';
         }
 
         // Assume que pode haver múltiplos tamanhos separados por vírgula (ex: "P, M, G")
-        // ou apenas uma dimensão (ex: "30x40x10")
-        $tamanhos = array_map('trim', explode(',', $dimensoes));
+        $tamanhos = array_map('trim', explode(',', $tamanho));
         
         $html = '';
-        foreach ($tamanhos as $tamanho) {
-            if (!empty($tamanho)) {
-                // Adiciona classe 'active' ao primeiro como padrão se quiser, ou deixa sem seleção
-                $html .= '<button class="btn-option">' . htmlspecialchars($tamanho) . '</button>';
+        foreach ($tamanhos as $tam) {
+            if (!empty($tam)) {
+                $html .= '<button type="button" class="btn-option size-option" onclick="selectProductOption(this, \'tamanho\', \'' . htmlspecialchars($tam) . '\')">' . htmlspecialchars($tam) . '</button>';
             }
         }
         

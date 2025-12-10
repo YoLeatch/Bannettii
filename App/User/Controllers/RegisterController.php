@@ -46,14 +46,14 @@ class RegisterController {
             file_put_contents($logFile, "CSRF Validated\n", FILE_APPEND);
 
             // Validação do reCAPTCHA
-            //$recaptchaToken = $_POST['g-recaptcha-response'] ?? '';
-            //if (!Recaptcha::verify($recaptchaToken)) {
-            //    $_SESSION['ERROR'] = 'Por favor, confirme que você não é um robô.';
-            //    file_put_contents($logFile, "reCAPTCHA failed\n", FILE_APPEND);
-            //    header("Location: /register");
-            //    exit;
-            //}
-            //file_put_contents($logFile, "reCAPTCHA Validated\n", FILE_APPEND);
+            $recaptchaToken = $_POST['g-recaptcha-response'] ?? '';
+            if (!Recaptcha::verify($recaptchaToken)) {
+                $_SESSION['ERROR'] = 'Por favor, confirme que você não é um robô.';
+                file_put_contents($logFile, "reCAPTCHA failed\n", FILE_APPEND);
+                header("Location: /register");
+                exit;
+            }
+            file_put_contents($logFile, "reCAPTCHA Validated\n", FILE_APPEND);
 
             if (!Security::validateEmail($email)) {
                 $_SESSION['ERROR'] = 'E-mail inválido.';

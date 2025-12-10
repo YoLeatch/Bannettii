@@ -64,7 +64,7 @@ class ConnectionFactory {
      * Método auxiliar privado para carregar o arquivo de configuração.
      */
     private static function loadConfig() {
-        $configFile = __DIR__ . '/../config/database.php';
+        $configFile = __DIR__ . '/../Config/database.php';
 
         if (!file_exists($configFile)) {
             throw new \Exception("Arquivo de configuração do banco de dados não encontrado.");

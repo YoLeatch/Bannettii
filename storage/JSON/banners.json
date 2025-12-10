@@ -1,6 +1,6 @@
 [
     {
-        "titulo": "Bem-vindo à Bennettii",
+        "titulo": "Bem-vindo à BennettiA",
         "descricao": "Moda com estilo e conforto para você",
         "imagem": "\/uploads\/banners\/banner1.png",
         "link": "\/catalogo",
@@ -10,5 +10,14 @@
         "dataFim": null,
         "id": 1,
         "criacao": "2025-12-09 00:09:28"
+    },
+    {
+        "id": 1765323981,
+        "titulo": "Teste T",
+        "descricao": "Test Desc",
+        "imagem": "\/uploads\/banners\/banner_1765323981.png",
+        "link": "\/catalogo",
+        "ativo": true,
+        "ordem": 2
     }
 ]

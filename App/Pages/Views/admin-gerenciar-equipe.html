@@ -257,19 +257,48 @@
 
   <script>
     function filterTeam() {
-      const search = document.getElementById('searchTeam').value.toLowerCase();
-      const cargo = document.getElementById('filterCargo').value.toLowerCase();
+      const search = document.getElementById('searchTeam').value.toLowerCase().trim();
+      const cargo = document.getElementById('filterCargo').value.toLowerCase().trim();
+      const status = document.getElementById('filterStatus').value.toLowerCase().trim();
       const cards = document.querySelectorAll('.team-card');
 
       cards.forEach(card => {
-        const name = card.dataset.name.toLowerCase();
-        const cardCargo = card.dataset.cargo.toLowerCase();
+        const name = (card.dataset.name || '').toLowerCase();
+        const cardCargo = (card.dataset.cargo || '').toLowerCase();
+        const cardStatus = (card.dataset.status || '').toLowerCase();
 
-        const matchSearch = name.includes(search);
-        const matchCargo = !cargo || cardCargo.includes(cargo);
+        // Verifica cada filtro
+        const matchSearch = !search || name.includes(search);
+        const matchCargo = !cargo || cardCargo === cargo || cardCargo.includes(cargo);
 
-        card.style.display = (matchSearch && matchCargo) ? 'block' : 'none';
+        // Status: "status-active" ou "status-inactive"
+        let matchStatus = true;
+        if (status === 'active') {
+          matchStatus = cardStatus === 'status-active';
+        } else if (status === 'inactive') {
+          matchStatus = cardStatus === 'status-inactive';
+        }
+
+        // Mostra ou esconde o card
+        card.style.display = (matchSearch && matchCargo && matchStatus) ? 'block' : 'none';
       });
+
+      // Verifica se há resultados visíveis
+      const visibleCards = document.querySelectorAll('.team-card[style="display: block"]');
+      const noDataDiv = document.getElementById('noDataMessage');
+
+      if (visibleCards.length === 0) {
+        if (!noDataDiv) {
+          const grid = document.getElementById('teamGrid');
+          const msg = document.createElement('div');
+          msg.id = 'noDataMessage';
+          msg.className = 'no-data';
+          msg.textContent = 'Nenhum resultado encontrado para os filtros selecionados';
+          grid.appendChild(msg);
+        }
+      } else if (noDataDiv) {
+        noDataDiv.remove();
+      }
     }
   </script>
 </body>

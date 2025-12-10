@@ -27,6 +27,9 @@ class ProductModel {
     protected ?string $pesototal;
     protected ?string $dimensoes;
     protected ?string $descricao;
+    protected ?string $tamanho;
+    protected ?string $cor;
+    protected ?string $material;
     protected string $data;
     protected string $status;
     protected ?int $desconto;
@@ -45,6 +48,7 @@ class ProductModel {
         int $id, string $nome, float $preco, string $cod,
         int $categoria, int $sub_categoria, ?string $pesoliq,
         ?string $pesototal, ?string $dimensoes, ?string $descricao,
+        ?string $tamanho, ?string $cor, ?string $material,
         string $data, string $status, ?int $desconto, ?int $estoque
     ) {
         $this->id = $id;
@@ -57,6 +61,9 @@ class ProductModel {
         $this->pesototal = $pesototal;
         $this->dimensoes = $dimensoes;
         $this->descricao = $descricao;
+        $this->tamanho = $tamanho;
+        $this->cor = $cor;
+        $this->material = $material;
         $this->data = $data;
         $this->status = $status;
         $this->desconto = $desconto;
@@ -77,6 +84,9 @@ class ProductModel {
     public function getPesoTotal(): ?string { return $this->pesototal; }
     public function getDimensoes(): ?string { return $this->dimensoes; }
     public function getDescricao(): ?string { return $this->descricao; }
+    public function getTamanho(): ?string { return $this->tamanho; }
+    public function getCor(): ?string { return $this->cor; }
+    public function getMaterial(): ?string { return $this->material; }
     public function getData(): string { return $this->data; }
     public function getStatus(): string { return $this->status; }
     public function getDesconto(): ?int { return $this->desconto; }
@@ -234,7 +244,8 @@ class ProductModel {
             $row['id'], $row['nome'], (float)$row['preco'], $row['cod'],
             (int)$row['categoria'], (int)$row['sub_categoria'],
             $row['pesoliq'], $row['pesototal'], $row['dimensoes'],
-            $row['descricao'], $row['data'], $row['status'],
+            $row['descricao'], $row['tamanho'] ?? null, $row['cor'] ?? null,
+            $row['material'] ?? null, $row['data'], $row['status'],
             $row['desconto'] ?? null, $row['estoque'] ?? null
         );
     }
@@ -245,9 +256,9 @@ class ProductModel {
         $pdo = ConnectionFactory::getConnection('default');
         $stmt = $pdo->prepare("
             INSERT INTO produto (nome, preco, cod, categoria, sub_categoria, pesoliq, 
-                pesototal, dimensoes, descricao, data, status, desconto, estoque)
+                pesototal, dimensoes, descricao, tamanho, cor, material, data, status, desconto, estoque)
             VALUES (:nome, :preco, :cod, :categoria, :sub_categoria, :pesoliq,
-                :pesototal, :dimensoes, :descricao, NOW(), '1', :desconto, :estoque)
+                :pesototal, :dimensoes, :descricao, :tamanho, :cor, :material, NOW(), '1', :desconto, :estoque)
         ");
         $result = $stmt->execute([
             'nome' => $data['nome'],
@@ -259,6 +270,9 @@ class ProductModel {
             'pesototal' => $data['pesototal'] ?? null,
             'dimensoes' => $data['dimensoes'] ?? null,
             'descricao' => $data['descricao'] ?? null,
+            'tamanho' => $data['tamanho'] ?? null,
+            'cor' => $data['cor'] ?? null,
+            'material' => $data['material'] ?? null,
             'desconto' => $data['desconto'] ?? null,
             'estoque' => $data['estoque'] ?? null
         ]);
@@ -273,7 +287,8 @@ class ProductModel {
             UPDATE produto SET nome = :nome, preco = :preco, cod = :cod,
                 categoria = :categoria, sub_categoria = :sub_categoria,
                 pesoliq = :pesoliq, pesototal = :pesototal, dimensoes = :dimensoes,
-                descricao = :descricao, desconto = :desconto, estoque = :estoque
+                descricao = :descricao, tamanho = :tamanho, cor = :cor, material = :material,
+                desconto = :desconto, estoque = :estoque
             WHERE id = :id
         ");
         return $stmt->execute([
@@ -287,6 +302,9 @@ class ProductModel {
             'pesototal' => $data['pesototal'] ?? $this->pesototal,
             'dimensoes' => $data['dimensoes'] ?? $this->dimensoes,
             'descricao' => $data['descricao'] ?? $this->descricao,
+            'tamanho' => $data['tamanho'] ?? $this->tamanho,
+            'cor' => $data['cor'] ?? $this->cor,
+            'material' => $data['material'] ?? $this->material,
             'desconto' => $data['desconto'] ?? $this->desconto,
             'estoque' => $data['estoque'] ?? $this->estoque
         ]);

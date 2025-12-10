@@ -9,7 +9,7 @@
         "categoria": "geral",
         "mensagem": "Meeeeeuuuu Deeeeeeuuuuuussssss",
         "prioridade": "urgente",
-        "status": "resolvido",
+        "status": "fechado",
         "respostas": [
             {
                 "autor": "Empresa Bennettii",
@@ -52,10 +52,46 @@
                 "autor_tipo": "admin",
                 "mensagem": "olá",
                 "data": "2025-12-09 21:35:11"
+            },
+            {
+                "autor": "Usuário",
+                "autor_tipo": "usuario",
+                "mensagem": "oiiiiii",
+                "data": "2025-12-10 01:56:42"
+            },
+            {
+                "autor": "Empresa Bennettii",
+                "autor_tipo": "admin",
+                "mensagem": "Ajuda",
+                "data": "2025-12-10 01:56:49"
+            },
+            {
+                "autor": "Usuário",
+                "autor_tipo": "usuario",
+                "mensagem": "Meeeeeeeeeeeh",
+                "data": "2025-12-10 01:56:57"
+            },
+            {
+                "autor": "Empresa Bennettii",
+                "autor_tipo": "admin",
+                "mensagem": "awdawdawd",
+                "data": "2025-12-10 01:57:12"
+            },
+            {
+                "autor": "Usuário",
+                "autor_tipo": "usuario",
+                "mensagem": "respondi",
+                "data": "2025-12-10 01:57:23"
+            },
+            {
+                "autor": "Empresa Bennettii",
+                "autor_tipo": "admin",
+                "mensagem": "awdawdawdawdawdawd",
+                "data": "2025-12-10 01:57:40"
             }
         ],
         "criado_em": "2025-12-09 21:23:29",
-        "atualizado_em": "2025-12-09 21:39:27"
+        "atualizado_em": "2025-12-10 01:57:40"
     },
     {
         "id": 2,

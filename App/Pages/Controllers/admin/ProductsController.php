@@ -8,6 +8,7 @@
 namespace App\Pages\Controllers\admin;
 
 use Core\ViewerPlace;
+use Core\ConnectionFactory;
 use App\Product\Models\ProductModel;
 use App\User\Models\FuncionarioModel;
 
@@ -118,6 +119,37 @@ class ProductsController
 
         // Gera HTML das imagens existentes
         $imagesHtml = $this->generateProductImagesHtml($produto);
+        
+        // Busca categorias e subcategorias
+        $pdo = ConnectionFactory::getConnection('read_only');
+        
+        $categoriaAtual = $produto->getCategoria();
+        $subcategoriaAtual = $produto->getSubCategoria();
+        
+        // Gera options de categorias
+        $stmt = $pdo->query("SELECT * FROM categoria ORDER BY categoria ASC");
+        $categorias = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $categoryOptions = '';
+        foreach ($categorias as $c) {
+            $selected = ($c['id'] == $categoriaAtual) ? ' selected' : '';
+            $categoryOptions .= "<option value=\"{$c['id']}\"{$selected}>{$c['categoria']}</option>";
+        }
+        
+        // Busca todas subcategorias para JavaScript
+        $stmt = $pdo->query("SELECT id, sub_categoria, categoria FROM sub_categoria ORDER BY sub_categoria ASC");
+        $subcategorias = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $subcategoriasJson = json_encode($subcategorias);
+        
+        // Gera options iniciais de subcategorias (filtradas pela categoria atual ou todas)
+        $subcategoryOptions = '';
+        foreach ($subcategorias as $sc) {
+            // Só mostra subcategorias da categoria atual (se existir)
+            if ($categoriaAtual && $sc['categoria'] != $categoriaAtual) {
+                continue;
+            }
+            $selected = ($sc['id'] == $subcategoriaAtual) ? ' selected' : '';
+            $subcategoryOptions .= "<option value=\"{$sc['id']}\"{$selected}>{$sc['sub_categoria']}</option>";
+        }
 
         echo ViewerPlace::render('admin-products-edit', [
             'admin_avatar' => $this->getAdminAvatar(),
@@ -136,7 +168,11 @@ class ProductsController
             'product_pesoliq' => htmlspecialchars($produto->getPesoLiq() ?? ''),
             'product_pesototal' => htmlspecialchars($produto->getPesoTotal() ?? ''),
             'product_images' => $imagesHtml,
-            'product_status_checked' => $produto->getStatus() === '1' ? 'checked' : ''
+            'product_status_checked' => $produto->getStatus() === '1' ? 'checked' : '',
+            'category_options' => $categoryOptions,
+            'subcategory_options' => $subcategoryOptions,
+            'subcategorias_json' => $subcategoriasJson,
+            'subcategoria_atual' => $subcategoriaAtual ?? 0
         ]);
     }
 
@@ -161,6 +197,10 @@ class ProductsController
             exit;
         }
 
+        // Trata categoria e subcategoria (valores vazios como NULL)
+        $categoria = !empty($_POST['categoria']) ? (int)$_POST['categoria'] : null;
+        $subCategoria = !empty($_POST['sub_categoria']) ? (int)$_POST['sub_categoria'] : null;
+        
         $produto->update([
             'nome' => trim($_POST['nome'] ?? $produto->getNome()),
             'preco' => floatval($_POST['preco'] ?? $produto->getPreco()),
@@ -171,7 +211,9 @@ class ProductsController
             'cor' => trim($_POST['cor'] ?? $produto->getCor()),
             'material' => trim($_POST['material'] ?? $produto->getMaterial()),
             'pesoliq' => trim($_POST['pesoliq'] ?? $produto->getPesoLiq()),
-            'pesototal' => trim($_POST['pesototal'] ?? $produto->getPesoTotal())
+            'pesototal' => trim($_POST['pesototal'] ?? $produto->getPesoTotal()),
+            'categoria' => $categoria,
+            'sub_categoria' => $subCategoria
         ]);
 
         // Processa upload de novas imagens

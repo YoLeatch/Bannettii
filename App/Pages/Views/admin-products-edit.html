@@ -196,6 +196,29 @@
                                     </div>
                                 </div>
 
+                                <!-- Categoria e Subcategoria -->
+                                <div class="card">
+                                    <h2>Categoria e Subcategoria</h2>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <label>Categoria</label>
+                                            <select name="categoria" id="categoria-select"
+                                                onchange="updateSubcategorias()">
+                                                <option value="">Selecione uma categoria...</option>
+                                                {category_options}
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                            <label>Subcategoria</label>
+                                            <select name="sub_categoria" id="subcategoria-select">
+                                                <option value="">Selecione uma subcategoria...</option>
+                                                {subcategory_options}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- Pricing and Stock -->
                                 <div class="card">
                                     <h2>Preço e Estoque</h2>
@@ -405,6 +428,40 @@
                     });
                 }
             });
+        </script>
+
+        <!-- Script para filtrar subcategorias por categoria -->
+        <script>
+            // Dados das subcategorias vindos do PHP
+            const todasSubcategorias = { subcategorias_json };
+            const subcategoriaAtual = { subcategoria_atual };
+
+            function updateSubcategorias() {
+                const categoriaSelect = document.getElementById('categoria-select');
+                const subcategoriaSelect = document.getElementById('subcategoria-select');
+                const categoriaSelecionada = categoriaSelect.value;
+
+                // Limpa as opções atuais
+                subcategoriaSelect.innerHTML = '<option value="">Selecione uma subcategoria...</option>';
+
+                if (!categoriaSelecionada) {
+                    return;
+                }
+
+                // Filtra e adiciona as subcategorias da categoria selecionada
+                todasSubcategorias.forEach(sc => {
+                    if (sc.categoria == categoriaSelecionada) {
+                        const option = document.createElement('option');
+                        option.value = sc.id;
+                        option.textContent = sc.sub_categoria;
+                        // Mantém selecionada se for a subcategoria atual
+                        if (sc.id == subcategoriaAtual) {
+                            option.selected = true;
+                        }
+                        subcategoriaSelect.appendChild(option);
+                    }
+                });
+            }
         </script>
 
 </body>

@@ -127,11 +127,30 @@ Router::addRoute("GET", "/admin/categories/{id}/delete", "App\\Pages\\Controller
 Router::addRoute("GET", "/admin/subcategorias", "App\\Pages\\Controllers\\admin\\CategoriesController@subcategorias", [AuthMiddleware::class, 'handle']);
 Router::addRoute("GET", "/admin/subcategorias/create", "App\\Pages\\Controllers\\admin\\CategoriesController@subcategoriasCreate", [AuthMiddleware::class, 'handle']);
 Router::addRoute("POST", "/admin/subcategorias/store", "App\\Pages\\Controllers\\admin\\CategoriesController@subcategoriasStore", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/subcategorias/{id}/edit", "App\\Pages\\Controllers\\admin\\CategoriesController@subcategoriasEdit", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/subcategorias/{id}/update", "App\\Pages\\Controllers\\admin\\CategoriesController@subcategoriasUpdate", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/subcategorias/{id}/delete", "App\\Pages\\Controllers\\admin\\CategoriesController@subcategoriasDelete", [AuthMiddleware::class, 'handle']);
+
+//Admin Sessions (Seções da Home)
+Router::addRoute("GET", "/admin/sessions", "App\\Pages\\Controllers\\admin\\SessionsController@index", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/sessions/create", "App\\Pages\\Controllers\\admin\\SessionsController@create", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/sessions/store", "App\\Pages\\Controllers\\admin\\SessionsController@store", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/sessions/update", "App\\Pages\\Controllers\\admin\\SessionsController@update", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/sessions/{id}/toggle", "App\\Pages\\Controllers\\admin\\SessionsController@toggle", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/sessions/{id}/delete", "App\\Pages\\Controllers\\admin\\SessionsController@delete", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/sessions/reorder", "App\\Pages\\Controllers\\admin\\SessionsController@reorder", [AuthMiddleware::class, 'handle']);
+
 
 //Admin Reviews
 Router::addRoute("GET", "/admin/reviews", "App\\Pages\\Controllers\\admin\\ReviewsController@index", [AuthMiddleware::class, 'handle']);
 Router::addRoute("POST", "/admin/reviews/{id}/approve", "App\\Pages\\Controllers\\admin\\ReviewsController@approve", [AuthMiddleware::class, 'handle']);
 Router::addRoute("POST", "/admin/reviews/{id}/reject", "App\\Pages\\Controllers\\admin\\ReviewsController@reject", [AuthMiddleware::class, 'handle']);
+
+//Admin Cupons
+Router::addRoute("GET", "/admin/cupons", "App\\Pages\\Controllers\\admin\\CouponsController@index", [AuthMiddleware::class, 'handle']);
+Router::addRoute("POST", "/admin/cupons/store", "App\\Pages\\Controllers\\admin\\CouponsController@store", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/cupons/{id}/toggle", "App\\Pages\\Controllers\\admin\\CouponsController@toggle", [AuthMiddleware::class, 'handle']);
+Router::addRoute("GET", "/admin/cupons/{id}/delete", "App\\Pages\\Controllers\\admin\\CouponsController@delete", [AuthMiddleware::class, 'handle']);
 
 //Admin Carousel
 Router::addRoute("GET", "/admin/carousel", "App\\Pages\\Controllers\\admin\\CarouselController@index", [AuthMiddleware::class, 'handle']);

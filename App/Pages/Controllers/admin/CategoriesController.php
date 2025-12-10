@@ -29,12 +29,14 @@ class CategoriesController
 
         $categorias = $this->getAllCategories();
         $categoryRows = $this->generateCategoryRows($categorias);
+        $messages = $this->getMessages();
 
         echo ViewerPlace::render('admin-tabela-categorias', [
             'admin_avatar' => $this->getAdminAvatar(),
             'admin_name' => htmlspecialchars($_SESSION['admin_name'] ?? 'Admin'),
             'admin_role' => 'Administrador',
-            'category_rows' => $categoryRows
+            'category_rows' => $categoryRows,
+            'messages' => $messages
         ]);
     }
 
@@ -55,7 +57,8 @@ class CategoriesController
         echo ViewerPlace::render('admin-gerenciar-categoria-criar', [
             'admin_avatar' => $this->getAdminAvatar(),
             'admin_name' => htmlspecialchars($_SESSION['admin_name'] ?? 'Admin'),
-            'admin_role' => 'Administrador'
+            'admin_role' => 'Administrador',
+            'categoria' => ''
         ]);
     }
 
@@ -111,7 +114,7 @@ class CategoriesController
             'admin_name' => htmlspecialchars($_SESSION['admin_name'] ?? 'Admin'),
             'admin_role' => 'Administrador',
             'category_id' => $categoria['id'],
-            'category_name' => htmlspecialchars($categoria['categoria'])
+            'categoria' => htmlspecialchars($categoria['categoria'])
         ]);
     }
 
@@ -156,10 +159,34 @@ class CategoriesController
         }
 
         $pdo = ConnectionFactory::getConnection('default');
-        $stmt = $pdo->prepare("DELETE FROM categoria WHERE id = :id");
+        
+        // Verifica se há produtos usando esta categoria
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM produto WHERE categoria = :id");
         $stmt->execute(['id' => $id]);
+        $count = $stmt->fetchColumn();
+        
+        if ($count > 0) {
+            header('Location: /admin/categories?error=has_products&count=' . $count);
+            exit;
+        }
+        
+        // Verifica se há subcategorias usando esta categoria
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM sub_categoria WHERE categoria = :id");
+        $stmt->execute(['id' => $id]);
+        $subCount = $stmt->fetchColumn();
+        
+        if ($subCount > 0) {
+            header('Location: /admin/categories?error=has_subcategories&count=' . $subCount);
+            exit;
+        }
 
-        header('Location: /admin/categories?success=deleted');
+        try {
+            $stmt = $pdo->prepare("DELETE FROM categoria WHERE id = :id");
+            $stmt->execute(['id' => $id]);
+            header('Location: /admin/categories?success=deleted');
+        } catch (\PDOException $e) {
+            header('Location: /admin/categories?error=delete_failed');
+        }
         exit;
     }
 
@@ -183,12 +210,14 @@ class CategoriesController
 
         $subcategorias = $this->getAllSubcategories();
         $subcategoryRows = $this->generateSubcategoryRows($subcategorias);
+        $messages = $this->getSubcategoriaMessages();
 
         echo ViewerPlace::render('admin-subcategorias-lista', [
             'admin_avatar' => $this->getAdminAvatar(),
             'admin_name' => htmlspecialchars($_SESSION['admin_name'] ?? 'Admin'),
             'admin_role' => 'Administrador',
-            'subcategory_rows' => $subcategoryRows
+            'subcategory_rows' => $subcategoryRows,
+            'messages' => $messages
         ]);
     }
 
@@ -244,6 +273,104 @@ class CategoriesController
         exit;
     }
 
+    /**
+     * Formulário de edição de subcategoria
+     */
+    public function subcategoriasEdit($id)
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['admin_logged_in']) || !$_SESSION['admin_logged_in']) {
+            header("Location: /login");
+            exit;
+        }
+
+        $subcategoria = $this->getSubcategoryById($id);
+        
+        if (!$subcategoria) {
+            header('Location: /admin/subcategorias?error=notfound');
+            exit;
+        }
+
+        $categorias = $this->getAllCategories();
+        $categoryOptions = $this->generateCategoryOptionsWithSelected($categorias, $subcategoria['categoria']);
+
+        echo ViewerPlace::render('admin-subcategorias-editar', [
+            'admin_avatar' => $this->getAdminAvatar(),
+            'admin_name' => htmlspecialchars($_SESSION['admin_name'] ?? 'Admin'),
+            'admin_role' => 'Administrador',
+            'subcategory_id' => $subcategoria['id'],
+            'sub_categoria' => htmlspecialchars($subcategoria['sub_categoria']),
+            'category_options' => $categoryOptions
+        ]);
+    }
+
+    /**
+     * Atualiza subcategoria
+     */
+    public function subcategoriasUpdate($id)
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['admin_logged_in']) || !$_SESSION['admin_logged_in']) {
+            header("Location: /login");
+            exit;
+        }
+
+        $subcategoria = trim($_POST['sub_categoria'] ?? '');
+        $categoriaId = (int)($_POST['categoria'] ?? 0);
+        
+        if (!empty($subcategoria) && $categoriaId > 0) {
+            $pdo = ConnectionFactory::getConnection('default');
+            $stmt = $pdo->prepare("UPDATE sub_categoria SET sub_categoria = :sub_categoria, categoria = :categoria WHERE id = :id");
+            $stmt->execute(['sub_categoria' => $subcategoria, 'categoria' => $categoriaId, 'id' => $id]);
+        }
+
+        header('Location: /admin/subcategorias?success=updated');
+        exit;
+    }
+
+    /**
+     * Deleta subcategoria
+     */
+    public function subcategoriasDelete($id)
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['admin_logged_in']) || !$_SESSION['admin_logged_in']) {
+            header("Location: /login");
+            exit;
+        }
+
+        $pdo = ConnectionFactory::getConnection('default');
+        
+        // Verifica se há produtos usando esta subcategoria
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM produto WHERE sub_categoria = :id");
+        $stmt->execute(['id' => $id]);
+        $count = $stmt->fetchColumn();
+        
+        if ($count > 0) {
+            header('Location: /admin/subcategorias?error=has_products&count=' . $count);
+            exit;
+        }
+
+        try {
+            $stmt = $pdo->prepare("DELETE FROM sub_categoria WHERE id = :id");
+            $stmt->execute(['id' => $id]);
+            header('Location: /admin/subcategorias?success=deleted');
+        } catch (\PDOException $e) {
+            error_log("Erro ao excluir subcategoria: " . $e->getMessage());
+            header('Location: /admin/subcategorias?error=delete_failed');
+        }
+        exit;
+    }
+
     // =============================================
     // HELPERS
     // =============================================
@@ -269,6 +396,15 @@ class CategoriesController
         $pdo = ConnectionFactory::getConnection('read_only');
         $stmt = $pdo->query("SELECT sc.*, c.categoria as categoria_nome FROM sub_categoria sc LEFT JOIN categoria c ON sc.categoria = c.id ORDER BY sc.sub_categoria ASC");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    private function getSubcategoryById(int $id): ?array
+    {
+        $pdo = ConnectionFactory::getConnection('read_only');
+        $stmt = $pdo->prepare("SELECT sc.*, c.categoria as categoria_nome FROM sub_categoria sc LEFT JOIN categoria c ON sc.categoria = c.id WHERE sc.id = ?");
+        $stmt->execute([$id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ?: null;
     }
 
     private function generateCategoryRows(array $categorias): string
@@ -321,6 +457,16 @@ class CategoriesController
         return $html;
     }
 
+    private function generateCategoryOptionsWithSelected(array $categorias, int $selectedId): string
+    {
+        $html = '';
+        foreach ($categorias as $c) {
+            $selected = ($c['id'] == $selectedId) ? ' selected' : '';
+            $html .= "<option value=\"{$c['id']}\"{$selected}>{$c['categoria']}</option>";
+        }
+        return $html;
+    }
+
     private function getAdminAvatar(): string
     {
         $nome = $_SESSION['admin_name'] ?? 'Admin';
@@ -330,5 +476,66 @@ class CategoriesController
             $iniciais .= strtoupper(substr(end($partes), 0, 1));
         }
         return $iniciais;
+    }
+
+    private function getMessages(): string
+    {
+        $msg = '';
+        
+        if (isset($_GET['success'])) {
+            $type = $_GET['success'];
+            $text = match($type) {
+                'created' => 'Categoria criada com sucesso!',
+                'updated' => 'Categoria atualizada com sucesso!',
+                'deleted' => 'Categoria excluída com sucesso!',
+                default => 'Operação realizada com sucesso!'
+            };
+            $msg = '<div class="alert alert-success" style="background:#065f46;color:#d1fae5;padding:15px;border-radius:10px;margin-bottom:20px;">' . $text . '</div>';
+        }
+        
+        if (isset($_GET['error'])) {
+            $type = $_GET['error'];
+            $count = $_GET['count'] ?? 0;
+            $text = match($type) {
+                'has_products' => "Não é possível excluir esta categoria. Existem {$count} produto(s) vinculado(s) a ela.",
+                'has_subcategories' => "Não é possível excluir esta categoria. Existem {$count} subcategoria(s) vinculada(s) a ela.",
+                'delete_failed' => 'Erro ao excluir a categoria. Tente novamente.',
+                'notfound' => 'Categoria não encontrada.',
+                default => 'Ocorreu um erro. Tente novamente.'
+            };
+            $msg = '<div class="alert alert-error" style="background:#7f1d1d;color:#fecaca;padding:15px;border-radius:10px;margin-bottom:20px;">' . $text . '</div>';
+        }
+        
+        return $msg;
+    }
+
+    private function getSubcategoriaMessages(): string
+    {
+        $msg = '';
+        
+        if (isset($_GET['success'])) {
+            $type = $_GET['success'];
+            $text = match($type) {
+                'created' => 'Subcategoria criada com sucesso!',
+                'updated' => 'Subcategoria atualizada com sucesso!',
+                'deleted' => 'Subcategoria excluída com sucesso!',
+                default => 'Operação realizada com sucesso!'
+            };
+            $msg = '<div class="alert alert-success" style="background:#065f46;color:#d1fae5;padding:15px;border-radius:10px;margin-bottom:20px;">' . $text . '</div>';
+        }
+        
+        if (isset($_GET['error'])) {
+            $type = $_GET['error'];
+            $count = $_GET['count'] ?? 0;
+            $text = match($type) {
+                'has_products' => "Não é possível excluir esta subcategoria. Existem {$count} produto(s) vinculado(s) a ela.",
+                'delete_failed' => 'Erro ao excluir a subcategoria. Tente novamente.',
+                'notfound' => 'Subcategoria não encontrada.',
+                default => 'Ocorreu um erro. Tente novamente.'
+            };
+            $msg = '<div class="alert alert-error" style="background:#7f1d1d;color:#fecaca;padding:15px;border-radius:10px;margin-bottom:20px;">' . $text . '</div>';
+        }
+        
+        return $msg;
     }
 }

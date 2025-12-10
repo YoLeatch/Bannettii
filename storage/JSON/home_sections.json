@@ -1,0 +1,14 @@
+[
+    {
+        "id": "cole____o_de_ver__o_1765334219",
+        "nome": "Coleção de verão",
+        "titulo": "Coleção de verão",
+        "subtitulo": "Os produtos mais populares",
+        "ativo": true,
+        "ordem": 6,
+        "editavel": true,
+        "removivel": true,
+        "order_by": "mais_recentes",
+        "limite": 4
+    }
+]

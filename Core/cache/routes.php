@@ -532,6 +532,17 @@
   50 => 
   array (
     'method' => 'GET',
+    'handler' => 'App\\Pages\\Controllers\\admin\\ProductsController@deleteImage',
+    'regex' => '#^/admin/products/(?P<id>[^/]+)/images/(?P<image_id>[^/]+)/delete/?$#',
+    'middleware' => 
+    array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
+    ),
+  ),
+  51 => 
+  array (
+    'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\CustomersController@index',
     'regex' => '#^/admin/customers/?$#',
     'middleware' => 
@@ -540,7 +551,7 @@
       1 => 'handle',
     ),
   ),
-  51 => 
+  52 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\CustomersController@search',
@@ -551,7 +562,7 @@
       1 => 'handle',
     ),
   ),
-  52 => 
+  53 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\CustomersController@show',
@@ -562,7 +573,7 @@
       1 => 'handle',
     ),
   ),
-  53 => 
+  54 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\Pages\\Controllers\\admin\\CustomersController@toggleStatus',
@@ -573,7 +584,7 @@
       1 => 'handle',
     ),
   ),
-  54 => 
+  55 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\OrdersController@index',
@@ -584,7 +595,7 @@
       1 => 'handle',
     ),
   ),
-  55 => 
+  56 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\OrdersController@show',
@@ -595,7 +606,7 @@
       1 => 'handle',
     ),
   ),
-  56 => 
+  57 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\Pages\\Controllers\\admin\\OrdersController@updateStatus',
@@ -606,7 +617,7 @@
       1 => 'handle',
     ),
   ),
-  57 => 
+  58 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\CategoriesController@index',
@@ -617,7 +628,7 @@
       1 => 'handle',
     ),
   ),
-  58 => 
+  59 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\CategoriesController@create',
@@ -628,7 +639,7 @@
       1 => 'handle',
     ),
   ),
-  59 => 
+  60 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\Pages\\Controllers\\admin\\CategoriesController@store',
@@ -639,7 +650,7 @@
       1 => 'handle',
     ),
   ),
-  60 => 
+  61 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\CategoriesController@edit',
@@ -650,7 +661,7 @@
       1 => 'handle',
     ),
   ),
-  61 => 
+  62 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\Pages\\Controllers\\admin\\CategoriesController@update',
@@ -661,7 +672,7 @@
       1 => 'handle',
     ),
   ),
-  62 => 
+  63 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\CategoriesController@delete',
@@ -672,7 +683,7 @@
       1 => 'handle',
     ),
   ),
-  63 => 
+  64 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\CategoriesController@subcategorias',
@@ -683,7 +694,7 @@
       1 => 'handle',
     ),
   ),
-  64 => 
+  65 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\CategoriesController@subcategoriasCreate',
@@ -694,7 +705,7 @@
       1 => 'handle',
     ),
   ),
-  65 => 
+  66 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\Pages\\Controllers\\admin\\CategoriesController@subcategoriasStore',
@@ -705,7 +716,117 @@
       1 => 'handle',
     ),
   ),
-  66 => 
+  67 => 
+  array (
+    'method' => 'GET',
+    'handler' => 'App\\Pages\\Controllers\\admin\\CategoriesController@subcategoriasEdit',
+    'regex' => '#^/admin/subcategorias/(?P<id>[^/]+)/edit/?$#',
+    'middleware' => 
+    array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
+    ),
+  ),
+  68 => 
+  array (
+    'method' => 'POST',
+    'handler' => 'App\\Pages\\Controllers\\admin\\CategoriesController@subcategoriasUpdate',
+    'regex' => '#^/admin/subcategorias/(?P<id>[^/]+)/update/?$#',
+    'middleware' => 
+    array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
+    ),
+  ),
+  69 => 
+  array (
+    'method' => 'GET',
+    'handler' => 'App\\Pages\\Controllers\\admin\\CategoriesController@subcategoriasDelete',
+    'regex' => '#^/admin/subcategorias/(?P<id>[^/]+)/delete/?$#',
+    'middleware' => 
+    array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
+    ),
+  ),
+  70 => 
+  array (
+    'method' => 'GET',
+    'handler' => 'App\\Pages\\Controllers\\admin\\SessionsController@index',
+    'regex' => '#^/admin/sessions/?$#',
+    'middleware' => 
+    array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
+    ),
+  ),
+  71 => 
+  array (
+    'method' => 'GET',
+    'handler' => 'App\\Pages\\Controllers\\admin\\SessionsController@create',
+    'regex' => '#^/admin/sessions/create/?$#',
+    'middleware' => 
+    array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
+    ),
+  ),
+  72 => 
+  array (
+    'method' => 'POST',
+    'handler' => 'App\\Pages\\Controllers\\admin\\SessionsController@store',
+    'regex' => '#^/admin/sessions/store/?$#',
+    'middleware' => 
+    array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
+    ),
+  ),
+  73 => 
+  array (
+    'method' => 'POST',
+    'handler' => 'App\\Pages\\Controllers\\admin\\SessionsController@update',
+    'regex' => '#^/admin/sessions/update/?$#',
+    'middleware' => 
+    array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
+    ),
+  ),
+  74 => 
+  array (
+    'method' => 'GET',
+    'handler' => 'App\\Pages\\Controllers\\admin\\SessionsController@toggle',
+    'regex' => '#^/admin/sessions/(?P<id>[^/]+)/toggle/?$#',
+    'middleware' => 
+    array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
+    ),
+  ),
+  75 => 
+  array (
+    'method' => 'GET',
+    'handler' => 'App\\Pages\\Controllers\\admin\\SessionsController@delete',
+    'regex' => '#^/admin/sessions/(?P<id>[^/]+)/delete/?$#',
+    'middleware' => 
+    array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
+    ),
+  ),
+  76 => 
+  array (
+    'method' => 'POST',
+    'handler' => 'App\\Pages\\Controllers\\admin\\SessionsController@reorder',
+    'regex' => '#^/admin/sessions/reorder/?$#',
+    'middleware' => 
+    array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
+    ),
+  ),
+  77 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\ReviewsController@index',
@@ -716,7 +837,7 @@
       1 => 'handle',
     ),
   ),
-  67 => 
+  78 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\Pages\\Controllers\\admin\\ReviewsController@approve',
@@ -727,7 +848,7 @@
       1 => 'handle',
     ),
   ),
-  68 => 
+  79 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\Pages\\Controllers\\admin\\ReviewsController@reject',
@@ -738,7 +859,51 @@
       1 => 'handle',
     ),
   ),
-  69 => 
+  80 => 
+  array (
+    'method' => 'GET',
+    'handler' => 'App\\Pages\\Controllers\\admin\\CouponsController@index',
+    'regex' => '#^/admin/cupons/?$#',
+    'middleware' => 
+    array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
+    ),
+  ),
+  81 => 
+  array (
+    'method' => 'POST',
+    'handler' => 'App\\Pages\\Controllers\\admin\\CouponsController@store',
+    'regex' => '#^/admin/cupons/store/?$#',
+    'middleware' => 
+    array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
+    ),
+  ),
+  82 => 
+  array (
+    'method' => 'GET',
+    'handler' => 'App\\Pages\\Controllers\\admin\\CouponsController@toggle',
+    'regex' => '#^/admin/cupons/(?P<id>[^/]+)/toggle/?$#',
+    'middleware' => 
+    array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
+    ),
+  ),
+  83 => 
+  array (
+    'method' => 'GET',
+    'handler' => 'App\\Pages\\Controllers\\admin\\CouponsController@delete',
+    'regex' => '#^/admin/cupons/(?P<id>[^/]+)/delete/?$#',
+    'middleware' => 
+    array (
+      0 => 'App\\User\\Middlewares\\AuthMiddleware',
+      1 => 'handle',
+    ),
+  ),
+  84 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\CarouselController@index',
@@ -749,7 +914,7 @@
       1 => 'handle',
     ),
   ),
-  70 => 
+  85 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\Pages\\Controllers\\admin\\CarouselController@store',
@@ -760,7 +925,7 @@
       1 => 'handle',
     ),
   ),
-  71 => 
+  86 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\CarouselController@edit',
@@ -771,7 +936,7 @@
       1 => 'handle',
     ),
   ),
-  72 => 
+  87 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\Pages\\Controllers\\admin\\CarouselController@update',
@@ -782,7 +947,7 @@
       1 => 'handle',
     ),
   ),
-  73 => 
+  88 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\CarouselController@delete',
@@ -793,7 +958,7 @@
       1 => 'handle',
     ),
   ),
-  74 => 
+  89 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\Pages\\Controllers\\admin\\CarouselController@reorder',
@@ -804,7 +969,7 @@
       1 => 'handle',
     ),
   ),
-  75 => 
+  90 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\SettingsController@index',
@@ -815,7 +980,7 @@
       1 => 'handle',
     ),
   ),
-  76 => 
+  91 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\Pages\\Controllers\\admin\\SettingsController@update',
@@ -826,7 +991,7 @@
       1 => 'handle',
     ),
   ),
-  77 => 
+  92 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\SettingsController@general',
@@ -837,7 +1002,7 @@
       1 => 'handle',
     ),
   ),
-  78 => 
+  93 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\ReportsController@index',
@@ -848,7 +1013,7 @@
       1 => 'handle',
     ),
   ),
-  79 => 
+  94 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\ReportsController@export',
@@ -859,7 +1024,7 @@
       1 => 'handle',
     ),
   ),
-  80 => 
+  95 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\SupportController@index',
@@ -868,7 +1033,7 @@
     array (
     ),
   ),
-  81 => 
+  96 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\Pages\\Controllers\\admin\\SupportController@create',
@@ -877,7 +1042,7 @@
     array (
     ),
   ),
-  82 => 
+  97 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\SupportController@show',
@@ -886,7 +1051,7 @@
     array (
     ),
   ),
-  83 => 
+  98 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\Pages\\Controllers\\admin\\SupportController@reply',
@@ -895,7 +1060,7 @@
     array (
     ),
   ),
-  84 => 
+  99 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\SupportController@adminList',
@@ -906,7 +1071,7 @@
       1 => 'handle',
     ),
   ),
-  85 => 
+  100 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\SupportController@adminShow',
@@ -917,7 +1082,7 @@
       1 => 'handle',
     ),
   ),
-  86 => 
+  101 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\Pages\\Controllers\\admin\\SupportController@adminReply',
@@ -928,7 +1093,7 @@
       1 => 'handle',
     ),
   ),
-  87 => 
+  102 => 
   array (
     'method' => 'POST',
     'handler' => 'App\\Pages\\Controllers\\admin\\SupportController@adminUpdateStatus',
@@ -939,7 +1104,7 @@
       1 => 'handle',
     ),
   ),
-  88 => 
+  103 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\SupportController@getUpdates',
@@ -948,7 +1113,7 @@
     array (
     ),
   ),
-  89 => 
+  104 => 
   array (
     'method' => 'GET',
     'handler' => 'App\\Pages\\Controllers\\admin\\SupportController@getTicketsList',

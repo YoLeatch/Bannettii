@@ -20,39 +20,50 @@ class HomeController
             session_start();
         }
 
-        // Busca as seções ativas da página home
-        $sections = SessionModel::findByPagina('home');
+        // Busca as seções do arquivo JSON
+        $sectionsFile = __DIR__ . '/../../../storage/JSON/home_sections.json';
+        $sections = [];
+        if (file_exists($sectionsFile)) {
+            $sections = json_decode(file_get_contents($sectionsFile), true) ?? [];
+        }
+        
+        // Ordena por ordem
+        usort($sections, fn($a, $b) => ($a['ordem'] ?? 0) <=> ($b['ordem'] ?? 0));
         
         // Gera o HTML das seções de produtos dinamicamente
         $productSectionsHtml = '';
         
         foreach ($sections as $section) {
-            if (!$section->isAtivo()) continue;
+            // Pula seções inativas
+            if (!($section['ativo'] ?? false)) continue;
             
-            $tipo = $section->getTipo();
-            $conteudo = $section->getConteudo();
+            // Pula seções que não são de produtos (carousel, categorias)
+            $sectionId = $section['id'] ?? '';
+            if ($sectionId === 'carousel' || $sectionId === 'categorias') continue;
             
-            if ($tipo === SessionModel::TYPE_PRODUCTS) {
-                $limit = $conteudo['limit'] ?? 4;
-                $orderBy = $conteudo['orderBy'] ?? 'newest';
-                $showViewAll = $conteudo['showViewAll'] ?? false;
-                $viewAllLink = $conteudo['viewAllLink'] ?? '/catalogo';
-                $titulo = htmlspecialchars($section->getTitulo());
-                
-                $products = $this->getProductsByOrder($orderBy, $limit);
-                $productGrid = $this->generateProductGrid($products);
-                
-                // Monta a seção HTML
-                $viewAllHtml = '';
-                if ($showViewAll) {
-                    $viewAllHtml = '<a href="' . htmlspecialchars($viewAllLink) . '" class="view-all">Ver tudo &rarr;</a>';
-                }
-                
-                $productSectionsHtml .= <<<HTML
-        <section class="section-container promotions">
+            $orderBy = $section['order_by'] ?? 'mais_recentes';
+            $limite = $section['limite'] ?? 8;
+            $titulo = htmlspecialchars($section['titulo'] ?? '');
+            $subtitulo = htmlspecialchars($section['subtitulo'] ?? '');
+            
+            // Busca produtos de acordo com a ordenação
+            $products = $this->getProductsByOrder($orderBy, $limite);
+            
+            if (empty($products)) continue;
+            
+            $productGrid = $this->generateProductGrid($products);
+            
+            // Monta a seção HTML com subtítulo
+            $subtituloHtml = !empty($subtitulo) ? "<p class=\"section-subtitle\">{$subtitulo}</p>" : '';
+            
+            $productSectionsHtml .= <<<HTML
+        <section class="section-container promotions" data-section="{$sectionId}">
             <div class="section-header">
-                <h2>{$titulo}</h2>
-                {$viewAllHtml}
+                <div>
+                    <h2>{$titulo}</h2>
+                    {$subtituloHtml}
+                </div>
+                <a href="/catalogo?orderBy={$orderBy}" class="view-all">Ver tudo &rarr;</a>
             </div>
             <div class="product-grid">
                 {$productGrid}
@@ -60,14 +71,13 @@ class HomeController
         </section>
 
 HTML;
-            }
         }
         
         // Fallback se não houver seções de produtos configuradas
         if (empty($productSectionsHtml)) {
             $allProducts = ProductModel::findAll();
             usort($allProducts, fn($a, $b) => $b->getId() <=> $a->getId());
-            $productGrid = $this->generateProductGrid(array_slice($allProducts, 0, 4));
+            $productGrid = $this->generateProductGrid(array_slice($allProducts, 0, 8));
             
             $productSectionsHtml = <<<HTML
         <section class="section-container promotions">
@@ -288,26 +298,49 @@ HTML;
         $allProducts = ProductModel::findAll();
         
         switch ($orderBy) {
+            case 'mais_recentes':
             case 'newest':
                 usort($allProducts, fn($a, $b) => $b->getId() <=> $a->getId());
                 break;
+            case 'mais_antigos':
+                usort($allProducts, fn($a, $b) => $a->getId() <=> $b->getId());
+                break;
+            case 'mais_vendidos':
             case 'bestseller':
                 // Por enquanto usa ID como fallback - pode ser implementado com vendas reais
                 usort($allProducts, fn($a, $b) => $b->getId() <=> $a->getId());
-                // Pega os próximos 4 (simula mais vendidos diferentes dos novos)
+                // Pega os próximos produtos (simula mais vendidos diferentes dos novos)
                 if (count($allProducts) > $limit) {
                     $allProducts = array_slice($allProducts, $limit);
                 }
                 break;
+            case 'menor_preco':
             case 'price_asc':
                 usort($allProducts, fn($a, $b) => $a->getPrecoFinal() <=> $b->getPrecoFinal());
                 break;
+            case 'maior_preco':
             case 'price_desc':
                 usort($allProducts, fn($a, $b) => $b->getPrecoFinal() <=> $a->getPrecoFinal());
                 break;
+            case 'maior_desconto':
             case 'discount':
                 usort($allProducts, fn($a, $b) => ($b->getDesconto() ?? 0) <=> ($a->getDesconto() ?? 0));
                 break;
+            case 'alfabetico_az':
+                usort($allProducts, fn($a, $b) => strcasecmp($a->getNome(), $b->getNome()));
+                break;
+            case 'alfabetico_za':
+                usort($allProducts, fn($a, $b) => strcasecmp($b->getNome(), $a->getNome()));
+                break;
+            case 'melhor_avaliacao':
+                // Placeholder - pode ser implementado quando houver sistema de avaliação
+                usort($allProducts, fn($a, $b) => $b->getId() <=> $a->getId());
+                break;
+            case 'aleatorio':
+                shuffle($allProducts);
+                break;
+            default:
+                usort($allProducts, fn($a, $b) => $b->getId() <=> $a->getId());
         }
         
         return array_slice($allProducts, 0, $limit);

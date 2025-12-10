@@ -169,7 +169,7 @@
                     <h3>Produtos</h3>
                     <a href="/admin/products">Gerenciar Produtos</a>
                     <a href="/admin/categories">Categorias</a>
-                    <a href="/admin/subcategories" class="active">Subcategorias</a>
+                    <a href="/admin/subcategorias" class="active">Subcategorias</a>
                 </div>
                 <div class="nav-section">
                     <h3>Clientes</h3>
@@ -196,14 +196,14 @@
 
                 <ul class="breadcrumb" style="margin-bottom: 20px;">
                     <li><a href="/admin/dashboard">Dashboard</a></li>
-                    <li><a href="/admin/subcategories">Subcategorias</a></li>
+                    <li><a href="/admin/subcategorias">Subcategorias</a></li>
                     <li class="active">Editar</li>
                 </ul>
 
-                <form action="/admin/subcategories/update/{subcategory_id}" method="POST">
+                <form action="/admin/subcategorias/{subcategory_id}/update" method="POST">
                     <div class="page-header">
                         <div class="title-area">
-                            <a href="/admin/subcategories" class="btn-back">
+                            <a href="/admin/subcategorias" class="btn-back">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M19 12H5M12 19l-7-7 7-7" />
@@ -227,7 +227,7 @@
 
                         <div class="form-group">
                             <label for="categoria_id">Categoria Pai *</label>
-                            <select id="categoria_id" name="categoria_id" required>
+                            <select id="categoria" name="categoria" required>
                                 <option value="">Selecione uma categoria...</option>
                                 {category_options}
                             </select>
@@ -235,11 +235,11 @@
 
                         <div class="form-group">
                             <label for="subcategoria">Nome da Subcategoria *</label>
-                            <input type="text" id="subcategoria" name="subcategoria" required value="{subcategoria}">
+                            <input type="text" id="sub_categoria" name="sub_categoria" required value="{sub_categoria}">
                         </div>
 
                         <div class="form-actions">
-                            <a href="/admin/subcategories" class="btn-secondary">Cancelar</a>
+                            <a href="/admin/subcategorias" class="btn-secondary">Cancelar</a>
                         </div>
                     </div>
                 </form>

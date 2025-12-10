@@ -19,5 +19,14 @@
         "link": "\/catalogo",
         "ativo": true,
         "ordem": 2
+    },
+    {
+        "id": 1765328329,
+        "titulo": "Test3",
+        "descricao": "Test3",
+        "imagem": "\/uploads\/banners\/banner_1765328329.png",
+        "link": "\/carrinho",
+        "ativo": true,
+        "ordem": 3
     }
 ]

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/image/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/image/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/image/favicon-16x16.png">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <script src="/assets/js/script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <title>Editar Produto - Bennettii</title>
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="/assets/image/bennettii_nobackground_horizontal.png" alt="Bennettii Admin">
+            </div>
+
+            <nav class="admin-nav">
+                <div class="nav-section">
+                    <h3>Principal</h3>
+                    <a href="/admin/dashboard">
+                        Dashboard
+                    </a>
+                    <a href="/admin/team-list">
+                        Equipe
+                    </a>
+                    <a href="/admin/reports">Relatórios</a>
+
+                </div>
+
+                <div class="nav-section">
+                    <h3>Produtos</h3>
+                    <a href="/admin/cupons">Cupons
+                    </a>
+                    <a href="/admin/products" class="active">
+                        Produtos
+                    </a>
+                    <a href="/admin/categories">
+                        Categorias
+                    </a>
+                    <a href="/admin/subcategorias">
+                        Subcategorias
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Clientes</h3>
+                    <a href="/admin/customers">
+                        Clientes
+                    </a>
+                    <a href="/admin/orders">
+                        Pedidos
+                    </a>
+                    <a href="/admin/reviews">Avaliações</a>
+                    <a href="/admin/tickets">Tickets</a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Configurações</h3>
+                    <a href="/admin/carousel">
+                        Carrossel
+                    </a>
+                    <a href="/admin/sessions">
+                        Sessões
+                    </a>
+                </div>
+            </nav>
+        </aside>
+        <main>
+            <div class="page-content">
+                <div class="add-product-container">
+                    <div class="admin-profile">
+                        <div class="admin-profile-card">
+                            <div class="admin-pfp">{admin_avatar}</div>
+                            <div class="admin-profile-info">
+                                <h2 id="admin-profile-name">{admin_name}</h2>
+                                <h4 id="admin-profile-role">{admin_role}</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="breadcrumb">
+                        <ul class="breadcrumb" style="margin-bottom: 20px;">
+                            <li><a href="/admin/dashboard">Dashboard</a></li>
+                            <li class="active"> Gerenciar Produtos</li>
+                        </ul>
+                    </div><br>
+
+                    <form action="/admin/products/{product_id}/update" method="POST" enctype="multipart/form-data">
+                        <div class="page-header">
+                            <div class="title-area">
+                                <a href="/tabela-produtos" class="btn-back">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M19 12H5M12 19l-7-7 7-7" />
+                                    </svg>
+                                </a>
+                                <h1>Editar Produto #{product_id}</h1>
+                            </div>
+                            <div class="actions-area">
+                                <button type="submit" class="btn-add">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Salvar Produto
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="product-form-grid">
+                            <!-- Left Column -->
+                            <div class="left-column">
+                                <!-- General Information -->
+                                <div class="card">
+                                    <h2>Informações Gerais</h2>
+
+                                    <div class="form-group">
+                                        <label>Nome do Produto</label>
+                                        <input type="text" name="nome" placeholder="Ex: Jaqueta Puffer"
+                                            value="{product_name}">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Descrição</label>
+                                        <textarea name="descricao" rows="5"
+                                            placeholder="Descrição detalhada do produto...">{product_description}</textarea>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <label>Tamanho</label>
+                                            <span class="sub-label">Selecione os tamanhos disponíveis</span>
+                                            <div class="size-selector">
+                                                <input type="hidden" name="tamanho" id="selected-sizes"
+                                                    value="{product_tamanho}">
+                                                <button type="button" class="size-btn" data-size="PP"
+                                                    onclick="toggleSize('PP')">PP</button>
+                                                <button type="button" class="size-btn" data-size="P"
+                                                    onclick="toggleSize('P')">P</button>
+                                                <button type="button" class="size-btn" data-size="M"
+                                                    onclick="toggleSize('M')">M</button>
+                                                <button type="button" class="size-btn" data-size="G"
+                                                    onclick="toggleSize('G')">G</button>
+                                                <button type="button" class="size-btn" data-size="GG"
+                                                    onclick="toggleSize('GG')">GG</button>
+                                                <button type="button" class="size-btn" data-size="XG"
+                                                    onclick="toggleSize('XG')">XG</button>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <label>Material</label>
+                                            <input type="text" name="material" value="{product_material}"
+                                                placeholder="Ex: Algodão, Poliéster">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <label>Cor</label>
+                                            <input type="text" name="cor" value="{product_cor}"
+                                                placeholder="Ex: Azul, Preto">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Categoria e Subcategoria -->
+                                <div class="card">
+                                    <h2>Categoria e Subcategoria</h2>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <label>Categoria</label>
+                                            <select name="categoria" id="categoria-select"
+                                                onchange="updateSubcategorias()">
+                                                <option value="">Selecione uma categoria...</option>
+                                                {category_options}
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                            <label>Subcategoria</label>
+                                            <select name="sub_categoria" id="subcategoria-select">
+                                                <option value="">Selecione uma subcategoria...</option>
+                                                {subcategory_options}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Pricing and Stock -->
+                                <div class="card">
+                                    <h2>Preço e Estoque</h2>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <label>Preço Base (R$)</label>
+                                            <input type="number" step="0.01" name="preco" value="{product_price}"
+                                                required placeholder="0.00">
+                                        </div>
+                                        <div class="col">
+                                            <label>Estoque</label>
+                                            <input type="number" name="estoque" value="{product_stock}" required
+                                                placeholder="0">
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <label>Desconto (%)</label>
+                                            <input type="number" name="desconto" value="{product_discount}"
+                                                placeholder="0">
+                                        </div>
+                                        <div class="col">
+                                            <label>Peso Líquido</label>
+                                            <input type="text" name="pesoliq" value="{product_pesoliq}"
+                                                placeholder="Ex: 0.5kg">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <label>Peso Total</label>
+                                            <input type="text" name="pesototal" value="{product_pesototal}"
+                                                placeholder="Ex: 0.6kg">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Column -->
+                            <div class="right-column">
+                                <!-- Upload Img -->
+                                <div class="card">
+                                    <h2>Imagens do Produto</h2>
+
+                                    <!-- Imagens existentes -->
+                                    <div class="existing-images" style="margin-bottom: 1.5rem;">
+                                        <h4 style="font-size: 0.9rem; color: #888; margin-bottom: 0.5rem;">Imagens
+                                            Atuais</h4>
+                                        <div class="image-grid"
+                                            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                                            {product_images}
+                                        </div>
+                                    </div>
+
+                                    <!-- Adicionar novas imagens -->
+                                    <div class="add-images">
+                                        <h4 style="font-size: 0.9rem; color: #888; margin-bottom: 0.5rem;">Adicionar
+                                            Novas Imagens</h4>
+                                        <div class="upload-area"
+                                            style="border: 2px dashed #444; border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.3s;"
+                                            onclick="document.getElementById('image-input').click()">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"
+                                                viewBox="0 0 24 24" fill="none" stroke="#D0D558" stroke-width="2"
+                                                style="margin-bottom: 1rem;">
+                                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                                <polyline points="21 15 16 10 5 21" />
+                                            </svg>
+                                            <p style="color: #888; margin: 0;">Clique para selecionar imagens</p>
+                                            <p style="color: #666; font-size: 0.85rem; margin-top: 0.5rem;">JPG, PNG ou
+                                                WEBP (máx. 5MB cada)</p>
+                                        </div>
+                                        <input type="file" id="image-input" name="novas_imagens[]" multiple
+                                            accept="image/*" style="display: none;" onchange="previewImages(this)">
+
+                                        <!-- Preview das novas imagens -->
+                                        <div id="new-images-preview"
+                                            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 1rem;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Status do Produto -->
+                                <div class="card" style="margin-top: 1rem;">
+                                    <h2>Status</h2>
+                                    <div class="form-group">
+                                        <label class="switch-label"
+                                            style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                            <input type="checkbox" name="status" value="1" {product_status_checked}
+                                                style="width: 20px; height: 20px;">
+                                            <span>Produto Ativo</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+
+        <script>
+            // Array para armazenar tamanhos selecionados
+            let selectedSizes = [];
+
+            // Inicializa tamanhos já selecionados ao carregar a página
+            function initSizes() {
+                const input = document.getElementById('selected-sizes');
+                if (input && input.value) {
+                    selectedSizes = input.value.split(',').map(s => s.trim()).filter(s => s);
+                    // Marca os botões correspondentes como ativos
+                    selectedSizes.forEach(size => {
+                        const btn = document.querySelector(`.size-btn[data-size="${size}"]`);
+                        if (btn) btn.classList.add('active');
+                    });
+                }
+            }
+
+            // Toggle de tamanho (adiciona/remove da seleção)
+            function toggleSize(size) {
+                const btn = event.target;
+                const index = selectedSizes.indexOf(size);
+
+                if (index > -1) {
+                    // Remove se já está selecionado
+                    selectedSizes.splice(index, 1);
+                    btn.classList.remove('active');
+                } else {
+                    // Adiciona se não está selecionado
+                    selectedSizes.push(size);
+                    btn.classList.add('active');
+                }
+
+                // Atualiza o campo hidden com os tamanhos separados por vírgula
+                document.getElementById('selected-sizes').value = selectedSizes.join(', ');
+            }
+
+            // Preview de novas imagens selecionadas
+            function previewImages(input) {
+                const preview = document.getElementById('new-images-preview');
+                preview.innerHTML = '';
+
+                if (input.files) {
+                    Array.from(input.files).forEach((file, index) => {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const div = document.createElement('div');
+                            div.className = 'image-preview-item';
+                            div.style.cssText = 'position: relative; border-radius: 8px; overflow: hidden; aspect-ratio: 1;';
+                            div.innerHTML = `
+                                <img src="${e.target.result}" alt="Preview ${index + 1}" style="width: 100%; height: 100%; object-fit: cover;">
+                                <button type="button" onclick="removePreview(this, ${index})" style="position: absolute; top: 5px; right: 5px; background: #ff4444; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 14px;">&times;</button>
+                            `;
+                            preview.appendChild(div);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                }
+            }
+
+            // Remove preview e arquivo da seleção
+            function removePreview(btn, index) {
+                btn.parentElement.remove();
+                // Note: Não é possível remover arquivos do FileList, apenas visual
+            }
+
+            // Confirma exclusão de imagem existente
+            function confirmDeleteImage(imageId, productId) {
+                if (confirm('Tem certeza que deseja excluir esta imagem?')) {
+                    window.location.href = `/admin/products/${productId}/images/${imageId}/delete`;
+                }
+            }
+
+            // Inicializa ao carregar
+            document.addEventListener('DOMContentLoaded', initSizes);
+
+
+            document.addEventListener('DOMContentLoaded', () => {
+                // Sidebar Toggle
+                const menuTrigger = document.getElementById('menuTrigger');
+                const sidebar = document.getElementById('sidebar');
+                const closeSidebar = document.getElementById('closeSidebar');
+                const overlay = document.getElementById('overlay');
+
+                function toggleSidebar() {
+                    sidebar.classList.toggle('active');
+                    overlay.classList.toggle('active');
+                }
+
+                if (menuTrigger) menuTrigger.addEventListener('click', toggleSidebar);
+                if (closeSidebar) closeSidebar.addEventListener('click', toggleSidebar);
+                if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+                // Cookie Consent
+                const cookieBanner = document.getElementById('cookieConsent');
+                if (!localStorage.getItem('cookiesAccepted')) {
+                    cookieBanner.classList.add('show');
+                }
+
+                const acceptBtn = document.getElementById('acceptCookies');
+                if (acceptBtn) {
+                    acceptBtn.addEventListener('click', () => {
+                        localStorage.setItem('cookiesAccepted', 'true');
+                        cookieBanner.classList.remove('show');
+                    });
+                }
+            });
+        </script>
+
+        <!-- Script para filtrar subcategorias por categoria -->
+        <script>
+            // Dados das subcategorias vindos do PHP
+            const todasSubcategorias = { subcategorias_json };
+            const subcategoriaAtual = { subcategoria_atual };
+
+            function updateSubcategorias() {
+                const categoriaSelect = document.getElementById('categoria-select');
+                const subcategoriaSelect = document.getElementById('subcategoria-select');
+                const categoriaSelecionada = categoriaSelect.value;
+
+                // Limpa as opções atuais
+                subcategoriaSelect.innerHTML = '<option value="">Selecione uma subcategoria...</option>';
+
+                if (!categoriaSelecionada) {
+                    return;
+                }
+
+                // Filtra e adiciona as subcategorias da categoria selecionada
+                todasSubcategorias.forEach(sc => {
+                    if (sc.categoria == categoriaSelecionada) {
+                        const option = document.createElement('option');
+                        option.value = sc.id;
+                        option.textContent = sc.sub_categoria;
+                        // Mantém selecionada se for a subcategoria atual
+                        if (sc.id == subcategoriaAtual) {
+                            option.selected = true;
+                        }
+                        subcategoriaSelect.appendChild(option);
+                    }
+                });
+            }
+        </script>
+
+</body>
+
+</html>

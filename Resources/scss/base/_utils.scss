@@ -1,0 +1,29 @@
+.special-margin {
+    padding-top: 80px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.texto-centro {
+    text-align: center;
+}
+
+.amarelo-bennettii {
+    filter: brightness(0) saturate(100%) invert(86%) sepia(96%) saturate(288%) hue-rotate(2deg) brightness(96%) contrast(93%);
+    margin-right: 10px;
+}
+
+.cor-cinza {
+    filter: brightness(0) saturate(100%) invert(71%) sepia(2%) saturate(0%) hue-rotate(6deg) brightness(88%) contrast(86%);
+}
+
+.hidden-dropdown {
+    display: flex;
+    padding: 10px;
+}
+
+.esconderMobile {
+    @media (max-width: 800px) {
+        display: none;
+    }
+}

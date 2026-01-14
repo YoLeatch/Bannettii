@@ -1,18 +1,13 @@
 <IfModule mod_rewrite.c>
-    # Ativa o motor de reescrita de URL
     RewriteEngine On
-
-    # Define a base para as regras de reescrita (opcional, mas bom ter)
-    # Se seu site estiver em um subdiretório, mude / para /seusubdiretorio/
-    RewriteBase /
-
-    # Condição 1: Se a requisição NÃO for para um arquivo existente
-    RewriteCond %{REQUEST_FILENAME} !-f
     
-    # Condição 2: Se a requisição NÃO for para um diretório existente
-    RewriteCond %{REQUEST_FILENAME} !-d
+    # 1. Proteger o arquivo .env (CRÍTICO!)
+    <Files .env>
+        Order allow,deny
+        Deny from all
+    </Files>
 
-    # Regra: Reescreve todas as outras requisições para o public/index.php
-    # O que for digitado na URL é capturado e passado como um parâmetro "url"
-    RewriteRule ^(.*)$ public/index.php?url=$1 [L,QSA]
+    # 2. Redirecionar todo o tráfego para a pasta public
+    RewriteRule ^$ public/ [L]
+    RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>

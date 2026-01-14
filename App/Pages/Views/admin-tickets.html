@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/image/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/image/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/image/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <title>Gerenciar Tickets - Admin Bennettii</title>
+    <style>
+        .tickets-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            border: 1px solid rgba(208, 213, 88, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .stat-card:hover {
+            border-color: rgba(208, 213, 88, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .stat-card.active {
+            border-color: #D0D558;
+        }
+
+        .stat-card h3 {
+            color: #a0a0a0;
+            font-size: 0.85rem;
+            margin: 0 0 0.5rem 0;
+            font-weight: 500;
+        }
+
+        .stat-card .value {
+            color: #fff;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .stat-card.open .value {
+            color: #3b82f6;
+        }
+
+        .stat-card.progress .value {
+            color: #f59e0b;
+        }
+
+        .stat-card.waiting .value {
+            color: #8b5cf6;
+        }
+
+        .stat-card.resolved .value {
+            color: #22c55e;
+        }
+
+        .tickets-table {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(208, 213, 88, 0.1);
+        }
+
+        .tickets-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tickets-table th {
+            background: rgba(208, 213, 88, 0.1);
+            color: #D0D558;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .tickets-table td {
+            padding: 1rem;
+            color: #e0e0e0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .tickets-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .ticket-subject-cell {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .priority-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .priority-low {
+            background: rgba(107, 114, 128, 0.2);
+            color: #9ca3af;
+        }
+
+        .priority-medium {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
+
+        .priority-high {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        .priority-urgent {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-open {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
+
+        .status-progress {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        .status-waiting {
+            background: rgba(139, 92, 246, 0.2);
+            color: #a78bfa;
+        }
+
+        .status-resolved {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+        }
+
+        .status-closed {
+            background: rgba(107, 114, 128, 0.2);
+            color: #9ca3af;
+        }
+
+        .btn-view {
+            background: rgba(208, 213, 88, 0.2);
+            color: #D0D558;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view:hover {
+            background: rgba(208, 213, 88, 0.3);
+        }
+
+        .no-data {
+            text-align: center;
+            color: #a0a0a0;
+            padding: 3rem !important;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .page-title h1 {
+            color: #fff;
+            margin: 0;
+        }
+
+        .page-title svg {
+            color: #D0D558;
+        }
+    </style>
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="/assets/image/bennettii_nobackground_horizontal.png" alt="Bennettii Admin">
+            </div>
+
+            <nav class="admin-nav">
+                <div class="nav-section">
+                    <h3>Principal</h3>
+                    <a href="/admin/dashboard">
+                        Dashboard
+                    </a>
+                    <a href="/admin/team-list">
+                        Equipe
+                    </a>
+                    <a href="/admin/reports">Relatórios</a>
+
+                </div>
+
+                <div class="nav-section">
+                    <h3>Produtos</h3>
+                    <a href="/admin/cupons">Cupons
+                    </a>
+                    <a href="/admin/products">
+                        Produtos
+                    </a>
+                    <a href="/admin/categories">
+                        Categorias
+                    </a>
+                    <a href="/admin/subcategorias">
+                        Subcategorias
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Clientes</h3>
+                    <a href="/admin/customers">
+                        Clientes
+                    </a>
+                    <a href="/admin/orders">
+                        Pedidos
+                    </a>
+                    <a href="/admin/reviews">Avaliações</a>
+                    <a href="/admin/tickets" class="active">Tickets</a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Configurações</h3>
+                    <a href="/admin/carousel">
+                        Carrossel
+                    </a>
+                    <a href="/admin/sessions">
+                        Sessões
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-profile">
+                <div class="admin-profile-card">
+                    <div class="admin-pfp">{admin_avatar}</div>
+                    <div class="admin-profile-info">
+                        <h2 id="admin-profile-name">{admin_name}</h2>
+                        <h4 id="admin-profile-role">{admin_role}</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <h1>Gerenciar Tickets</h1>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="tickets-stats">
+                <a href="/admin/tickets" class="stat-card">
+                    <h3>Total</h3>
+                    <p class="value">{count_total}</p>
+                </a>
+                <a href="/admin/tickets?status=aberto" class="stat-card open">
+                    <h3>Abertos</h3>
+                    <p class="value">{count_aberto}</p>
+                </a>
+                <a href="/admin/tickets?status=em_andamento" class="stat-card progress">
+                    <h3>Em Andamento</h3>
+                    <p class="value">{count_em_andamento}</p>
+                </a>
+                <a href="/admin/tickets?status=aguardando_resposta" class="stat-card waiting">
+                    <h3>Aguardando</h3>
+                    <p class="value">{count_aguardando}</p>
+                </a>
+                <a href="/admin/tickets?status=resolvido" class="stat-card resolved">
+                    <h3>Resolvidos</h3>
+                    <p class="value">{count_resolvido}</p>
+                </a>
+            </div>
+
+            <!-- Tickets Table -->
+            <div class="tickets-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Cliente</th>
+                            <th>Assunto</th>
+                            <th>Prioridade</th>
+                            <th>Status</th>
+                            <th>Data</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {tickets}
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

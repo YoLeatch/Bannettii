@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/image/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/image/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/image/favicon-16x16.png">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <script src="/assets/js/script.js"></script>
+
+    <title>Cadastro Admin - Bennettii</title>
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="/assets/image/bennettii_nobackground_horizontal.png" alt="Bennettii Admin">
+            </div>
+
+            <nav class="admin-nav">
+                <div class="nav-section">
+                    <h3>Principal</h3>
+                    <a href="/admin/dashboard">
+                        Dashboard
+                    </a>
+                    <a href="/admin/team-list" class="active">
+                        Equipe
+                    </a>
+                    <a href="/admin/reports">Relatórios</a>
+
+                </div>
+
+                <div class="nav-section">
+                    <h3>Produtos</h3>
+                    <a href="/admin/cupons">Cupons
+                    </a>
+                    <a href="/admin/products">
+                        Produtos
+                    </a>
+                    <a href="/admin/categories">
+                        Categorias
+                    </a>
+                    <a href="/admin/subcategorias">
+                        Subcategorias
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Clientes</h3>
+                    <a href="/admin/customers">
+                        Clientes
+                    </a>
+                    <a href="/admin/orders">
+                        Pedidos
+                    </a>
+                    <a href="/admin/reviews">Avaliações</a>
+                    <a href="/admin/tickets">Tickets</a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Configurações</h3>
+                    <a href="/admin/carousel">
+                        Carrossel
+                    </a>
+                    <a href="/admin/sessions">
+                        Sessões
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-profile">
+                <div class="admin-profile-card">
+                    <img src="/assets/image/placeholder_pfp.png" class="admin-pfp">
+                    <div class="admin-profile-info">
+                        <h2 id="admin-profile-name">{admin_name}</h2>
+                        <h4 id="admin-profile-role">{admin_role}</h4>
+                    </div>
+                </div>
+            </div>
+            <div id="login-container">
+                <ul class="breadcrumb" style="margin-bottom: 20px; width: 100%;">
+                    <li><a href="/">Dashboard</a></li>
+                </ul>
+                <div class="login-modal">
+                    <form method="POST" action="/admin/register">
+                        <center><img src="/assets/image/bennettii_nobackground.png" height="120px"><br></center>
+                        <br>
+                        <h3>Promover Usuário a Admin</h3><br>
+                        <h3 class="warning">{error}</h3><br>
+
+                        <label>Email do Usuário Existente</label>
+                        <input required type="email" name="email" maxlength="255" placeholder="email@usuario.com"><br>
+
+                        <label>Senha do Usuário</label>
+                        <input required type="password" name="password" maxlength="255"
+                            placeholder="Confirme a senha do usuário"><br>
+
+                        <label>Cargo a Atribuir</label>
+                        <select name="cargo" required
+                            style="width: 100%; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+                            <option value="1">Administrador</option>
+                            <option value="2">Gerente</option>
+                            <option value="3">Suporte</option>
+                        </select><br><br>
+
+                        <input type="submit" class="button" value="Promover a Admin">
+                        <br>
+
+                        <input type="hidden" name="csrf_token" value="{csrf_token}">
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

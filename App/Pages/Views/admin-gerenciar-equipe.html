@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/image/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/image/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/image/favicon-16x16.png">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+
+  <title>Gerenciamento de equipe - Bennettii</title>
+  <style>
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      padding: 1.5rem 0;
+    }
+
+    .team-card {
+      background: linear-gradient(145deg, #1a1a2e, #16213e);
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 1px solid rgba(208, 213, 88, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .team-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(208, 213, 88, 0.3);
+    }
+
+    .team-card-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .team-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #D0D558, #a8ad3f);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: #1a1a2e;
+      font-weight: 700;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .team-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .team-name {
+      color: #fff;
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .team-role {
+      color: #D0D558;
+      margin: 0.2rem 0 0 0;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .team-details {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 1rem;
+    }
+
+    .team-detail-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #a0a0a0;
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .team-detail-item svg {
+      width: 16px;
+      height: 16px;
+      opacity: 0.7;
+    }
+
+    .team-status {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-active {
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+    }
+
+    .status-inactive {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+    }
+
+    .no-data {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 3rem;
+      color: #a0a0a0;
+    }
+  </style>
+</head>
+
+<body class="admin-body">
+  <div class="admin-container">
+    <aside class="admin-sidebar">
+      <div class="admin-logo">
+        <img src="/assets/image/bennettii_nobackground_horizontal.png" alt="Bennettii Admin">
+      </div>
+
+      <nav class="admin-nav">
+        <div class="nav-section">
+          <h3>Principal</h3>
+          <a href="/admin/dashboard">
+            Dashboard
+          </a>
+          <a href="/admin/team-list" class="active">
+            Equipe
+          </a>
+          <a href="/admin/reports">Relatórios</a>
+
+        </div>
+
+        <div class="nav-section">
+          <h3>Produtos</h3>
+          <a href="/admin/cupons">Cupons
+          </a>
+          <a href="/admin/products">
+            Produtos
+          </a>
+          <a href="/admin/categories">
+            Categorias
+          </a>
+          <a href="/admin/subcategorias">
+            Subcategorias
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <h3>Clientes</h3>
+          <a href="/admin/customers">
+            Clientes
+          </a>
+          <a href="/admin/orders">
+            Pedidos
+          </a>
+          <a href="/admin/reviews">Avaliações</a>
+          <a href="/admin/tickets">Tickets</a>
+        </div>
+
+        <div class="nav-section">
+          <h3>Configurações</h3>
+          <a href="/admin/carousel">
+            Carrossel
+          </a>
+          <a href="/admin/sessions">
+            Sessões
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+
+    <main>
+      <div class="page-content">
+        <div class="admin-profile">
+          <div class="admin-profile-card">
+            <div class="admin-pfp">{admin_avatar}</div>
+            <div class="admin-profile-info">
+              <h2 id="admin-profile-name">{admin_name}</h2>
+              <h4 id="admin-profile-role">{admin_role}</h4>
+            </div>
+          </div>
+        </div>
+
+        <div class="breadcrumb">
+          <ul class="breadcrumb" style="margin-bottom: 20px;">
+            <li><a href="/admin/dashboard">Principal</a></li>
+            <li class="active">Equipe</li>
+          </ul>
+        </div><br>
+
+        <div class="filters-container">
+          <div class="search-box">
+            <label class="icon-pesquisa"></label>
+            <input type="text" class="barraPesquisa" id="searchTeam" placeholder="Buscar membro..."
+              onkeyup="filterTeam()">
+          </div>
+
+          <div class="filter-group">
+            <label>Cargo:</label>
+            <select class="filter-select" id="filterCargo" onchange="filterTeam()">
+              <option value="">Todos</option>
+              {cargo_options}
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Status:</label>
+            <select class="filter-select" id="filterStatus" onchange="filterTeam()">
+              <option value="">Todos</option>
+              <option value="active">Ativo</option>
+              <option value="inactive">Inativo</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="team-grid" id="teamGrid">
+          {team_rows}
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function filterTeam() {
+      const search = document.getElementById('searchTeam').value.toLowerCase().trim();
+      const cargo = document.getElementById('filterCargo').value.toLowerCase().trim();
+      const status = document.getElementById('filterStatus').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.team-card');
+
+      cards.forEach(card => {
+        const name = (card.dataset.name || '').toLowerCase();
+        const cardCargo = (card.dataset.cargo || '').toLowerCase();
+        const cardStatus = (card.dataset.status || '').toLowerCase();
+
+        // Verifica cada filtro
+        const matchSearch = !search || name.includes(search);
+        const matchCargo = !cargo || cardCargo === cargo || cardCargo.includes(cargo);
+
+        // Status: "status-active" ou "status-inactive"
+        let matchStatus = true;
+        if (status === 'active') {
+          matchStatus = cardStatus === 'status-active';
+        } else if (status === 'inactive') {
+          matchStatus = cardStatus === 'status-inactive';
+        }
+
+        // Mostra ou esconde o card
+        card.style.display = (matchSearch && matchCargo && matchStatus) ? 'block' : 'none';
+      });
+
+      // Verifica se há resultados visíveis
+      const visibleCards = document.querySelectorAll('.team-card[style="display: block"]');
+      const noDataDiv = document.getElementById('noDataMessage');
+
+      if (visibleCards.length === 0) {
+        if (!noDataDiv) {
+          const grid = document.getElementById('teamGrid');
+          const msg = document.createElement('div');
+          msg.id = 'noDataMessage';
+          msg.className = 'no-data';
+          msg.textContent = 'Nenhum resultado encontrado para os filtros selecionados';
+          grid.appendChild(msg);
+        }
+      } else if (noDataDiv) {
+        noDataDiv.remove();
+      }
+    }
+  </script>
+</body>
+
+</html>

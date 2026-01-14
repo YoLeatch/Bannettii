@@ -1,0 +1,32 @@
+[
+    {
+        "titulo": "Bem-vindo à BennettiA",
+        "descricao": "Moda com estilo e conforto para você",
+        "imagem": "\/uploads\/banners\/banner1.png",
+        "link": "\/catalogo",
+        "ordem": 1,
+        "ativo": true,
+        "dataInicio": null,
+        "dataFim": null,
+        "id": 1,
+        "criacao": "2025-12-09 00:09:28"
+    },
+    {
+        "id": 1765323981,
+        "titulo": "Teste T",
+        "descricao": "Test Desc",
+        "imagem": "\/uploads\/banners\/banner_1765323981.png",
+        "link": "\/catalogo",
+        "ativo": true,
+        "ordem": 2
+    },
+    {
+        "id": 1765328329,
+        "titulo": "Test3",
+        "descricao": "Test3",
+        "imagem": "\/uploads\/banners\/banner_1765328329.png",
+        "link": "\/carrinho",
+        "ativo": true,
+        "ordem": 3
+    }
+]

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Favicon -->
+
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/image/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/image/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/image/favicon-16x16.png">
+
+
+    <!-- Custom CSS -->
+
+
+    <link rel="stylesheet" href="./css/style.css">
+    <script type="text/javascript"
+        src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=GrJsPutp4SJzKYFw9zdKJXtBumodrOIEK7GCf2b4qKswNvYFo2koS2MVAEz3UA2_pfR2uhiQbvjXo5De3gShvl2Qfe9AHhoekcn-H30QMi3wLfcunz2eatbIDeRkIarm4rtH8_03jbN2RhiPn6OtNLmY4ecTOIJ92bYMnDa_a5AMrLWcGgZPuVrsSaMukAmRnOVmELM_2dg6H3diav-hEhZfVdpPqHyqcTM0dXYSoR9pXwrAXC8z77lcQDfoZ2qtzZX6w1kSqEuO8JsrvxmrYg"
+        charset="UTF-8"></script>
+    <script src="./assets/js/script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+
+    <title>Tabela de Usuários - Bennettii</title>
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <!-- Admin Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="/assets/image/bennettii_nobackground_horizontal.png" alt="Bennettii Admin">
+            </div>
+
+            <nav class="admin-nav">
+                <div class="nav-section">
+                    <h3>Principal</h3>
+                    <a href="/admin/dashboard">
+                        Dashboard
+                    </a>
+                    <a href="/admin/team-list">
+                        Equipe
+                    </a>
+                    <a href="/admin/reports" class="active">Relatórios</a>
+
+                </div>
+
+                <div class="nav-section">
+                    <h3>Produtos</h3>
+                    <a href="/admin/cupons">Cupons
+                    </a>
+                    <a href="/admin/products">
+                        Produtos
+                    </a>
+                    <a href="/admin/categories">
+                        Categorias
+                    </a>
+                    <a href="/admin/subcategorias">
+                        Subcategorias
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Clientes</h3>
+                    <a href="/admin/customers">
+                        Clientes
+                    </a>
+                    <a href="/admin/orders">
+                        Pedidos
+                    </a>
+                    <a href="/admin/reviews">Avaliações</a>
+                    <a href="/admin/tickets">Tickets</a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Configurações</h3>
+                    <a href="/admin/carousel">
+                        Carrossel
+                    </a>
+                    <a href="/admin/sessions">
+                        Sessões
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main>
+
+            <div class="page-content">
+
+
+                <div class="admin-profile">
+                    <div class="admin-profile-card">
+                        <img src="./assets/image/placeholder_pfp.png" class="admin-pfp">
+                        <div class="admin-profile-info">
+                            <h2 id="admin-profile-name">{admin_name}</h2>
+                            <h4 id="admin-profile-role">{admin_role}</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="breadcrumb" style="margin-bottom: 20px;">
+                    <li><a href="/admin/dashboard">Dashboard</a></li>
+                    <li class="active"><a href="/admin/logs">Logs</a></li>
+                </ul>
+                <input type="file">
+            </div>
+    </div>
+
+    </main>
+</body>
+
+</html>

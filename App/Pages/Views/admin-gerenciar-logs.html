@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logs do Sistema - Admin Bennettii</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="/assets/image/bennettii_nobackground_horizontal.png" alt="Bennettii Admin">
+            </div>
+
+            <nav class="admin-nav">
+                <div class="nav-section">
+                    <h3>Principal</h3>
+                    <a href="/admin/dashboard">
+                        Dashboard
+                    </a>
+                    <a href="/admin/team-list">
+                        Equipe
+                    </a>
+                    <a href="/admin/reports" class="active">Relatórios</a>
+
+                </div>
+
+                <div class="nav-section">
+                    <h3>Produtos</h3>
+                    <a href="/admin/cupons">Cupons
+                    </a>
+                    <a href="/admin/products">
+                        Produtos
+                    </a>
+                    <a href="/admin/categories">
+                        Categorias
+                    </a>
+                    <a href="/admin/subcategorias">
+                        Subcategorias
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Clientes</h3>
+                    <a href="/admin/customers">
+                        Clientes
+                    </a>
+                    <a href="/admin/orders">
+                        Pedidos
+                    </a>
+                    <a href="/admin/reviews">Avaliações</a>
+                    <a href="/admin/tickets">Tickets</a>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Configurações</h3>
+                    <a href="/admin/carousel">
+                        Carrossel
+                    </a>
+                    <a href="/admin/sessions">
+                        Sessões
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="admin-profile">
+                <div class="admin-profile-card">
+                    <img src="/assets/image/placeholder_pfp.png" class="admin-pfp">
+                    <div class="admin-profile-info">
+                        <h2 id="admin-profile-name">{admin_name}</h2>
+                        <h4 id="admin-profile-role">{admin_role}</h4>
+                    </div>
+                </div>
+            </div>
+            <ul class="breadcrumb" style="margin-bottom: 20px;">
+                <li><a href="/admin/dashboard">Dashboard</a></li>
+                <li class="active"> Gerenciar Logs</li>
+            </ul>
+            <header class="admin-header">
+                <div class="header-title">
+                    <h1>Logs do Sistema</h1>
+                    <p>Monitore as atividades e erros do sistema.</p>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <!-- Filters -->
+                <div class="card">
+                    <form class="filter-form" method="GET" action="/admin/logs">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="date">Data</label>
+                                <input type="date" id="date" name="date" value="{date_val}" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="level">Nível</label>
+                                <select id="level" name="level" class="form-control">
+                                    <option value="">Todos</option>
+                                    <option value="INFO">INFO</option>
+                                    <option value="ERROR">ERROR</option>
+                                    <option value="WARNING">WARNING</option>
+                                    <option value="DEBUG">DEBUG</option>
+                                </select>
+                            </div>
+                            <div class="form-group flex-grow">
+                                <label for="context">Buscar Texto</label>
+                                <input type="text" id="context" name="context" value="{context_val}"
+                                    placeholder="Ex: User ID, Error Code..." class="form-control">
+                            </div>
+                            <div class="form-group align-end">
+                                <button type="submit" class="btn-primary">Filtrar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Logs Table -->
+                <div class="card">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 180px;">Data/Hora</th>
+                                <th style="width: 100px;">Nível</th>
+                                <th>Mensagem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {log_rows}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
